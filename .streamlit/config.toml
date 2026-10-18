@@ -1,0 +1,14 @@
+# Tema terang tetap (desain CIVA tidak mengikuti mode gelap sistem operasi).
+[theme]
+base = "light"
+primaryColor = "#10b981"
+backgroundColor = "#f4f6f5"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1e293b"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

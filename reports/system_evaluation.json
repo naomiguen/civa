@@ -1,0 +1,102 @@
+{
+  "total": 196,
+  "groups": {
+    "palsu_doi": {
+      "n": 24,
+      "benar": 0.9583333333333334,
+      "ml_saja_benar": 0.5416666666666666,
+      "status": {
+        "halu": 23,
+        "out_of_scope": 1
+      },
+      "bukti": {
+        "mismatch": 24
+      }
+    },
+    "palsu_karangan": {
+      "n": 24,
+      "benar": 0.8333333333333334,
+      "ml_saja_benar": 0.9166666666666666,
+      "status": {
+        "halu": 20,
+        "out_of_scope": 4
+      },
+      "bukti": {
+        "not_found": 22,
+        "mismatch": 2
+      }
+    },
+    "palsu_penulis": {
+      "n": 24,
+      "benar": 0.9583333333333334,
+      "ml_saja_benar": 0.375,
+      "status": {
+        "halu": 23,
+        "out_of_scope": 1
+      },
+      "bukti": {
+        "mismatch": 23,
+        "not_found": 1
+      }
+    },
+    "palsu_tahun": {
+      "n": 24,
+      "benar": 0.9583333333333334,
+      "ml_saja_benar": 0.3333333333333333,
+      "status": {
+        "halu": 23,
+        "valid": 1
+      },
+      "bukti": {
+        "mismatch": 21,
+        "not_found": 2,
+        "verified": 1
+      }
+    },
+    "real_dataset": {
+      "n": 20,
+      "benar": 1.0,
+      "ml_saja_benar": 0.6,
+      "status": {
+        "valid": 20
+      },
+      "bukti": {
+        "verified": 20
+      }
+    },
+    "real_eksternal": {
+      "n": 80,
+      "benar": 0.825,
+      "ml_saja_benar": 0.5625,
+      "status": {
+        "valid": 66,
+        "out_of_scope": 11,
+        "unparsed": 2,
+        "halu": 1
+      },
+      "bukti": {
+        "verified": 77,
+        "nan": 2,
+        "mismatch": 1
+      }
+    }
+  },
+  "halu_detection": {
+    "tp": 89,
+    "fp": 1,
+    "fn": 7,
+    "tn": 99,
+    "precision": 0.9888888888888889,
+    "recall": 0.9270833333333334,
+    "f1": 0.9569892473118279,
+    "accuracy": 0.9591836734693877
+  },
+  "ml_saja": {
+    "recall": 0.5416666666666666,
+    "false_alarm": 0.41
+  },
+  "real_false_alarm": 0.01,
+  "real_out_of_scope": 0.11,
+  "real_unparsed": 0.02,
+  "fake_unparsed": 0.0
+}

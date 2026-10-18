@@ -1,0 +1,3187 @@
+[
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Ulhaq, A. dan Burmeister, O. (2020) “COVID-19 Imaging Data Privacy by Federated Learning Design: A Theoretical Framework,” arXiv preprint.",
+  "meta": {
+   "title": "COVID-19 Imaging Data Privacy by Federated Learning Design: A Theoretical Framework",
+   "authors": [
+    "Anwaar Ulhaq",
+    "Oliver Burmeister"
+   ],
+   "year": 2020,
+   "venue": "arXiv preprint"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Hope, J. (2020). Manajemen Pelaksanaan Penerimaan Peserta Didik Baru Sistem Zonasi. Jambura Journal of Educational Management. https://doi.org/10.37411/jjem.v1i2.162",
+  "meta": {
+   "title": "Manajemen Pelaksanaan Penerimaan Peserta Didik Baru Sistem Zonasi",
+   "authors": [
+    "Santi Vera Mulyani"
+   ],
+   "year": 2020,
+   "venue": "Jambura Journal of Educational Management",
+   "doi": "10.37411/jjem.v1i2.162",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Billah, P. S., & T.S.B, F. (2021). Implementasi E-Learning di Madrasah Aliyah Kabupaten Subang. JIIP - Jurnal Ilmiah Ilmu Pendidikan.",
+  "meta": {
+   "title": "Implementasi E-Learning di Madrasah Aliyah Kabupaten Subang",
+   "authors": [
+    "Lina Nurdiyannah",
+    "Cahya Syaodih",
+    "Helmawati Helmawati"
+   ],
+   "year": 2021,
+   "venue": "JIIP - Jurnal Ilmiah Ilmu Pendidikan",
+   "doi": "10.54371/jiip.v4i7.313",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Sun, Y. dkk. (2022) “Accurate and efficient phase unwrapping using Poisson-coupled Fourier method,” Optics and Lasers in Engineering. Tersedia pada: https://doi.org/10.1016/j.optlaseng.2025.109295.",
+  "meta": {
+   "title": "Accurate and efficient phase unwrapping using Poisson-coupled Fourier method",
+   "authors": [
+    "Yan Sun",
+    "Zhi Zhong",
+    "Yanjun Xu",
+    "Diyao Song"
+   ],
+   "year": 2025,
+   "venue": "Optics and Lasers in Engineering",
+   "doi": "10.1016/j.optlaseng.2025.109295",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Dellia, P. dkk. (2022) “PENGEMBANGAN AUGMENTED REALITY MUSEUM CAKRANINGRAT BANGKALAN BERBASIS QR-CODE,” Jurnal Teknoinfo. Tersedia pada: https://doi.org/10.33365/jti.v16i2.1915.",
+  "meta": {
+   "title": "PENGEMBANGAN AUGMENTED REALITY MUSEUM CAKRANINGRAT BANGKALAN BERBASIS QR-CODE",
+   "authors": [
+    "Prita Dellia",
+    "Siti Mutiatun",
+    "Ahmad Jami’ul Amil"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Teknoinfo",
+   "doi": "10.33365/jti.v16i2.1915",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Lebenberg, J., Zhang, R., Grosset, L., & Guichard, J. (2023). Segmentation of incident lacunes during the course of ischemic cerebral small vessel diseases. Frontiers in Neurology. https://doi.org/10.3389/873aeb799a",
+  "meta": {
+   "title": "Segmentation of incident lacunes during the course of ischemic cerebral small vessel diseases",
+   "authors": [
+    "Jessica Lebenberg",
+    "Ruiting Zhang",
+    "Lina Grosset",
+    "Jean‐Pierre Guichard"
+   ],
+   "year": 2023,
+   "venue": "Frontiers in Neurology",
+   "doi": "10.3389/fneur.2023.1113644",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Santoso, Y.O. dan Nugroho, R.S.A. (2019) “Simplifying and implementing service level objectives for stream parallelism,” The Journal of Supercomputing. Tersedia pada: https://doi.org/10.1007/s11227-019-02914-6.",
+  "meta": {
+   "title": "Simplifying and implementing service level objectives for stream parallelism",
+   "authors": [
+    "Dalvan Griebler",
+    "Adriano Vogel",
+    "Daniele De Sensi",
+    "Marco Danelutto"
+   ],
+   "year": 2019,
+   "venue": "The Journal of Supercomputing",
+   "doi": "10.1007/s11227-019-02914-6",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Juliyana, Y., Suwita, J., & Winanti, W. (2024). Pengembangan Aplikasi Pengelolaan Data Warga Berbasis Website. Insan Pembangunan Sistem Informasi dan Komputer (IPSIKOM).",
+  "meta": {
+   "title": "Pengembangan Aplikasi Pengelolaan Data Warga Berbasis Website",
+   "authors": [
+    "Yoga Juliyana",
+    "Jaka Suwita",
+    "Winanti Winanti"
+   ],
+   "year": 2024,
+   "venue": "Insan Pembangunan Sistem Informasi dan Komputer (IPSIKOM)",
+   "doi": "10.58217/ipsikom.v12i1.278",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Supriyadi, H. dkk. (2021) “Media Pembelajaran : Pengembangan Media Pembelajaran melalui Google Sites untuk Memperbaiki Keterampilan Membaca Siswa pada Teks Recount,” Inovasi-Jurnal Diklat Keagamaan. Tersedia pada: https://doi.org/10.52048/inovasi.v19i1.632.",
+  "meta": {
+   "title": "Media Pembelajaran : Pengembangan Media Pembelajaran melalui Google Sites untuk Memperbaiki Keterampilan Membaca Siswa pada Teks Recount",
+   "authors": [
+    "Hermawan Supriyadi",
+    "Dwi Rukmini",
+    "Ruminda Ruminda"
+   ],
+   "year": 2025,
+   "venue": "Inovasi-Jurnal Diklat Keagamaan",
+   "doi": "10.52048/inovasi.v19i1.632",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Brandstetter, H. dkk. (2024) “Contrastive Pretraining of Sparse Transformers on Pollen-Count Time Series for Allergy Forecasting in Alpine Regions,” Alpine Journal of Applied Machine Learning.",
+  "meta": {
+   "title": "Contrastive Pretraining of Sparse Transformers on Pollen-Count Time Series for Allergy Forecasting in Alpine Regions",
+   "authors": [
+    "Hannes Brandstetter",
+    "David Nkemelu",
+    "Yuki Ito"
+   ],
+   "year": 2024,
+   "venue": "Alpine Journal of Applied Machine Learning"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Widodo, M.S. (2021) “Prediksi Jumlah Kendaraan Di Kota Tangerang Selatan Dengan Metode Algoritma Genetika,” Bit (Fakultas Teknologi Informasi Universitas Budi Luhur).",
+  "meta": {
+   "title": "Prediksi Jumlah Kendaraan Di Kota Tangerang Selatan Dengan Metode Algoritma Genetika",
+   "authors": [
+    "Agianto Syam Halim",
+    "Kusrini Kusrini",
+    "Agung Budi Prasetyo"
+   ],
+   "year": 2021,
+   "venue": "Bit (Fakultas Teknologi Informasi Universitas Budi Luhur)",
+   "doi": "10.36080/bit.v18i1.1302",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Panggabean, A.B. dkk. (2023) “Implementasi Algoritma Bubble Sort pada Sistem Pelayanan Perpustakaan Menggunakan Laravel,” Jurnal Ilmu Komputer. Tersedia pada: https://doi.org/10.56211/sudo.v2i1.185.",
+  "meta": {
+   "title": "Implementasi Algoritma Bubble Sort pada Sistem Pelayanan Perpustakaan Menggunakan Laravel",
+   "authors": [
+    "Aidil Bahri Panggabean",
+    "Rizki Ramadhan Htb",
+    "Ira Perina",
+    "Yunus Lukman Toro"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Oktiyawan, M. W., & Dalafranka, M. L. (2023). SISTEM INFORMASI BANK SAMPAH MENGGUNAKAN METODE RAD DAN FRAMEWORK LARAVEL. JURNAL FASILKOM.",
+  "meta": {
+   "title": "SISTEM INFORMASI BANK SAMPAH MENGGUNAKAN METODE RAD DAN FRAMEWORK LARAVEL",
+   "authors": [
+    "Muhammad Wahyu Oktiyawan",
+    "Muhammad Leandry Dalafranka"
+   ],
+   "year": 2023,
+   "venue": "JURNAL FASILKOM",
+   "doi": "10.37859/jf.v13i02.4982",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Efendi, A. (2021). Media Pembelajaran Sejarah di Indonesia untuk Sekolah Dasar di Yogyakarta. Respati. https://doi.org/10.35842/jtir.v16i3.425",
+  "meta": {
+   "title": "Media Pembelajaran Sejarah di Indonesia untuk Sekolah Dasar di Yogyakarta",
+   "authors": [
+    "Pantra Rizal Pamungkas",
+    "Mulia Sulistiyono",
+    "Bernadhed Bernadhed"
+   ],
+   "year": 2021,
+   "venue": "Respati",
+   "doi": "10.35842/jtir.v16i3.425",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Hutapea, R.M. dkk. (2023) “Sistem Pakar Diagnosis Penyakit Tanaman Anggrek Berbasis Certainty Factor dengan Antarmuka Suara Bahasa Daerah,” Jurnal Sistem Cerdas Hortikultura. Tersedia pada: https://doi.org/10.50893/e9701.",
+  "meta": {
+   "title": "Sistem Pakar Diagnosis Penyakit Tanaman Anggrek Berbasis Certainty Factor dengan Antarmuka Suara Bahasa Daerah",
+   "authors": [
+    "Rudi M. Hutapea",
+    "Fitri A. Lestari",
+    "Zaki Maulana"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Sistem Cerdas Hortikultura"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Efendi, A. (2022). PENGEMBANGAN MULTIMEDIA TEKNIK DASAR RENANG PEMBELAJARAN PENJASORKES SEKOLAH MENENGAH PERTAMA DI KABUPATEN KUDUS. Jurnal Penjaskesrek. https://doi.org/10.46244/penjaskesrek.v9i1.1825",
+  "meta": {
+   "title": "PENGEMBANGAN MULTIMEDIA TEKNIK DASAR RENANG PEMBELAJARAN PENJASORKES SEKOLAH MENENGAH PERTAMA DI KABUPATEN KUDUS",
+   "authors": [
+    "Abdullah Efendi"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Penjaskesrek",
+   "doi": "10.46244/penjaskesrek.v9i1.1825",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Řı́ha, L. dkk. (2026) “MaX - Materials design at the exascale - a EuroHPC Centre of Excellence: Recent selected results,” JuSER Publikationsportal.",
+  "meta": {
+   "title": "MaX - Materials design at the exascale - a EuroHPC Centre of Excellence: Recent selected results",
+   "authors": [
+    "Lubomı́r Řı́ha",
+    "A. Bohm",
+    "Ondřej Vysocký",
+    "Filip Vaverka"
+   ],
+   "year": 2025,
+   "venue": "JuSER Publikationsportal",
+   "doi": "10.34734/fzj-2025-05065",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Noida, G., Gupta, A., Kumar, A., & Singh, A. (2024). Network Security Intrusion Detection Methods Combining Optimization Algorithms and Neural Networks. Jurnal Ilmu Komputer. https://doi.org/10.26562/ijirae.2024.v1112.14",
+  "meta": {
+   "title": "Network Security Intrusion Detection Methods Combining Optimization Algorithms and Neural Networks",
+   "authors": [
+    "Greater Noida",
+    "Abhishek Gupta",
+    "Abhishek Kumar",
+    "Abhishek Singh"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "S, P. R. (2021). Women Safety Application using Machine Learning. International Journal for Research in Applied Science and Engineering Technology. https://doi.org/10.22214/ijraset.2021.34542",
+  "meta": {
+   "title": "Women Safety Application using Machine Learning",
+   "authors": [
+    "Prof. Rakesh S"
+   ],
+   "year": 2021,
+   "venue": "International Journal for Research in Applied Science and Engineering Technology",
+   "doi": "10.22214/ijraset.2021.34542",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "2022, C.E.P.D. (2022) “Prepare With Most recent C2010-530 Exam PDF Dumps 2022 for Superior Possibilities,” Zenodo (CERN European Organization for Nuclear Research).",
+  "meta": {
+   "title": "Prepare With Most recent C2010-530 Exam PDF Dumps 2022 for Superior Possibilities",
+   "authors": [
+    "C2010-530 Exam PDF Dumps 2022"
+   ],
+   "year": 2022,
+   "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+   "doi": "10.5281/zenodo.5892484",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Kandekar, N. (2026). Ecommerce Assisted by Machine Learning. International Journal for Research in Applied Science and Engineering Technology. https://doi.org/10.22214/ijraset.2022.40643",
+  "meta": {
+   "title": "Ecommerce Assisted by Machine Learning",
+   "authors": [
+    "Nikhil Kandekar"
+   ],
+   "year": 2022,
+   "venue": "International Journal for Research in Applied Science and Engineering Technology",
+   "doi": "10.22214/ijraset.2022.40643",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Gupta, S., & Sharma, N. (2025). A novel cluster based reliable security enhancement in FANET directed by game theory. Soft Computing.",
+  "meta": {
+   "title": "A novel cluster based reliable security enhancement in FANET directed by game theory",
+   "authors": [
+    "Shikha Gupta",
+    "Neetu Sharma"
+   ],
+   "year": 2025,
+   "venue": "Soft Computing",
+   "doi": "10.1007/s00500-025-10502-5",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Imani, M.Y. dkk. (2021) “IMPLEMENTASI BACKBONE NETWORK SECURITY SYSTEM MENGGUNAKAN FIREWALL PADA KOMUNIKASI HYBRID,” Jurnal Telkommil. Tersedia pada: https://doi.org/10.54317/kom.v2imei.147.",
+  "meta": {
+   "title": "IMPLEMENTASI BACKBONE NETWORK SECURITY SYSTEM MENGGUNAKAN FIREWALL PADA KOMUNIKASI HYBRID",
+   "authors": [
+    "Muhamad Yusuf Imani",
+    "Nur Rachman Supadmana Muda",
+    "Prisca Chorina"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Telkommil",
+   "doi": "10.54317/kom.v2imei.147",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Nasution, R.H. dkk. (2023) “Rancang Bangun Aplikasi Pelaporan Sampah Pasar Tradisional Berbasis Geofencing dan Insentif Poin Digital,” Jurnal Aplikasi Mobile Lingkungan Perkotaan.",
+  "meta": {
+   "title": "Rancang Bangun Aplikasi Pelaporan Sampah Pasar Tradisional Berbasis Geofencing dan Insentif Poin Digital",
+   "authors": [
+    "Rizky H. Nasution",
+    "Wulan Kurniasih",
+    "Samuel Pohan"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Aplikasi Mobile Lingkungan Perkotaan"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Lipsa, S., Nguyen, T. N., & Dash, R. K. (2022). A New Signature-Based Blockchain Paradigm: Foreseeable Impact on Healthcare Applications. IEEE Internet of Things Magazine. https://doi.org/10.1109/iotm.001.2200017",
+  "meta": {
+   "title": "A New Signature-Based Blockchain Paradigm: Foreseeable Impact on Healthcare Applications",
+   "authors": [
+    "Swati Lipsa",
+    "Tu N. Nguyen",
+    "Ranjan Kumar Dash"
+   ],
+   "year": 2022,
+   "venue": "IEEE Internet of Things Magazine",
+   "doi": "10.1109/iotm.001.2200017",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Indiana, B.D. dan Ramadhani, I. (2016) “APLIKASI PEMBELAJARAN BAHASA JAWA BERBASIS ANDROID,” CAHAYAtech.",
+  "meta": {
+   "title": "APLIKASI PEMBELAJARAN BAHASA JAWA BERBASIS ANDROID",
+   "authors": [
+    "Bramita Damayani Indiana",
+    "Irfan Ramadhani"
+   ],
+   "year": 2019,
+   "venue": "CAHAYAtech",
+   "doi": "10.47047/ct.v8i1.18",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Nabil, M.B. dkk. (2025) “Persepsi Mahasiswa Terhadap Flaming pada Teman Sebaya di Media Sosial: Analisis Kualitatif,” JURNAL MANAJEMEN PENDIDIKAN DAN ILMU SOSIAL. Tersedia pada: https://doi.org/10.38035/jmpis.v6i3.4517.",
+  "meta": {
+   "title": "Persepsi Mahasiswa Terhadap Flaming pada Teman Sebaya di Media Sosial: Analisis Kualitatif",
+   "authors": [
+    "Muhammad Bahrul Nabil",
+    "Moersito Wimbo Wibowo",
+    "Masayu Nandhia Dwiputri"
+   ],
+   "year": 2025,
+   "venue": "JURNAL MANAJEMEN PENDIDIKAN DAN ILMU SOSIAL",
+   "doi": "10.38035/jmpis.v6i3.4517",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Weng, W., Deaton, J., Natarajan, V., & Elsayed, G. F. (2020). Addressing the Real-world Class Imbalance Problem in Dermatology. arXiv preprint.",
+  "meta": {
+   "title": "Addressing the Real-world Class Imbalance Problem in Dermatology",
+   "authors": [
+    "Wei-Hung Weng",
+    "Jonathan Deaton",
+    "Vivek Natarajan",
+    "Gamaleldin F. Elsayed"
+   ],
+   "year": 2020,
+   "venue": "arXiv preprint"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Marbun, J.S. dkk. (2021) “Sistem Rekomendasi Bibit Padi Gogo Berdasarkan Kandungan Hara Tanah Menggunakan Collaborative Filtering Berbobot,” Jurnal Pertanian Presisi Digital.",
+  "meta": {
+   "title": "Sistem Rekomendasi Bibit Padi Gogo Berdasarkan Kandungan Hara Tanah Menggunakan Collaborative Filtering Berbobot",
+   "authors": [
+    "Jonathan S. Marbun",
+    "Vina Amalia",
+    "Bagas Kusuma"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Pertanian Presisi Digital"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Laverty, L. dkk. (2024) “The power and promise of transparency: Perspectives from citizens’ juries of pandemic health data sharing,” Big Data & Society. Tersedia pada: https://doi.org/10.1177/20539517241299729.",
+  "meta": {
+   "title": "The power and promise of transparency: Perspectives from citizens’ juries of pandemic health data sharing",
+   "authors": [
+    "Louise Laverty",
+    "Elisa Jones",
+    "Niels B. Peek",
+    "Malcolm Oswald"
+   ],
+   "year": 2024,
+   "venue": "Big Data & Society",
+   "doi": "10.1177/20539517241299729",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Naidu, T. P., & Kumari, A. K. (2023). A High-Performance VLSI Architecture for the PRESENT Lightweight Cryptography. International Journal of Engineering Research and. https://doi.org/10.17577/ijertv9is010225",
+  "meta": {
+   "title": "A High-Performance VLSI Architecture for the PRESENT Lightweight Cryptography",
+   "authors": [
+    "T. Pattalu Naidu",
+    "A. Kamala Kumari"
+   ],
+   "year": 2020,
+   "venue": "International Journal of Engineering Research and",
+   "doi": "10.17577/ijertv9is010225",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Ardiansyah, B., & Rahmawati, D. (2022). Analisis Sentimen Ulasan Wisata Kuliner Warung Tegal Menggunakan IndoBERT dengan Penanganan Slang Pesisir. Jurnal Pemrosesan Bahasa Alami Terapan.",
+  "meta": {
+   "title": "Analisis Sentimen Ulasan Wisata Kuliner Warung Tegal Menggunakan IndoBERT dengan Penanganan Slang Pesisir",
+   "authors": [
+    "Budi Ardiansyah",
+    "Dian Rahmawati"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Pemrosesan Bahasa Alami Terapan"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Simanjuntak, M. H., Sitanggang, D., & Indra, E. (2021). SISTEM BERBASIS ANDROID UNTUK RESERVASI TIKET BUS. Jurnal Sistem Informasi dan Ilmu Komputer Prima(JUSIKOM PRIMA). https://doi.org/10.34012/6548fdac2c",
+  "meta": {
+   "title": "SISTEM BERBASIS ANDROID UNTUK RESERVASI TIKET BUS",
+   "authors": [
+    "Mega Herlin Simanjuntak",
+    "Delima Sitanggang",
+    "Evta Indra"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Sistem Informasi dan Ilmu Komputer Prima(JUSIKOM PRIMA)",
+   "doi": "10.34012/jurnalsisteminformasidanilmukomputer.v4i2.1588",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Hu, H., Zhang, L., Yan, H., & Bai, Y. (2019). Denoising and Baseline Drift Removal Method of MEMS Hydrophone Signal Based on VMD and Wavelet Threshold Processing. IEEE Access. https://doi.org/10.1109/access.2019.2915612",
+  "meta": {
+   "title": "Denoising and Baseline Drift Removal Method of MEMS Hydrophone Signal Based on VMD and Wavelet Threshold Processing",
+   "authors": [
+    "Hongping Hu",
+    "Linmei Zhang",
+    "Huichao Yan",
+    "Yanping Bai"
+   ],
+   "year": 2019,
+   "venue": "IEEE Access",
+   "doi": "10.1109/access.2019.2915612",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Ratri, P.A. dkk. (2020) “Pengembangan Aplikasi Algoritma Genetika Berbasis Vba Excel Untuk Menyelesaikan Travelling Salesman Problem (Contoh Kasus: Tsp 20 Kota Di Rusia),” Media Jurnal Informatika.",
+  "meta": {
+   "title": "Pengembangan Aplikasi Algoritma Genetika Berbasis Vba Excel Untuk Menyelesaikan Travelling Salesman Problem (Contoh Kasus: Tsp 20 Kota Di Rusia)",
+   "authors": [
+    "Ekra Sanggala"
+   ],
+   "year": 2020,
+   "venue": "Media Jurnal Informatika",
+   "doi": "10.35194/mji.v12i1.1184",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Ramadhani, M. dkk. (2025) “Pengaruh Media Pop Up Book Terhadap Kemampuan Membaca Nyaring Siswa Kelas II SD Swasta Jaya Pancur Batu,” Education Achievement Journal of Science and Research. Tersedia pada: https://doi.org/10.51178/66c572b2db.",
+  "meta": {
+   "title": "Pengaruh Media Pop Up Book Terhadap Kemampuan Membaca Nyaring Siswa Kelas II SD Swasta Jaya Pancur Batu",
+   "authors": [
+    "Mastari Ramadhani",
+    "Thessa Herdyana",
+    "Syarifah Ainun"
+   ],
+   "year": 2025,
+   "venue": "Education Achievement Journal of Science and Research",
+   "doi": "10.51178/jsr.v6i2.2696",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Sorbelli, F.B. dkk. (2022) “Speeding up Routing Schedules on Aisle Graphs with Single Access,” Padua Research Archive (University of Padova). Tersedia pada: https://doi.org/10.1109/tro.2021.3082021.",
+  "meta": {
+   "title": "Speeding up Routing Schedules on Aisle Graphs with Single Access",
+   "authors": [
+    "Francesco Betti Sorbelli",
+    "Stefano Carpin",
+    "Federico Corò",
+    "Sajal Kumar Das"
+   ],
+   "year": 2022,
+   "venue": "Padua Research Archive (University of Padova)",
+   "doi": "10.1109/tro.2021.3082021",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Tawaang, T.C.C. dkk. (2024) “Pengembangan Video Tutorial Mata Pelajaran Desain Grafis Siswa Kelas X di SMK,” Edutik Jurnal Pendidikan Teknologi Informasi dan Komunikasi. Tersedia pada: https://doi.org/10.53682/edutik.v4i1.11179.",
+  "meta": {
+   "title": "Pengembangan Video Tutorial Mata Pelajaran Desain Grafis Siswa Kelas X di SMK",
+   "authors": [
+    "Tri Cahya Calvin Tawaang",
+    "Mario Tulenan Parinsi",
+    "Alfrina Mewengkang"
+   ],
+   "year": 2024,
+   "venue": "Edutik Jurnal Pendidikan Teknologi Informasi dan Komunikasi",
+   "doi": "10.53682/edutik.v4i1.11179",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Natole, M., Ying, Y., & Lyu, S. (2013). Stochastic AUC Optimization Algorithms With Linear Convergence. Frontiers in Applied Mathematics and Statistics.",
+  "meta": {
+   "title": "Stochastic AUC Optimization Algorithms With Linear Convergence",
+   "authors": [
+    "Michael Natole",
+    "Yiming Ying",
+    "Siwei Lyu"
+   ],
+   "year": 2019,
+   "venue": "Frontiers in Applied Mathematics and Statistics",
+   "doi": "10.3389/fams.2019.00030",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Hari, N.H. dkk. (2023) “IMPLEMENTASI PERPUSTAKAAN DIGITAL UNTUK MENDUKUNG LITERASI BELAJAR BAGI WARGA PELAJAR DI DAERAH PEDESAAN,” SELAPARANG Jurnal Pengabdian Masyarakat Berkemajuan. Tersedia pada: https://doi.org/10.31764/jpmb.v7i1.13720.",
+  "meta": {
+   "title": "IMPLEMENTASI PERPUSTAKAAN DIGITAL UNTUK MENDUKUNG LITERASI BELAJAR BAGI WARGA PELAJAR DI DAERAH PEDESAAN",
+   "authors": [
+    "Nirwana Haidar Hari",
+    "Ukhti Raudhatul Jannah",
+    "Sholeh Rachmatullah"
+   ],
+   "year": 2023,
+   "venue": "SELAPARANG Jurnal Pengabdian Masyarakat Berkemajuan",
+   "doi": "10.31764/jpmb.v7i1.13720",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Reddy, R.G. dkk. (2020) “Answer Span Correction in Machine Reading Comprehension,” arXiv preprint.",
+  "meta": {
+   "title": "Answer Span Correction in Machine Reading Comprehension",
+   "authors": [
+    "Revanth Gangi Reddy",
+    "Md Arafat Sultan",
+    "Efsun Sarioglu Kayi",
+    "Rong Zhang"
+   ],
+   "year": 2020,
+   "venue": "arXiv preprint"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Aulia, R., Zakir, A., & Zulhafiz, M. (2015). Penerapan Algoritma One Time Pad & Linear Congruential Generator Untuk Keamanan Pesan Teks. InfoTekJar (Jurnal Nasional Informatika dan Teknologi Jaringan).",
+  "meta": {
+   "title": "Penerapan Algoritma One Time Pad & Linear Congruential Generator Untuk Keamanan Pesan Teks",
+   "authors": [
+    "Rachmat Aulia",
+    "Ahmad Zakir",
+    "Muhammad Zulhafiz"
+   ],
+   "year": 2019,
+   "venue": "InfoTekJar (Jurnal Nasional Informatika dan Teknologi Jaringan)",
+   "doi": "10.30743/infotekjar.v4i1.1590",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Vanlehn, K., & Ball, W. (1987). A Version Space Approach to Learning Context-free Grammars. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "A Version Space Approach to Learning Context-free Grammars",
+   "authors": [
+    "Kurt Vanlehn",
+    "William Ball"
+   ],
+   "year": 1987,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "ARMANDA, R. K. (2023). Prediksi Pertumbuhan Penduduk Kecamatan Cimaragas Kabupaten Ciamis Dengan Metode Artificial Neural. Jurnal Algoritme. https://doi.org/10.35957/d06537cb90",
+  "meta": {
+   "title": "Prediksi Pertumbuhan Penduduk Kecamatan Cimaragas Kabupaten Ciamis Dengan Metode Artificial Neural",
+   "authors": [
+    "RAFLI KURNIA ARMANDA"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Algoritme",
+   "doi": "10.35957/algoritme.v3i2.3709",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Wibisono, I.P. dan Hartini, A.F. (2022) “Efektifitas Digital Concierge Dalam Mendukung Operasional Hotel,” WAHANA. Tersedia pada: https://doi.org/10.36456/7c217519b4.",
+  "meta": {
+   "title": "Efektifitas Digital Concierge Dalam Mendukung Operasional Hotel",
+   "authors": [
+    "Indra Perdana Wibisono",
+    "Ayu Firstyndah Hartini"
+   ],
+   "year": 2022,
+   "venue": "WAHANA",
+   "doi": "10.36456/wahana.v74i1.5974",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Ghani, M. A. N. U., Kun, S., Rauf, M. A., & Khan, S. (2022). IMPLEMENTASI LOAD BALANCING DAN FAILOVER PADA JARINGAN INTERNET MENGGUNAKAN METODE NTH. Jurnal Informatika Teknologi dan Sains (Jinteks). https://doi.org/10.51401/jinteks.v4i3.1904",
+  "meta": {
+   "title": "IMPLEMENTASI LOAD BALANCING DAN FAILOVER PADA JARINGAN INTERNET MENGGUNAKAN METODE NTH",
+   "authors": [
+    "Idham Idham",
+    "Rodianto Rodianto",
+    "Hendra Wahyudi"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Informatika Teknologi dan Sains (Jinteks)",
+   "doi": "10.51401/jinteks.v4i3.1904",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Zhao, S., Chang, W., Wei, R., & Liu, W. (2020). Priority Assignment on Partitioned Multiprocessor Systems With Shared Resources. IEEE Transactions on Computers. https://doi.org/10.1109/tc.2020.3000051",
+  "meta": {
+   "title": "Priority Assignment on Partitioned Multiprocessor Systems With Shared Resources",
+   "authors": [
+    "Shuai Zhao",
+    "Wanli Chang",
+    "Ran Wei",
+    "Weichen Liu"
+   ],
+   "year": 2020,
+   "venue": "IEEE Transactions on Computers",
+   "doi": "10.1109/tc.2020.3000051",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Burhanuddin, B., Habibuddin, H., & Apriana, D. (2022). Kompetensi Sosial Guru dalam Membangun Kesadaran Literasi Budaya dan Kewargaan Siswa di Sekolah Dasar. Jurnal DIDIKA Wahana Ilmiah Pendidikan Dasar. https://doi.org/10.29408/881d1eed8c",
+  "meta": {
+   "title": "Kompetensi Sosial Guru dalam Membangun Kesadaran Literasi Budaya dan Kewargaan Siswa di Sekolah Dasar",
+   "authors": [
+    "B Burhanuddin",
+    "Habibuddin Habibuddin",
+    "Dina Apriana"
+   ],
+   "year": 2022,
+   "venue": "Jurnal DIDIKA Wahana Ilmiah Pendidikan Dasar",
+   "doi": "10.29408/didika.v8i2.7520",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Huang, J., Shao, X., Yang, F., & Zhu, J. (2022). Measurement method and recent progress of vision-based deflection measurement of bridges: a technical review. Optical Engineering. https://doi.org/10.1117/1.oe.61.7.070901",
+  "meta": {
+   "title": "Measurement method and recent progress of vision-based deflection measurement of bridges: a technical review",
+   "authors": [
+    "Jinke Huang",
+    "Xinxing Shao",
+    "Fujun Yang",
+    "Jianguo Zhu"
+   ],
+   "year": 2022,
+   "venue": "Optical Engineering",
+   "doi": "10.1117/1.oe.61.7.070901",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Rasmussen, J., & Ibarra, M. (2020). Differentially Private Cache Eviction for Browser Extensions Operating on Encrypted Bookmark Graphs. Privacy Engineering Quarterly.",
+  "meta": {
+   "title": "Differentially Private Cache Eviction for Browser Extensions Operating on Encrypted Bookmark Graphs",
+   "authors": [
+    "Jonas Rasmussen",
+    "Marta Ibarra"
+   ],
+   "year": 2020,
+   "venue": "Privacy Engineering Quarterly"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Papadakis, N., Zhao, M., & Whitcombe, R. (2025). Neuromorphic Compilation of Regular Expressions onto Memristive Crossbars for Edge Log Filtering. Memristive Computing Letters.",
+  "meta": {
+   "title": "Neuromorphic Compilation of Regular Expressions onto Memristive Crossbars for Edge Log Filtering",
+   "authors": [
+    "Nikos Papadakis",
+    "Ming Zhao",
+    "Rory Whitcombe"
+   ],
+   "year": 2025,
+   "venue": "Memristive Computing Letters"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Sobri, M., & Umar, U. (2023). Kontribusi Mahasiswa Kampus Mengajar Empat Dalam Membantu Guru Mengadaptasi Teknologi Dalam Pembelajaran Di Sekolah Dasar Negeri 3 Pejanggik. Bada a Jurnal Ilmiah Pendidikan Dasar.",
+  "meta": {
+   "title": "Kontribusi Mahasiswa Kampus Mengajar Empat Dalam Membantu Guru Mengadaptasi Teknologi Dalam Pembelajaran Di Sekolah Dasar Negeri 3 Pejanggik",
+   "authors": [
+    "Muhammad Sobri",
+    "Umar Umar"
+   ],
+   "year": 2023,
+   "venue": "Bada a Jurnal Ilmiah Pendidikan Dasar",
+   "doi": "10.37216/badaa.v5i1.888",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Delgado, S. M., & Kovalenko, I. (2024). Hyperbolic Embeddings of Pastry Recipe Dependency Graphs for Allergen-Aware Menu Generation. Journal of Computational Gastronomy. https://doi.org/10.12206/b5268",
+  "meta": {
+   "title": "Hyperbolic Embeddings of Pastry Recipe Dependency Graphs for Allergen-Aware Menu Generation",
+   "authors": [
+    "Sofia M. Delgado",
+    "Ivan Kovalenko"
+   ],
+   "year": 2024,
+   "venue": "Journal of Computational Gastronomy"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Darman, D. dan Lapu, L. (2022) “PELATIHAN PENGGUNAAN APLIKASI MOBILE PEMBELAJARAN BAHASA INGGRIS ANDROID UNTUK MENINGKATKAN KEMAHIRAN BAHASA INGGRIS SISWA DI SMP NEGERI 11 MIMIKA,” TONGKONAN JURNAL PENGABDIAN MASYARAKAT.",
+  "meta": {
+   "title": "PELATIHAN PENGGUNAAN APLIKASI MOBILE PEMBELAJARAN BAHASA INGGRIS ANDROID UNTUK MENINGKATKAN KEMAHIRAN BAHASA INGGRIS SISWA DI SMP NEGERI 11 MIMIKA",
+   "authors": [
+    "Darman Darman",
+    "Lukas Lapu"
+   ],
+   "year": 2022,
+   "venue": "TONGKONAN JURNAL PENGABDIAN MASYARAKAT",
+   "doi": "10.47178/tongkonan.v1i2.1760",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Herasmus, H. (2026) “SISTEM INFORMASI RIAU SAFETY DRIVING CENTRE BERBASIS WEB PADA DIREKTORAT LALU LINTAS POLDA RIAU,” Jurnal Teknik Informatika dan Teknologi Informasi.",
+  "meta": {
+   "title": "SISTEM INFORMASI RIAU SAFETY DRIVING CENTRE BERBASIS WEB PADA DIREKTORAT LALU LINTAS POLDA RIAU",
+   "authors": [
+    "Hilda Herasmus"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Teknik Informatika dan Teknologi Informasi",
+   "doi": "10.55606/jutiti.v1i2.1009",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Hasan, A. (2024). CAPACITY BUILDING: LITERASI DIGITAL DAN PELUANG PEMANFAATAN DALAM EKONOMI RUMAH TANGGA. Jurnal Pengabdian Kepada Masyarakat MEDITEG.",
+  "meta": {
+   "title": "CAPACITY BUILDING: LITERASI DIGITAL DAN PELUANG PEMANFAATAN DALAM EKONOMI RUMAH TANGGA",
+   "authors": [
+    "Asriani Hasan"
+   ],
+   "year": 2020,
+   "venue": "Jurnal Pengabdian Kepada Masyarakat MEDITEG",
+   "doi": "10.34128/mediteg.v5i1.55",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Ramírez-Rosales, S. dkk. (2024) “A State-Based Language for Enhanced Video Surveillance Modeling (SEL),” Modelling—International Open Access Journal of Modelling in Engineering Science. Tersedia pada: https://doi.org/10.3390/modelling5020029.",
+  "meta": {
+   "title": "A State-Based Language for Enhanced Video Surveillance Modeling (SEL)",
+   "authors": [
+    "Selene Ramírez-Rosales",
+    "Luis-Antonio Díaz-Jiménez",
+    "Daniel Cantón-Enriquez",
+    "Jorge-Luis Pérez-Ramos"
+   ],
+   "year": 2024,
+   "venue": "Modelling—International Open Access Journal of Modelling in Engineering Science",
+   "doi": "10.3390/modelling5020029",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Laverty, L., Jones, E., Peek, N. B., & Oswald, M. (2021). Drug traceability and transparency in medical supply chain using blockchain for easing the process and creating trust between stakeholders and consumers. Personal and Ubiquitous Computing. https://doi.org/10.1007/s00779-021-01588-3",
+  "meta": {
+   "title": "Drug traceability and transparency in medical supply chain using blockchain for easing the process and creating trust between stakeholders and consumers",
+   "authors": [
+    "Sandeep Kumar Panda",
+    "Suresh Chandra Satapathy"
+   ],
+   "year": 2021,
+   "venue": "Personal and Ubiquitous Computing",
+   "doi": "10.1007/s00779-021-01588-3",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Petrova, E. dkk. (2025) “Curriculum Distillation of Large Language Models for Low-Resource Sign Language Gloss Segmentation,” Sign Language Technology Review. Tersedia pada: https://doi.org/10.82491/g5388.",
+  "meta": {
+   "title": "Curriculum Distillation of Large Language Models for Low-Resource Sign Language Gloss Segmentation",
+   "authors": [
+    "Elena Petrova",
+    "Rahim Salim",
+    "Haruto Nakamura"
+   ],
+   "year": 2025,
+   "venue": "Sign Language Technology Review"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Jhansi, D. dan Harish, U.C. (2020) “Hand Calculator System using Convolutional Neural Networks,” International Journal of Recent Technology and Engineering (IJRTE). Tersedia pada: https://doi.org/10.35940/ijrte.d9106.018520.",
+  "meta": {
+   "title": "Hand Calculator System using Convolutional Neural Networks",
+   "authors": [
+    "Dr.Y. Jhansi",
+    "U. C. Harish"
+   ],
+   "year": 2020,
+   "venue": "International Journal of Recent Technology and Engineering (IJRTE)",
+   "doi": "10.35940/ijrte.d9106.018520",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Karlsen, E. M., Obuya, T. R., & Delacroix, P. (2023). Federated Wavelet Routing for Solar-Powered Mesh Networks under Intermittent Lunar Latency. Journal of Orbital Network Engineering. https://doi.org/10.23733/b5351",
+  "meta": {
+   "title": "Federated Wavelet Routing for Solar-Powered Mesh Networks under Intermittent Lunar Latency",
+   "authors": [
+    "Erik M. Karlsen",
+    "Tobias R. Obuya",
+    "Pierre Delacroix"
+   ],
+   "year": 2023,
+   "venue": "Journal of Orbital Network Engineering"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Swari, M. H. P., Satria, V. H., & Satwika, I. K. S. (2021). PENERAPAN CASE-BASED REASONING ( C.B.R. ) DALAM PEMBUATAN SISTEM REKOMENDASI JUDUL GIM. Syntax Jurnal Informatika. https://doi.org/10.35706/487e01cf4c",
+  "meta": {
+   "title": "PENERAPAN CASE-BASED REASONING ( C.B.R. ) DALAM PEMBUATAN SISTEM REKOMENDASI JUDUL GIM",
+   "authors": [
+    "Made Hanindia Prami Swari",
+    "Vinza Hedi Satria",
+    "I Kadek Susila Satwika"
+   ],
+   "year": 2021,
+   "venue": "Syntax Jurnal Informatika",
+   "doi": "10.35706/syji.v10i1.5194",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Fu, M. dkk. (2024) “Overcomplete-to-sparse representation learning for few-shot class-incremental learning,” Multimedia Systems. Tersedia pada: https://doi.org/10.1007/s00530-024-01294-z.",
+  "meta": {
+   "title": "Overcomplete-to-sparse representation learning for few-shot class-incremental learning",
+   "authors": [
+    "Mengying Fu",
+    "Binghao Liu",
+    "Tianren Ma",
+    "Qixiang Ye"
+   ],
+   "year": 2024,
+   "venue": "Multimedia Systems",
+   "doi": "10.1007/s00530-024-01294-z",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Pratiwi, D. dan Valentin, N.N.N. (2024) “Mewujudkan Madrasah Digital di MTsN 3 Ponorogo sebagai Keunggulan Bersaing di Era Society,” Adaara Jurnal Manajemen Pendidikan Islam. Tersedia pada: https://doi.org/10.30863/ajmpi.v14i1.5075.",
+  "meta": {
+   "title": "Mewujudkan Madrasah Digital di MTsN 3 Ponorogo sebagai Keunggulan Bersaing di Era Society",
+   "authors": [
+    "Dian Pratiwi",
+    "Nio Nilasari Nur Valentin"
+   ],
+   "year": 2024,
+   "venue": "Adaara Jurnal Manajemen Pendidikan Islam",
+   "doi": "10.30863/ajmpi.v14i1.5075",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Wang, C. dkk. (2025) “Pengaruh Multimedia Interaktif Berbasis Adobe Animate Terhadap Hasil Belajar Siswa SMKN 8 Majene,” Jurnal MEKOM (Media Komunikasi Pendidikan Kejuruan). Tersedia pada: https://doi.org/10.26858/mkpk.v11i1.6390.",
+  "meta": {
+   "title": "Pengaruh Multimedia Interaktif Berbasis Adobe Animate Terhadap Hasil Belajar Siswa SMKN 8 Majene",
+   "authors": [
+    "Andi Indar Dewi",
+    "Muh. Yusuf Mappeasse",
+    "Muhammad Riska"
+   ],
+   "year": 2025,
+   "venue": "Jurnal MEKOM (Media Komunikasi Pendidikan Kejuruan)",
+   "doi": "10.26858/mkpk.v11i1.6390",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Nurzaman, M.Y. (2023) “Implementasi K-Means Clustering Dalam Pengelompokkan Banyaknya Jumlah Petani Berdasarkan Kecamatan di Provinsi Jawa Barat,” JATISI (Jurnal Teknik Informatika dan Sistem Informasi). Tersedia pada: https://doi.org/10.35957/560a3c0903.",
+  "meta": {
+   "title": "Implementasi K-Means Clustering Dalam Pengelompokkan Banyaknya Jumlah Petani Berdasarkan Kecamatan di Provinsi Jawa Barat",
+   "authors": [
+    "Muhammad Yamin Nurzaman"
+   ],
+   "year": 2023,
+   "venue": "JATISI (Jurnal Teknik Informatika dan Sistem Informasi)",
+   "doi": "10.35957/jatisi.v10i3.4896",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Thomas, N.S. dan Kaliraj, S. (2026) “An Improved and Optimized Random Forest Based Approach to Predict the Software Faults,” SN Computer Science. Tersedia pada: https://doi.org/10.1007/s42979-024-02764-x.",
+  "meta": {
+   "title": "An Improved and Optimized Random Forest Based Approach to Predict the Software Faults",
+   "authors": [
+    "Nikhil Saji Thomas",
+    "S. Kaliraj"
+   ],
+   "year": 2024,
+   "venue": "SN Computer Science",
+   "doi": "10.1007/s42979-024-02764-x",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Gorrepati, L.P. dan Potla, R.T. (2025) “A Reinforcement Learning Framework for Real-Time Personalized Treatment Planning in Clinical Environments,” Engineering Technology & Applied Science Research. Tersedia pada: https://doi.org/10.48084/etasr.12390.",
+  "meta": {
+   "title": "A Reinforcement Learning Framework for Real-Time Personalized Treatment Planning in Clinical Environments",
+   "authors": [
+    "Leela Prasad Gorrepati",
+    "Ravi Teja Potla"
+   ],
+   "year": 2025,
+   "venue": "Engineering Technology & Applied Science Research",
+   "doi": "10.48084/etasr.12390",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Afifah, A. N., & Falah, S. (2024). MANAJEMEN PEMBIAYAAN DALAM MENINGKATKAN SARANA DAN PRASARANA. AL-MUNADZOMAH. https://doi.org/10.51192/almunadzomah.v3i2.772",
+  "meta": {
+   "title": "MANAJEMEN PEMBIAYAAN DALAM MENINGKATKAN SARANA DAN PRASARANA",
+   "authors": [
+    "Anisa Nur Afifah",
+    "Saiful Falah"
+   ],
+   "year": 2024,
+   "venue": "AL-MUNADZOMAH",
+   "doi": "10.51192/almunadzomah.v3i2.772",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Khair, U., Budiman, A., & Chiuloto, K. (2025). Keamanan AKun Web dengan Time Based One Time Password. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Keamanan AKun Web dengan Time Based One Time Password",
+   "authors": [
+    "Ummul Khair",
+    "Arief Budiman",
+    "Kalvin Chiuloto"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Ramachandran, V.R. (2023) “Reconfigurable Photonic Convolutional Neural Network,” Zenodo (CERN European Organization for Nuclear Research). Tersedia pada: https://doi.org/10.5281/zenodo.8163039.",
+  "meta": {
+   "title": "Reconfigurable Photonic Convolutional Neural Network",
+   "authors": [
+    "Vinoth Raj Ramachandran"
+   ],
+   "year": 2023,
+   "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+   "doi": "10.5281/zenodo.8163039",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Hafid, A., Hatsama, A., Mustia, A., & Febrianto, F. (2023). Gerakan Literasi Baca Tulis Bagi Siswa SD Negeri 17 Kabupaten Sorong. Jurnal Abdimasa Pengabdian Masyarakat. https://doi.org/10.36232/a9863e7564",
+  "meta": {
+   "title": "Gerakan Literasi Baca Tulis Bagi Siswa SD Negeri 17 Kabupaten Sorong",
+   "authors": [
+    "Abdul Hafid",
+    "Abdurahman Hatsama",
+    "Ari Mustia",
+    "Febrianto Febrianto"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Abdimasa Pengabdian Masyarakat",
+   "doi": "10.36232/jurnalabdimasa.v6i2.4665",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Qian, Y., Wang, Z., Chen, L., & Huang, Z. (2021). Vascular enhancement with structure preservation from noisy X-ray angiogram images by employing non-local Hessian-based filter. Optik. https://doi.org/10.1016/4a446d0a32",
+  "meta": {
+   "title": "Vascular enhancement with structure preservation from noisy X-ray angiogram images by employing non-local Hessian-based filter",
+   "authors": [
+    "Yongqing Qian",
+    "Zhicheng Wang",
+    "Liang Chen",
+    "Zhenghua Huang"
+   ],
+   "year": 2021,
+   "venue": "Optik",
+   "doi": "10.1016/j.ijleo.2021.166523",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Oleksii, A., & Kornaha, Y. (2019). INTELLECTUAL SYSTEM OF RECOGNITION OF VISUAL KEYS FOR MOBILE APPLICATIONS. Scientific notes of Taurida National V I Vernadsky University Series Technical Sciences. https://doi.org/10.32838/2663-5941/2019.6-1/22",
+  "meta": {
+   "title": "INTELLECTUAL SYSTEM OF RECOGNITION OF VISUAL KEYS FOR MOBILE APPLICATIONS",
+   "authors": [
+    "A.V. Oleksii",
+    "Yа.I. Kornaha"
+   ],
+   "year": 2019,
+   "venue": "Scientific notes of Taurida National V I Vernadsky University Series Technical Sciences",
+   "doi": "10.32838/2663-5941/2019.6-1/22",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Mahlangu, T., Voss, K., & Aydin, B. (2023). Probabilistic Type Inference for Ancient Cuneiform Markup Languages Using Graph Attention. Digital Philology and Computing Review. https://doi.org/10.52866/b5572",
+  "meta": {
+   "title": "Probabilistic Type Inference for Ancient Cuneiform Markup Languages Using Graph Attention",
+   "authors": [
+    "Thabo Mahlangu",
+    "Katrin Voss",
+    "Burak Aydin"
+   ],
+   "year": 2023,
+   "venue": "Digital Philology and Computing Review"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Hilgurt, S.Y. dkk. (2023) “Tools for Analyzing Signature-Based Hardware Solutions for Cyber Security Systems,” Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Tools for Analyzing Signature-Based Hardware Solutions for Cyber Security Systems",
+   "authors": [
+    "Serhii Ya. Hilgurt",
+    "Anatolii M. Davydenko",
+    "Tetyana V. Matovka",
+    "Mykhailo P. Prygara"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Hervey, M. (2020). Harnessing AI in drug discovery without losing patent protection. Drug Discovery Today. https://doi.org/10.1016/j.drudis.2020.03.007",
+  "meta": {
+   "title": "Harnessing AI in drug discovery without losing patent protection",
+   "authors": [
+    "Matt Hervey"
+   ],
+   "year": 2020,
+   "venue": "Drug Discovery Today",
+   "doi": "10.1016/j.drudis.2020.03.007",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Ghani, M. A. N. U., Kun, S., Rauf, M. A., & Khan, S. (2024). Toward robust and privacy-enhanced facial recognition: A decentralized blockchain-based approach with GANs and deep learning. Mathematical Biosciences & Engineering.",
+  "meta": {
+   "title": "Toward robust and privacy-enhanced facial recognition: A decentralized blockchain-based approach with GANs and deep learning",
+   "authors": [
+    "Muhammad Ahmad Nawaz Ul Ghani",
+    "She Kun",
+    "Muhammad Arslan Rauf",
+    "Shumaila Khan"
+   ],
+   "year": 2024,
+   "venue": "Mathematical Biosciences & Engineering",
+   "doi": "10.3934/mbe.2024184",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Khanh, P. D., Mordukhovich, B. S., & Phat, V. T. (2023). Variational Convexity of Functions and Variational Sufficiency in Optimization. SIAM Journal on Optimization. https://doi.org/10.1137/25e2d51996",
+  "meta": {
+   "title": "Variational Convexity of Functions and Variational Sufficiency in Optimization",
+   "authors": [
+    "Pham Duy Khanh",
+    "Boris S. Mordukhovich",
+    "Vo Thanh Phat"
+   ],
+   "year": 2023,
+   "venue": "SIAM Journal on Optimization",
+   "doi": "10.1137/22m1519250",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Wicaksana, D. P., & Siregar, N. (2022). Optimasi Penjadwalan Armada Becak Listrik Menggunakan Algoritma Genetika Hibrida pada Kawasan Wisata Pesisir. Jurnal Teknologi Informasi dan Transportasi Pesisir. https://doi.org/10.41252/b3645",
+  "meta": {
+   "title": "Optimasi Penjadwalan Armada Becak Listrik Menggunakan Algoritma Genetika Hibrida pada Kawasan Wisata Pesisir",
+   "authors": [
+    "Dimas P. Wicaksana",
+    "Nurlela Siregar"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Teknologi Informasi dan Transportasi Pesisir"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Hagen, O., Mwangi, P., & Tran, L. (2021). Latency-Aware Spiking Autoencoders for Acoustic Anomaly Detection in Tidal Turbine Gearboxes. Marine Energy Informatics.",
+  "meta": {
+   "title": "Latency-Aware Spiking Autoencoders for Acoustic Anomaly Detection in Tidal Turbine Gearboxes",
+   "authors": [
+    "Ola Hagen",
+    "Peter Mwangi",
+    "Linh Tran"
+   ],
+   "year": 2021,
+   "venue": "Marine Energy Informatics"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Karataev, R. dan Baibaktina, A. (2015) “PROBLEMS OF CREATING A MOBILE APPLICATION FOR A BIBLIOGRAPHIC INFORMATION SEARCH ENGINE,” Habaršy. Fizika-matematikalyķ ġylymdary seriâsy. Tersedia pada: https://doi.org/10.51889/2020-3.1728-7901.35.",
+  "meta": {
+   "title": "PROBLEMS OF CREATING A MOBILE APPLICATION FOR A BIBLIOGRAPHIC INFORMATION SEARCH ENGINE",
+   "authors": [
+    "R.K. Karataev",
+    "Axaule Baibaktina"
+   ],
+   "year": 2020,
+   "venue": "Habaršy. Fizika-matematikalyķ ġylymdary seriâsy",
+   "doi": "10.51889/2020-3.1728-7901.35",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Sun, T., Mashdour, S., & Mahmoudi, M. R. (2018). An Ensemble Clusterer Framework based on Valid and Diverse Basic Small Clusters. International Journal of Information Technology & Decision Making. https://doi.org/10.1142/s0219622021500309",
+  "meta": {
+   "title": "An Ensemble Clusterer Framework based on Valid and Diverse Basic Small Clusters",
+   "authors": [
+    "Tao Sun",
+    "Saeed Mashdour",
+    "Mohammad Reza Mahmoudi"
+   ],
+   "year": 2021,
+   "venue": "International Journal of Information Technology & Decision Making",
+   "doi": "10.1142/s0219622021500309",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Lubis, A. F., & Santoso, H. R. (2022). Pemodelan Antrean Kapal Nelayan di Pelabuhan Perikanan Skala Kecil dengan Simulasi Diskrit dan Reinforcement Learning. Jurnal Simulasi Sistem Kelautan. https://doi.org/10.55554/a3126",
+  "meta": {
+   "title": "Pemodelan Antrean Kapal Nelayan di Pelabuhan Perikanan Skala Kecil dengan Simulasi Diskrit dan Reinforcement Learning",
+   "authors": [
+    "Andi F. Lubis",
+    "Hendra R. Santoso"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Simulasi Sistem Kelautan"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Agustiani, D.H. dan Wicaksono, M.F. (2021) “Pemberdayaan Masyarakat Berbasis Literasi: Studi Kasus Taman Baca Masyarakat Matahari Indonesia Kediri,” Jurnal Ilmu Informasi Perpustakaan dan Kearsipan. Tersedia pada: https://doi.org/10.7454/jipk.v23i1.005.",
+  "meta": {
+   "title": "Pemberdayaan Masyarakat Berbasis Literasi: Studi Kasus Taman Baca Masyarakat Matahari Indonesia Kediri",
+   "authors": [
+    "Dilla Hardina Agustiani",
+    "M. Fikriansyah Wicaksono"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Ilmu Informasi Perpustakaan dan Kearsipan",
+   "doi": "10.7454/jipk.v23i1.005",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Setiawan, G. A., Purba, M. T., & Hakim, L. (2025). Prediksi Debit Sungai Musiman Menggunakan LSTM Bidirectional dengan Fitur Fase Bulan dan Pasang Surut. Jurnal Hidroinformatika Cerdas. https://doi.org/10.96287/g9110",
+  "meta": {
+   "title": "Prediksi Debit Sungai Musiman Menggunakan LSTM Bidirectional dengan Fitur Fase Bulan dan Pasang Surut",
+   "authors": [
+    "Gilang A. Setiawan",
+    "Maria T. Purba",
+    "Luqman Hakim"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Hidroinformatika Cerdas"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Huo, J. dan Magal, P. (2023) “Speed of convergence to the Perron-Frobenius stationary distribution,” Journal of Mathematical Analysis and Applications. Tersedia pada: https://doi.org/10.1016/j.jmaa.2023.127577.",
+  "meta": {
+   "title": "Speed of convergence to the Perron-Frobenius stationary distribution",
+   "authors": [
+    "Jiawei Huo",
+    "Pierre Magal"
+   ],
+   "year": 2023,
+   "venue": "Journal of Mathematical Analysis and Applications",
+   "doi": "10.1016/j.jmaa.2023.127577",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Nurhasanah, I., & Sudrajat, A. (2025). Sistem Informasi Penerimaan dan Pengeluaran Kas Pada Bacin Mart. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Sistem Informasi Penerimaan dan Pengeluaran Kas Pada Bacin Mart",
+   "authors": [
+    "Islah Nurhasanah",
+    "Ari Sudrajat"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Mustafin, R., Mustafina, S., & Ochkas, E. (2017). ABOUT THE EXPERIENCE AND PROSPECTS OF CRYPTOCURRENCY USE IN SOME COUNTRIES. Essays of Modern Cameralistics.",
+  "meta": {
+   "title": "ABOUT THE EXPERIENCE AND PROSPECTS OF CRYPTOCURRENCY USE IN SOME COUNTRIES",
+   "authors": [
+    "R.F. Mustafin",
+    "S.A. Mustafina",
+    "E.Yu. Ochkas"
+   ],
+   "year": 2023,
+   "venue": "Essays of Modern Cameralistics",
+   "doi": "10.31429/20785224_2023_21_24",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Fauzan, A., & Prameswari, D. (2024). Implementasi Blockchain untuk Pencatatan Distribusi Garam Rakyat di Pulau Madura Berbasis Smart Contract Ringan. Jurnal Rekayasa Rantai Pasok Digital. https://doi.org/10.75547/c5432",
+  "meta": {
+   "title": "Implementasi Blockchain untuk Pencatatan Distribusi Garam Rakyat di Pulau Madura Berbasis Smart Contract Ringan",
+   "authors": [
+    "Ahmad Fauzan",
+    "Dewi Prameswari"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Rekayasa Rantai Pasok Digital"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Rizki, F. (2026) “The Role of English Learning Motivation in Enhancing Students’ Reading Comprehension,” Jurnal Ilmu Komputer. Tersedia pada: https://doi.org/10.65309/sdx08v52.",
+  "meta": {
+   "title": "The Role of English Learning Motivation in Enhancing Students’ Reading Comprehension",
+   "authors": [
+    "Fitri Rizki"
+   ],
+   "year": 2026,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Hussien, A. A. (2021). Cyber Security Crimes, Ethics and a Suggested Algorithm to Overcome Cyber-Physical Systems Problems (CybSec1). Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Cyber Security Crimes, Ethics and a Suggested Algorithm to Overcome Cyber-Physical Systems Problems (CybSec1)",
+   "authors": [
+    "Abou_el_ela Abdou Hussien"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Ardiwinata, F., Satra, R., & Faradibah, A. (2025). Analisis Jaringan Menggunakan Provider Tri (3) di Area Fakultas Ilmu Komputer. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Analisis Jaringan Menggunakan Provider Tri (3) di Area Fakultas Ilmu Komputer",
+   "authors": [
+    "Ferri Ardiwinata",
+    "Ramdan Satra",
+    "Amaliah Faradibah"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Widodo, M. S. (2020). Aplikasi Pencari Lokasi Tambal Ban Berbasis Android. Zenodo (CERN European Organization for Nuclear Research).",
+  "meta": {
+   "title": "Aplikasi Pencari Lokasi Tambal Ban Berbasis Android",
+   "authors": [
+    "Mardiana, Slamet Widodo"
+   ],
+   "year": 2020,
+   "venue": "Zenodo (CERN European Organization for Nuclear Research)",
+   "doi": "10.5281/zenodo.3870532",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Werth, A.W. dan Morris, T.H. (2022) “Intrusion prevention for payloads against cyber-physical systems by predicting potential impacts,” Jurnal Ilmu Komputer. Tersedia pada: https://doi.org/10.1080/23742917.2022.2088113.",
+  "meta": {
+   "title": "Intrusion prevention for payloads against cyber-physical systems by predicting potential impacts",
+   "authors": [
+    "Aaron W. Werth",
+    "Thomas H. Morris"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Jara, A. dan Pedroso, J.E. (2025) “From Chalkboards to Keyboards: Exploring the Digital Competence of Educators Rural in Classrooms,” JOURNAL OF DIGITAL LEARNING AND DISTANCE EDUCATION.",
+  "meta": {
+   "title": "From Chalkboards to Keyboards: Exploring the Digital Competence of Educators Rural in Classrooms",
+   "authors": [
+    "Airene Jara",
+    "John Erwin Pedroso"
+   ],
+   "year": 2025,
+   "venue": "JOURNAL OF DIGITAL LEARNING AND DISTANCE EDUCATION",
+   "doi": "10.56778/jdlde.v4i3.536",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Mahardika, F., Fitriani, A., & ‘Amin, M. A. (2023). Testing Sistem pada Dealer Management System Service Menggunakan Metode Black Box Testing. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Testing Sistem pada Dealer Management System Service Menggunakan Metode Black Box Testing",
+   "authors": [
+    "Fajar Mahardika",
+    "Adelia Fitriani",
+    "M. Al ‘Amin"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Harbani, A. dan Hidayat, M.F. (2020) “Optimalisasi Jaringan Internet Kampus menggunakan Squid Proxy dan Dynamic Routing,” TeknoIS Jurnal Ilmiah Teknologi Informasi dan Sains.",
+  "meta": {
+   "title": "Optimalisasi Jaringan Internet Kampus menggunakan Squid Proxy dan Dynamic Routing",
+   "authors": [
+    "Arif Harbani",
+    "Muhamad Furqon Hidayat"
+   ],
+   "year": 2020,
+   "venue": "TeknoIS Jurnal Ilmiah Teknologi Informasi dan Sains",
+   "doi": "10.36350/jbs.v10i2.86",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Khanna, N., Singh, S., Bhasin, A., & Malik, K. (2022). Integration of Multi-Class Service Paradigm With Generic Trust Mechanism for Innovation, Customization and Adaptability in MANETs. International Journal of Information Retrieval Research. https://doi.org/10.4018/1911a73ba0",
+  "meta": {
+   "title": "Integration of Multi-Class Service Paradigm With Generic Trust Mechanism for Innovation, Customization and Adaptability in MANETs",
+   "authors": [
+    "Nitin Khanna",
+    "Sandeep Singh",
+    "Anshu Bhasin",
+    "Kamal Malik"
+   ],
+   "year": 2022,
+   "venue": "International Journal of Information Retrieval Research",
+   "doi": "10.4018/ijirr.300290",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Af’idah, D. I., Dairoh, D., Handayani, S. F., & Pratiwi, R. W. (2022). Sentimen Ulasan Destinasi Wisata Pulau Bali Menggunakan Bidirectional Long Short Term Memory. Matrik Jurnal Manajemen Teknik Informatika dan Rekayasa Komputer. https://doi.org/10.30812/matrik.v21i3.1402",
+  "meta": {
+   "title": "Sentimen Ulasan Destinasi Wisata Pulau Bali Menggunakan Bidirectional Long Short Term Memory",
+   "authors": [
+    "Dwi Intan Af’idah",
+    "Dairoh Dairoh",
+    "Sharfina Febbi Handayani",
+    "Riszki Wijayatun Pratiwi"
+   ],
+   "year": 2022,
+   "venue": "Matrik Jurnal Manajemen Teknik Informatika dan Rekayasa Komputer",
+   "doi": "10.30812/matrik.v21i3.1402",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Cahyono, T.D. dkk. (2019) “RANCANG BANGUN PENGOLAHAN DATAPADA DESA BATU TERING SEBAGAI MEDIA PROMOSI DAN INFORMASI WISATA BERBASIS WEB,” Jurnal Informatika Teknologi dan Sains (Jinteks). Tersedia pada: https://doi.org/10.51401/jinteks.v1i1.369.",
+  "meta": {
+   "title": "RANCANG BANGUN PENGOLAHAN DATAPADA DESA BATU TERING SEBAGAI MEDIA PROMOSI DAN INFORMASI WISATA BERBASIS WEB",
+   "authors": [
+    "Tomy Dwi Cahyono",
+    "Firmansyah Putra",
+    "M. Julkarnaen"
+   ],
+   "year": 2019,
+   "venue": "Jurnal Informatika Teknologi dan Sains (Jinteks)",
+   "doi": "10.51401/jinteks.v1i1.369",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Li, K., Zhao, S., Huang, B., & Liu, F. (2024). Bayesian Filtering for High-Dimensional State-Space Models With State Partition and Error Compensation. IEEE/CAA Journal of Automatica Sinica. https://doi.org/10.1109/be6b0ae7bb",
+  "meta": {
+   "title": "Bayesian Filtering for High-Dimensional State-Space Models With State Partition and Error Compensation",
+   "authors": [
+    "Ke Li",
+    "Shunyi Zhao",
+    "Biao Huang",
+    "Fei Liu"
+   ],
+   "year": 2024,
+   "venue": "IEEE/CAA Journal of Automatica Sinica",
+   "doi": "10.1109/jas.2023.124137",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Seftiani, W. dkk. (2022) “PENGEMBANGAN MODUL PENJUALAN PADA SISTEM INFORMASI E-COMMERCE ULTRA MIKRO BERBASIS WEBSITE,” Jurnal Pepadun. Tersedia pada: https://doi.org/10.23960/pepadun.v3i2.112.",
+  "meta": {
+   "title": "PENGEMBANGAN MODUL PENJUALAN PADA SISTEM INFORMASI E-COMMERCE ULTRA MIKRO BERBASIS WEBSITE",
+   "authors": [
+    "Wulan Seftiani",
+    "Irwan Adi Pribadi",
+    "Yohana Tri Utami"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Pepadun",
+   "doi": "10.23960/pepadun.v3i2.112",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Lombardi, A., & Osei, K. (2022). Byzantine-Tolerant Consensus over Pigeon-Carried Storage Networks: A Formal Verification Study. Journal of Avian Networking Protocols.",
+  "meta": {
+   "title": "Byzantine-Tolerant Consensus over Pigeon-Carried Storage Networks: A Formal Verification Study",
+   "authors": [
+    "Alberto Lombardi",
+    "Kwame Osei"
+   ],
+   "year": 2022,
+   "venue": "Journal of Avian Networking Protocols"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Putra, D.S. (2020) “Software vulnerability prioritization using vulnerability description,” International Journal of Systems Assurance Engineering and Management.",
+  "meta": {
+   "title": "Software vulnerability prioritization using vulnerability description",
+   "authors": [
+    "Ruchi Sharma",
+    "Ritu Sibal",
+    "Sangeeta Sabharwal"
+   ],
+   "year": 2020,
+   "venue": "International Journal of Systems Assurance Engineering and Management",
+   "doi": "10.1007/s13198-020-01021-7",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Verhoeven, L., & Anand, S. K. (2022). A Topological Garbage Collector for Persistent Memory Graph Databases with Quantum-Resistant Snapshots. Transactions on Persistent Graph Systems.",
+  "meta": {
+   "title": "A Topological Garbage Collector for Persistent Memory Graph Databases with Quantum-Resistant Snapshots",
+   "authors": [
+    "Lieke Verhoeven",
+    "Suresh K. Anand"
+   ],
+   "year": 2022,
+   "venue": "Transactions on Persistent Graph Systems"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Silalahi, B.P. dkk. (2022) “Algoritme Migrating Birds Optimization dan Algoritme Particle Swarm Optimization: Penyelesaian Masalah Knapsack 0-1,” PYTHAGORAS Jurnal Pendidikan Matematika.",
+  "meta": {
+   "title": "Algoritme Migrating Birds Optimization dan Algoritme Particle Swarm Optimization: Penyelesaian Masalah Knapsack 0-1",
+   "authors": [
+    "Bib Paruhum Silalahi",
+    "Mohamad Novanto",
+    "Prapto Tri Supriyo"
+   ],
+   "year": 2022,
+   "venue": "PYTHAGORAS Jurnal Pendidikan Matematika",
+   "doi": "10.21831/pythagoras.v17i1.35660",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Domínguez-Serna, F.A. dan Garay-Palmett, K. (2021) “Quantum state preparation and one qubit logic from third-order nonlinear interactions,” Journal of the Optical Society of America B. Tersedia pada: https://doi.org/10.1364/josab.424374.",
+  "meta": {
+   "title": "Quantum state preparation and one qubit logic from third-order nonlinear interactions",
+   "authors": [
+    "Francisco A. Domínguez-Serna",
+    "Karina Garay-Palmett"
+   ],
+   "year": 2021,
+   "venue": "Journal of the Optical Society of America B",
+   "doi": "10.1364/josab.424374",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Ferreira, J. P., & Sandhu, G. (2022). Self-Healing Microservice Meshes via Reinforcement Learning from Kubernetes Audit Trails of Greenhouse Controllers. Journal of Agricultural Cloud Operations.",
+  "meta": {
+   "title": "Self-Healing Microservice Meshes via Reinforcement Learning from Kubernetes Audit Trails of Greenhouse Controllers",
+   "authors": [
+    "Joao P. Ferreira",
+    "Gurpreet Sandhu"
+   ],
+   "year": 2022,
+   "venue": "Journal of Agricultural Cloud Operations"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Febriyanti, W. (2020). Ontology Learning pada Teks Tidak Terstruktur. Electrician Jurnal Rekayasa dan Teknologi Elektro. https://doi.org/10.23960/elc.v14n2.2139",
+  "meta": {
+   "title": "Ontology Learning pada Teks Tidak Terstruktur",
+   "authors": [
+    "Rajif Agung Yunmar"
+   ],
+   "year": 2020,
+   "venue": "Electrician Jurnal Rekayasa dan Teknologi Elektro",
+   "doi": "10.23960/elc.v14n2.2139",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Suartika, N.K. dan Wirawan, P. (2024) “Pengembangan Sistem Informasi Arsip Digital Naskah Lontar Berbasis OCR Aksara Bali dan Basis Data Graf,” Jurnal Humaniora Digital Nusantara.",
+  "meta": {
+   "title": "Pengembangan Sistem Informasi Arsip Digital Naskah Lontar Berbasis OCR Aksara Bali dan Basis Data Graf",
+   "authors": [
+    "Ni Komang Suartika",
+    "Putu Wirawan"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Humaniora Digital Nusantara"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Aman, A., & Triandi, B. (2021). VALIDASI FORMULIR PELANGGARAN PEMILU PADA BAWASLU SUMATERA UTARA MENGGUNAKAN QR-CODE DAN BASE64. IT (INFORMATIC TECHNIQUE) JOURNAL.",
+  "meta": {
+   "title": "VALIDASI FORMULIR PELANGGARAN PEMILU PADA BAWASLU SUMATERA UTARA MENGGUNAKAN QR-CODE DAN BASE64",
+   "authors": [
+    "Ali Aman",
+    "Budi Triandi"
+   ],
+   "year": 2021,
+   "venue": "IT (INFORMATIC TECHNIQUE) JOURNAL",
+   "doi": "10.22303/it.8.1.2020.12-22",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Ratri, P. A., Afifah, I. I., Zulfiani, P. C., & Elvera, R. S. (2025). Pengembangan Video Tutorial Perawatan Badan Berbasis Reels Instagram sebagai Media Pembelajaran bagi Mahasiswa Prodi Pendidikan Tata Kecantikan Unnes. Jurnal Penelitian Inovatif. https://doi.org/10.54082/jupin.1648",
+  "meta": {
+   "title": "Pengembangan Video Tutorial Perawatan Badan Berbasis Reels Instagram sebagai Media Pembelajaran bagi Mahasiswa Prodi Pendidikan Tata Kecantikan Unnes",
+   "authors": [
+    "Pramesti Adika Ratri",
+    "Indah Indi Afifah",
+    "Putri Chairina Zulfiani",
+    "Resi Sepsilia Elvera"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Penelitian Inovatif",
+   "doi": "10.54082/jupin.1648",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Cermakova, A. L., Jantunen, J. H., Jauhiainen, T., & Kirk, J. M. (2021). The International Comparable Corpus: Challenges in building multilingual spoken and written comparable corpora. Research in Corpus Linguistics. https://doi.org/10.32714/ricl.09.01.06",
+  "meta": {
+   "title": "The International Comparable Corpus: Challenges in building multilingual spoken and written comparable corpora",
+   "authors": [
+    "Anna Lindroos Cermakova",
+    "Jarmo Harri Jantunen",
+    "Tommi Jauhiainen",
+    "John M. Kirk"
+   ],
+   "year": 2021,
+   "venue": "Research in Corpus Linguistics",
+   "doi": "10.32714/ricl.09.01.06",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Muthengi, F. M., Mugo, D. M., Mutua, S. M., & Musyoka, F. M. (2024). Method level static source code analysis on behavioral change impact analysis in software regression testing. Indonesian Journal of Electrical Engineering and Computer Science.",
+  "meta": {
+   "title": "Method level static source code analysis on behavioral change impact analysis in software regression testing",
+   "authors": [
+    "Fredrick Mugambi Muthengi",
+    "David Muchangi Mugo",
+    "Stephen Makau Mutua",
+    "Faith Mueni Musyoka"
+   ],
+   "year": 2024,
+   "venue": "Indonesian Journal of Electrical Engineering and Computer Science",
+   "doi": "10.11591/ijeecs.v35.i1.pp665-672",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Giuda, G.M.D. dkk. (2023) “Federated learning enabled graph convolutional autoencoder and factorization machine for potential friendship prediction in social networks,” Information Fusion. Tersedia pada: https://doi.org/10.1016/j.inffus.2023.102042.",
+  "meta": {
+   "title": "Federated learning enabled graph convolutional autoencoder and factorization machine for potential friendship prediction in social networks",
+   "authors": [
+    "Hexuan Hu",
+    "Chengcheng Cao",
+    "Qiang Hu",
+    "Ye Zhang"
+   ],
+   "year": 2023,
+   "venue": "Information Fusion",
+   "doi": "10.1016/j.inffus.2023.102042",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Rasyid, M.F. dkk. (2020) “APLIKASI PENGENALAN PENUTUR PADA IDENTIFIKASI SUARA PENELEPON MENGGUNAKAN MEL-FREQUENCY CEPSTRAL COEFFICIENT DAN VECTOR QUANTIZATION (Studi Kasus : Layanan Hotline Universitas Pembangunan Nasional “Veteran” Yogyakarta),” Telematika. Tersedia pada: https://doi.org/10.31315/3e1274057a.",
+  "meta": {
+   "title": "APLIKASI PENGENALAN PENUTUR PADA IDENTIFIKASI SUARA PENELEPON MENGGUNAKAN MEL-FREQUENCY CEPSTRAL COEFFICIENT DAN VECTOR QUANTIZATION (Studi Kasus : Layanan Hotline Universitas Pembangunan Nasional “Veteran” Yogyakarta)",
+   "authors": [
+    "Muhammad Fahim Rasyid",
+    "Herlina Jayadianti",
+    "Herry Sofyan"
+   ],
+   "year": 2020,
+   "venue": "Telematika",
+   "doi": "10.31315/telematika.v1i1.3380",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Adhy, M., Priyambadha, B., & Pradana, F. (2014). Kuantifikasi Pengaruh Understandability dan Maintainability pada Evolusi Perangkat Lunak. Jurnal Teknologi Informasi dan Ilmu Komputer. https://doi.org/10.25126/jtiik.2019631289",
+  "meta": {
+   "title": "Kuantifikasi Pengaruh Understandability dan Maintainability pada Evolusi Perangkat Lunak",
+   "authors": [
+    "Mochammad Adhy",
+    "Bayu Priyambadha",
+    "Fajar Pradana"
+   ],
+   "year": 2019,
+   "venue": "Jurnal Teknologi Informasi dan Ilmu Komputer",
+   "doi": "10.25126/jtiik.2019631289",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Kumalaningrum, A.N. dkk. (2026) “DESAIN DAN PENGEMBANGAN POJOK LITERASI DAN PELATIHAN SOSIAL MEDIA PADA RT. 62 KELURAHAN GRAHA INDAH,” Jurnal Abdi Insani. Tersedia pada: https://doi.org/10.29303/abdiinsani.v11i3.1713.",
+  "meta": {
+   "title": "DESAIN DAN PENGEMBANGAN POJOK LITERASI DAN PELATIHAN SOSIAL MEDIA PADA RT. 62 KELURAHAN GRAHA INDAH",
+   "authors": [
+    "Amalia Nur Kumalaningrum",
+    "Sayid Rifqy Adhitya",
+    "Sabrina Aulia Putri",
+    "Joel Parulian Apriadi Siagian"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Abdi Insani",
+   "doi": "10.29303/abdiinsani.v11i3.1713",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Andrian, R. dkk. (2023) “Vol 11 No. 2, 2023 ©2023 Ilmu Komputer Unila Publishing Network all rights reserved 138 Implementasi Kecerdasan Bisnis pada UPT. (Unit Pelaksana Teknis) Pengembangan Karier dan Kewirausahaan Universitas Lampung,” Jurnal Ilmu Komputer. Tersedia pada: https://doi.org/10.23960/komputasi.v11i2.14157.",
+  "meta": {
+   "title": "Vol 11 No. 2, 2023 ©2023 Ilmu Komputer Unila Publishing Network all rights reserved 138 Implementasi Kecerdasan Bisnis pada UPT. (Unit Pelaksana Teknis) Pengembangan Karier dan Kewirausahaan Universitas Lampung",
+   "authors": [
+    "Rico Andrian",
+    "Eggi Amandar Sari",
+    "Rizky Prabowo",
+    "Diky Hidayat"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Xu, J., Fan, H., Wang, Q., & Jiang, Y. (2024). Adaptive Idle Model Fusion in Hierarchical Federated Learning for Unbalanced Edge Regions. IEEE Transactions on Network Science and Engineering. https://doi.org/10.1109/tnse.2024.3410275",
+  "meta": {
+   "title": "Adaptive Idle Model Fusion in Hierarchical Federated Learning for Unbalanced Edge Regions",
+   "authors": [
+    "Jiuyun Xu",
+    "Hanfei Fan",
+    "Qiqi Wang",
+    "Yinyue Jiang"
+   ],
+   "year": 2024,
+   "venue": "IEEE Transactions on Network Science and Engineering",
+   "doi": "10.1109/tnse.2024.3410275",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Domínguez-Serna, F.A. dan Garay-Palmett, K. (2021) “Model Jaringan Syaraf Tiruan untuk Variabel tidak Pasti pada Kontrol Putaran Kincir Angin,” Matrik Jurnal Manajemen Teknik Informatika dan Rekayasa Komputer.",
+  "meta": {
+   "title": "Model Jaringan Syaraf Tiruan untuk Variabel tidak Pasti pada Kontrol Putaran Kincir Angin",
+   "authors": [
+    "Zulfian Azmi",
+    "Ishak Ishak"
+   ],
+   "year": 2021,
+   "venue": "Matrik Jurnal Manajemen Teknik Informatika dan Rekayasa Komputer",
+   "doi": "10.30812/matrik.v21i1.1194",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Asru, A.S. dkk. (2025) “From automation to autonomy in smart manufacturing: a Bayesian optimization framework for modeling multi-objective experimentation and sequential decision making,” The International Journal of Advanced Manufacturing Technology. Tersedia pada: https://doi.org/10.1007/s00170-025-15407-z.",
+  "meta": {
+   "title": "From automation to autonomy in smart manufacturing: a Bayesian optimization framework for modeling multi-objective experimentation and sequential decision making",
+   "authors": [
+    "Avijit Saha Asru",
+    "Hamed Khosravi",
+    "Imtiaz Ahmed",
+    "Abdullahil Azeem"
+   ],
+   "year": 2025,
+   "venue": "The International Journal of Advanced Manufacturing Technology",
+   "doi": "10.1007/s00170-025-15407-z",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Nurhalimah, N. (2022). PENGEMBANGAN MEDIA AUDIOVISUAL BERBASIS LECTORA PADA BANGUN RUANG MATEMATIKA SD. Jurnal Cakrawala Pendas. https://doi.org/10.31949/80459a716b",
+  "meta": {
+   "title": "PENGEMBANGAN MEDIA AUDIOVISUAL BERBASIS LECTORA PADA BANGUN RUANG MATEMATIKA SD",
+   "authors": [
+    "Nurhalimah Nurhalimah"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Cakrawala Pendas",
+   "doi": "10.31949/jcp.v8i3.2510",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wang, M., Wu, X., Zhang, L., & Yue, X. (2023). Measurement and Analysis of Antenna Pattern for MIMO HF Surface Wave Radar. IEEE Antennas and Wireless Propagation Letters.",
+  "meta": {
+   "title": "Measurement and Analysis of Antenna Pattern for MIMO HF Surface Wave Radar",
+   "authors": [
+    "Mingtao Wang",
+    "Xiongbin Wu",
+    "Lan Zhang",
+    "Xianchang Yue"
+   ],
+   "year": 2023,
+   "venue": "IEEE Antennas and Wireless Propagation Letters",
+   "doi": "10.1109/lawp.2023.3264510",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Mohit, X. (2024) “Exploring Cutting-Edge Technologies in Computer Science: A Comprehensive Review,” International Journal of Science and Research (IJSR). Tersedia pada: https://doi.org/10.21275/sr24328231114.",
+  "meta": {
+   "title": "Exploring Cutting-Edge Technologies in Computer Science: A Comprehensive Review",
+   "authors": [
+    "x Mohit"
+   ],
+   "year": 2024,
+   "venue": "International Journal of Science and Research (IJSR)",
+   "doi": "10.21275/sr24328231114",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wang, C. dkk. (2021) “Optimal readout of superconducting qubits exploiting high-level states,” Fundamental Research. Tersedia pada: https://doi.org/10.1016/j.fmre.2020.12.008.",
+  "meta": {
+   "title": "Optimal readout of superconducting qubits exploiting high-level states",
+   "authors": [
+    "Can Wang",
+    "Ming-Cheng Chen",
+    "Chao‐Yang Lu",
+    "Jian-Wei Pan"
+   ],
+   "year": 2021,
+   "venue": "Fundamental Research",
+   "doi": "10.1016/j.fmre.2020.12.008",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "fatah, S. M. A., Jupriyanto, J., & Cahyaningtyas, A. P. (2019). ANALISIS MEDIA PEMBELAJARAN MULTIMEDIA INTERAKTIF TERHADAP MOTIVASI BELAJAR PESERTA DIDIK DI SEKOLAH DASAR. Jurnal Pesona Dasar. https://doi.org/10.24815/520a767062",
+  "meta": {
+   "title": "ANALISIS MEDIA PEMBELAJARAN MULTIMEDIA INTERAKTIF TERHADAP MOTIVASI BELAJAR PESERTA DIDIK DI SEKOLAH DASAR",
+   "authors": [
+    "Syamsul Ma'arif Al fatah",
+    "Jupriyanto Jupriyanto",
+    "Andarini Permata Cahyaningtyas"
+   ],
+   "year": 2019,
+   "venue": "Jurnal Pesona Dasar",
+   "doi": "10.24815/pear.v7i2.14755",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "D., S. R. (2020). Generation of Fine-Grained Movie Reviews – Text Segmentation and Sentiment Analysis. Journal of Advanced Research in Dynamical and Control Systems.",
+  "meta": {
+   "title": "Generation of Fine-Grained Movie Reviews – Text Segmentation and Sentiment Analysis",
+   "authors": [
+    "Sree Renjini D."
+   ],
+   "year": 2020,
+   "venue": "Journal of Advanced Research in Dynamical and Control Systems",
+   "doi": "10.5373/jardcs/v12sp4/20201549",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Suhendar, W.Q. dkk. (2023) “PEMBERDAYAAN PENGURUS MASJID MELALUI PEMBUATAN APLIKASI SISTEM INFORMASI MANAJEMEN MASJID DI DESA RANCAMULYA,” Jurnal DIFUSI. Tersedia pada: https://doi.org/10.35313/60cb78e39b.",
+  "meta": {
+   "title": "PEMBERDAYAAN PENGURUS MASJID MELALUI PEMBUATAN APLIKASI SISTEM INFORMASI MANAJEMEN MASJID DI DESA RANCAMULYA",
+   "authors": [
+    "Waway Qodratulloh Suhendar",
+    "Ade Hodijah",
+    "NS Junaedi",
+    "Ida Suhartini"
+   ],
+   "year": 2023,
+   "venue": "Jurnal DIFUSI",
+   "doi": "10.35313/difusi.v6i1.2250",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Prasetyo, A. A. (2019). Dampak Era Digital Terhadap Perpustakaan Sebagai Upaya Menarik Generasi Milenial. Tibanndaru Jurnal Ilmu Perpustakaan dan Informasi. https://doi.org/10.30742/84dcf40f8b",
+  "meta": {
+   "title": "Dampak Era Digital Terhadap Perpustakaan Sebagai Upaya Menarik Generasi Milenial",
+   "authors": [
+    "Arienda Addis Prasetyo"
+   ],
+   "year": 2019,
+   "venue": "Tibanndaru Jurnal Ilmu Perpustakaan dan Informasi",
+   "doi": "10.30742/tb.v3i2.761",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Khadijah, K., Sabilly, N., & Nugroho, F. A. (2020). SENTIMENT ANALYSIS OF LEAGUE OF LEGENDS: WILD RIFT REVIEWS ON GOOGLE PLAY USING NAÏVE BAYES CLASSIFIER. Jurnal Ilmiah KURSOR.",
+  "meta": {
+   "title": "SENTIMENT ANALYSIS OF LEAGUE OF LEGENDS: WILD RIFT REVIEWS ON GOOGLE PLAY USING NAÏVE BAYES CLASSIFIER",
+   "authors": [
+    "Khadijah Khadijah",
+    "Nur Sabilly",
+    "Fajar Agung Nugroho"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmiah KURSOR",
+   "doi": "10.21107/kursor.v12i01.328",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Hutasoit, F. dan Saragih, E.L.L. (2019) “Delay-Sensitive Task Offloading in the 802.11p-Based Vehicular Fog Computing Systems,” IEEE Internet of Things Journal. Tersedia pada: https://doi.org/10.1109/jiot.2019.2953047.",
+  "meta": {
+   "title": "Delay-Sensitive Task Offloading in the 802.11p-Based Vehicular Fog Computing Systems",
+   "authors": [
+    "Qiong Wu",
+    "Hanxu Liu",
+    "Ruhai Wang",
+    "Pingyi Fan"
+   ],
+   "year": 2019,
+   "venue": "IEEE Internet of Things Journal",
+   "doi": "10.1109/jiot.2019.2953047",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Niswa, K. dan Kharisma, A.J. (2021) “Pelatihan dan Pendampingan Penggunaan Media Pembelajaran Game Edukasi “Kids Learning” Berbasis Android Bagi Guru SD Muhammadiyah 02 Pematangsiantar,” Seandanan Jurnal Pengabdian Pada Masyarakat.",
+  "meta": {
+   "title": "Pelatihan dan Pendampingan Penggunaan Media Pembelajaran Game Edukasi “Kids Learning” Berbasis Android Bagi Guru SD Muhammadiyah 02 Pematangsiantar",
+   "authors": [
+    "Khairun Niswa",
+    "Adib Jasni Kharisma"
+   ],
+   "year": 2021,
+   "venue": "Seandanan Jurnal Pengabdian Pada Masyarakat",
+   "doi": "10.23960/seandanan.v1i1.8",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Shulhiyana, S. dan Voutama, A. (2025) “Penerapan Metode K-Means Clustering untuk Pengelompokkan Musik Berdasarkan Karakteristik Audio,” Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Penerapan Metode K-Means Clustering untuk Pengelompokkan Musik Berdasarkan Karakteristik Audio",
+   "authors": [
+    "Shofi Shulhiyana",
+    "Apriade Voutama"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wahhab, H., Alanssari, A., Рожина, Д. С., & Агафонов, А. В. (2019). A Fingerprint Matching Algorithm. Bulletin of the South Ural State University Ser Computer Technologies Automatic Control & Radioelectronics.",
+  "meta": {
+   "title": "A Fingerprint Matching Algorithm",
+   "authors": [
+    "H.I. Wahhab",
+    "A.N. Alanssari",
+    "Дарья Сергеевна Рожина",
+    "Андрей Валерьевич Агафонов"
+   ],
+   "year": 2019,
+   "venue": "Bulletin of the South Ural State University Ser Computer Technologies Automatic Control & Radioelectronics",
+   "doi": "10.14529/ctcr190404",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Nasiroh, S. dan Maharani, D.A. (2024) “SISTEM INFORMASI AKADEMIK BERBASIS WEB PADA SMK AL-ISLAM SURAKARTA,” Journal of Information System Management (JOISM).",
+  "meta": {
+   "title": "SISTEM INFORMASI AKADEMIK BERBASIS WEB PADA SMK AL-ISLAM SURAKARTA",
+   "authors": [
+    "Erlang Bagus Sadewa",
+    "Wijiyanto Wijiyanto",
+    "Nurohman Nurohman"
+   ],
+   "year": 2024,
+   "venue": "Journal of Information System Management (JOISM)",
+   "doi": "10.24076/joism.2024v6i1.1647",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Amin, M.A. dkk. (2024) “Exploring varying color spaces through representative forgery learning to improve deepfake detection,” Digital Signal Processing. Tersedia pada: https://doi.org/10.1016/j.dsp.2024.104426.",
+  "meta": {
+   "title": "Exploring varying color spaces through representative forgery learning to improve deepfake detection",
+   "authors": [
+    "Muhammad Ahmad Amin",
+    "Muhammad Ahmad Amin",
+    "Yongjian Hu",
+    "Guan Yu"
+   ],
+   "year": 2024,
+   "venue": "Digital Signal Processing",
+   "doi": "10.1016/j.dsp.2024.104426",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Zhang, F., Tang, Q., Chen, J., & Han, N. (2023). China public emotion analysis under normalization of COVID-19 epidemic: Using Sina Weibo. Frontiers in Psychology. https://doi.org/10.3389/018123d9f1",
+  "meta": {
+   "title": "China public emotion analysis under normalization of COVID-19 epidemic: Using Sina Weibo",
+   "authors": [
+    "Fa Zhang",
+    "Qian Tang",
+    "Jian Chen",
+    "Na Han"
+   ],
+   "year": 2023,
+   "venue": "Frontiers in Psychology",
+   "doi": "10.3389/fpsyg.2022.1066628",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Adil, A. dkk. (2025) “Menentukan Stok Produk Berdasarkan Pola Pembelian Konsumen dengan Algorithma Apriori,” SATIN - Sains dan Teknologi Informasi. Tersedia pada: https://doi.org/10.33372/evyrtn10.",
+  "meta": {
+   "title": "Menentukan Stok Produk Berdasarkan Pola Pembelian Konsumen dengan Algorithma Apriori",
+   "authors": [
+    "Ahmat Adil",
+    "Ni Wayan Yuli Ariyanti",
+    "Bambang Krismono Triwijoyo"
+   ],
+   "year": 2021,
+   "venue": "SATIN - Sains dan Teknologi Informasi",
+   "doi": "10.33372/evyrtn10",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Saputra, G. dkk. (2021) “SOSIALISASI PENGENALAN KOMPUTER DAN PERANGKAT KOMPUTER DESA DALIHAN NATOLU,” Jurnal Penyuluhan dan Pemberdayaan Masyarakat.",
+  "meta": {
+   "title": "SOSIALISASI PENGENALAN KOMPUTER DAN PERANGKAT KOMPUTER DESA DALIHAN NATOLU",
+   "authors": [
+    "Ganda Saputra",
+    "Yudi Prayogo",
+    "Mulya Rafika"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Penyuluhan dan Pemberdayaan Masyarakat",
+   "doi": "10.59066/jppm.v3i2.654",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Zuliana, V. dkk. (2018) “Analisis Sentimen Program Migrasi TV Digital Menggunakan Algoritma Naive Bayes dengan Chi Square,” Jurnal Informasi dan Komputer. Tersedia pada: https://doi.org/10.35959/jik.v10i2.366.",
+  "meta": {
+   "title": "Analisis Sentimen Program Migrasi TV Digital Menggunakan Algoritma Naive Bayes dengan Chi Square",
+   "authors": [
+    "Virgaria Zuliana",
+    "Garno Garno",
+    "Iqbal Maulana"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Informasi dan Komputer",
+   "doi": "10.35959/jik.v10i2.366",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wibowo, M. I. A. G., & Pratama, I. (2024). Analisis Sentimen Ulasan Aplikasi Identitas Kependudukan Digital Menggunakan Metode Support Vector Machine. Jurnal Teknologi Dan Sistem Informasi Bisnis. https://doi.org/10.47233/jteksis.v6i4.1552",
+  "meta": {
+   "title": "Analisis Sentimen Ulasan Aplikasi Identitas Kependudukan Digital Menggunakan Metode Support Vector Machine",
+   "authors": [
+    "M Ioni Abdurrahman Guno Wibowo",
+    "Irfan Pratama"
+   ],
+   "year": 2024,
+   "venue": "Jurnal Teknologi Dan Sistem Informasi Bisnis",
+   "doi": "10.47233/jteksis.v6i4.1552",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Pratama, Y.W. dkk. (2023) “Deteksi Kecurangan Transaksi Dompet Digital Koperasi Desa dengan Isolation Forest dan Aturan Fuzzy Musiman,” Jurnal Keamanan Keuangan Mikro.",
+  "meta": {
+   "title": "Deteksi Kecurangan Transaksi Dompet Digital Koperasi Desa dengan Isolation Forest dan Aturan Fuzzy Musiman",
+   "authors": [
+    "Yoga W. Pratama",
+    "Citra Anggraeni",
+    "Mahyuddin Daulay"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Keamanan Keuangan Mikro"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Rizki, R., Sawali, M. M. A., & Irfansyah, D. (2023). Utilization of Stabilizer Technology in Lights for Motorcycle. Jurnal Ilmu Komputer. https://doi.org/10.34010/injuratech.v3i1.10075",
+  "meta": {
+   "title": "Utilization of Stabilizer Technology in Lights for Motorcycle",
+   "authors": [
+    "Rahmatullah Rizki",
+    "Muhamad Marsa Althaf Sawali",
+    "Dwi Irfansyah"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Sakti, P. (2022) “Analisis Kemiskinan Digital Indonesia di Era Revolusi Industri 4.0,” Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Analisis Kemiskinan Digital Indonesia di Era Revolusi Industri 4.0",
+   "authors": [
+    "Permata Sakti"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Zhao, S. dkk. (2024) “MAFNet: dual-branch fusion network with multiscale atrous pyramid pooling aggregate contextual features for real-time semantic segmentation,” Complex & Intelligent Systems. Tersedia pada: https://doi.org/10.1007/s40747-024-01428-w.",
+  "meta": {
+   "title": "MAFNet: dual-branch fusion network with multiscale atrous pyramid pooling aggregate contextual features for real-time semantic segmentation",
+   "authors": [
+    "Shan Zhao",
+    "Yunlei Wang",
+    "Xuan Wu",
+    "Fukai Zhang"
+   ],
+   "year": 2024,
+   "venue": "Complex & Intelligent Systems",
+   "doi": "10.1007/s40747-024-01428-w",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Fadiya, R. dkk. (2024) “PENGEMBANGAN VIDEO PEMBELAJARAN ANIMASI MOTION GRAPHIC DENGAN PENDEKATAN HUMANISTIK PADA MATA PELAJARAN MATEMATIKA MATERI BANGUN DATAR DAN BANGUN RUANG UNTUK MENINGKATKAN MOTIVASI SISWA KELAS II DI SD KARTIKA V-6,” Journal of Instructional Technology.",
+  "meta": {
+   "title": "PENGEMBANGAN VIDEO PEMBELAJARAN ANIMASI MOTION GRAPHIC DENGAN PENDEKATAN HUMANISTIK PADA MATA PELAJARAN MATEMATIKA MATERI BANGUN DATAR DAN BANGUN RUANG UNTUK MENINGKATKAN MOTIVASI SISWA KELAS II DI SD KARTIKA V-6",
+   "authors": [
+    "Rina Fadiya",
+    "Susanti Sufyadi",
+    "Adrie Satrio"
+   ],
+   "year": 2024,
+   "venue": "Journal of Instructional Technology",
+   "doi": "10.20527/j-instech.v5i2.12023",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Jiang, J. (2021). An existence theorem on fractional ID-(g, f)-factor-critical covered graphs. AKCE International Journal of Graphs and Combinatorics.",
+  "meta": {
+   "title": "An existence theorem on fractional ID-(g, f)-factor-critical covered graphs",
+   "authors": [
+    "Jiashang Jiang"
+   ],
+   "year": 2021,
+   "venue": "AKCE International Journal of Graphs and Combinatorics",
+   "doi": "10.1080/09728600.2021.2010026",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Gu, Y., Zhao, J., & Zhang, J. (2025). Deep Feature Retrieval With Human‐in‐the‐Loop for Underwater Hull Fouling Segmentation. Electronics Letters. https://doi.org/10.1049/bae1b3e27d",
+  "meta": {
+   "title": "Deep Feature Retrieval With Human‐in‐the‐Loop for Underwater Hull Fouling Segmentation",
+   "authors": [
+    "Yajuan Gu",
+    "Jiawen Zhao",
+    "Junjie Zhang"
+   ],
+   "year": 2025,
+   "venue": "Electronics Letters",
+   "doi": "10.1049/ell2.70332",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Sari, D. I., Dewi, H. R., Nuraini, N., & Faizah, N. (2025). Pendampingan Pembelajaran Visual untuk Meningkatkan Literasi dan Numerasi Anak Usia Dini di PAUD Cahaya Dutam, Bangkalan. Jurnal Pengabdian Masyarakat Indonesia. https://doi.org/10.52436/1.jpmi.3508",
+  "meta": {
+   "title": "Pendampingan Pembelajaran Visual untuk Meningkatkan Literasi dan Numerasi Anak Usia Dini di PAUD Cahaya Dutam, Bangkalan",
+   "authors": [
+    "Dwi Ivayana Sari",
+    "Hefi Rusnita Dewi",
+    "Nuraini Nuraini",
+    "Nur Faizah"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Pengabdian Masyarakat Indonesia",
+   "doi": "10.52436/1.jpmi.3508",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Rosyad, J. S., Handini, O., & Daryono, D. (2025). RANCANG BANGUN SISTEM INFORMASI BERBASIS WEBSITE DI SEKOLAH SMP NEGERI 1 GONDANGREJO. Primary Education Journals (Jurnal Ke-SD-An). https://doi.org/10.36636/primed.v5i2.5550",
+  "meta": {
+   "title": "RANCANG BANGUN SISTEM INFORMASI BERBASIS WEBSITE DI SEKOLAH SMP NEGERI 1 GONDANGREJO",
+   "authors": [
+    "Jimy Sabilal Rosyad",
+    "Oktiana Handini",
+    "Daryono Daryono"
+   ],
+   "year": 2025,
+   "venue": "Primary Education Journals (Jurnal Ke-SD-An)",
+   "doi": "10.36636/primed.v5i2.5550",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Siregar, N. (2023) “Penerapan Algoritma Lzy Untuk Mengkompresi                                     Record Database Mysql,” Jurnal Ilmu Komputer. Tersedia pada: https://doi.org/10.62866/jurikti.v1i2.65.",
+  "meta": {
+   "title": "Penerapan Algoritma Lzy Untuk Mengkompresi                                     Record Database Mysql",
+   "authors": [
+    "Nuraini Siregar"
+   ],
+   "year": 2023,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Domínguez-Serna, F. A., & Garay-Palmett, K. (2022). PENGARUH PENERAPAN MEDIA PEMBELAJARAN BERBASIS AUTOPLAY MEDIA STUDIO 8 TERHADAP AKTIVITAS BELAJAR SISWA DI KELAS X MAS NU SIBUHUAN. JURNAL PhysEdu (PHYSICS EDUCATION). https://doi.org/10.37081/physedu.v4i1.2966",
+  "meta": {
+   "title": "PENGARUH PENERAPAN MEDIA PEMBELAJARAN BERBASIS AUTOPLAY MEDIA STUDIO 8 TERHADAP AKTIVITAS BELAJAR SISWA DI KELAS X MAS NU SIBUHUAN",
+   "authors": [
+    "Hanifah Nur Nasution",
+    "Erma Wita",
+    "Rabiyatul Adawiyah Siregar",
+    "Supina Siregar"
+   ],
+   "year": 2022,
+   "venue": "JURNAL PhysEdu (PHYSICS EDUCATION)",
+   "doi": "10.37081/physedu.v4i1.2966",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Suryadi, D., Daryati, M. E., & Indrawati, I. (2021). Pelatihan Pelaksanaan Strategi Membaca Read Aloud Oleh Guru Tk Witri I Kota Bengkulu. Publikasi Pendidikan. https://doi.org/10.26858/publikan.v11i1.16409",
+  "meta": {
+   "title": "Pelatihan Pelaksanaan Strategi Membaca Read Aloud Oleh Guru Tk Witri I Kota Bengkulu",
+   "authors": [
+    "Didik Suryadi",
+    "Melia Eka Daryati",
+    "Indrawati Indrawati"
+   ],
+   "year": 2021,
+   "venue": "Publikasi Pendidikan",
+   "doi": "10.26858/publikan.v11i1.16409",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Thaibur, T. dkk. (2022) “ANALISIS KEMAMPUAN TENAGA PENDIDIK DALAM PEMAKAIAN SOFTWARE OFFICE DI LINGKUNGAN FAKULTAS TARBIYAH DAN KEPENDIDIKAN,” JURNAL HURRIAH Jurnal Evaluasi Pendidikan dan Penelitian.",
+  "meta": {
+   "title": "ANALISIS KEMAMPUAN TENAGA PENDIDIK DALAM PEMAKAIAN SOFTWARE OFFICE DI LINGKUNGAN FAKULTAS TARBIYAH DAN KEPENDIDIKAN",
+   "authors": [
+    "Tsara Thaibur",
+    "Hazrullah Hazrullah",
+    "B Basrul"
+   ],
+   "year": 2022,
+   "venue": "JURNAL HURRIAH Jurnal Evaluasi Pendidikan dan Penelitian",
+   "doi": "10.56806/jh.v3i4.104",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Ezeama, A.O. dkk. (2021) “Microelectronics Design in Educational Apps for Technical Education Learning in Pandemic Eras,” Nigerian Journal of Technology. Tersedia pada: https://doi.org/10.4314/njt.v40i1.13.",
+  "meta": {
+   "title": "Microelectronics Design in Educational Apps for Technical Education Learning in Pandemic Eras",
+   "authors": [
+    "Anthony O. Ezeama",
+    "P.I. Obe",
+    "R.N. Ezeama",
+    "Victor Ikechukwu Oguejiofor"
+   ],
+   "year": 2021,
+   "venue": "Nigerian Journal of Technology",
+   "doi": "10.4314/njt.v40i1.13",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Gunawan, I. K., & Sulistyowati, E. (2021). Klasifikasi Citra Batik Tulis Lasem Menggunakan EfficientNet dengan Augmentasi Motif Parang Sintetis. Jurnal Visi Komputer Nusantara. https://doi.org/10.42826/a1251",
+  "meta": {
+   "title": "Klasifikasi Citra Batik Tulis Lasem Menggunakan EfficientNet dengan Augmentasi Motif Parang Sintetis",
+   "authors": [
+    "I Ketut Gunawan",
+    "Endang Sulistyowati"
+   ],
+   "year": 2021,
+   "venue": "Jurnal Visi Komputer Nusantara"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Andira, V. A., Fitria, F., Hartono, L., & Sakila, R. (2025). Implementasi Association Rule Mining pada Penentuan Pola Tata Letak Barang Menggunakan Metode Frequent Pattern Growth. Journal of Big Data Analytic and Artificial Intelligence. https://doi.org/10.71302/jbidai.v8i2.72",
+  "meta": {
+   "title": "Implementasi Association Rule Mining pada Penentuan Pola Tata Letak Barang Menggunakan Metode Frequent Pattern Growth",
+   "authors": [
+    "Virra Ayu Andira",
+    "Fitria Fitria",
+    "Lies Hartono",
+    "Risma Sakila"
+   ],
+   "year": 2025,
+   "venue": "Journal of Big Data Analytic and Artificial Intelligence",
+   "doi": "10.71302/jbidai.v8i2.72",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Zuters, J., & Leonova, V. (2024). Adaptive Vocabulary Construction for Frustration Intensity Modelling in Customer Support Dialog Texts. International Journal of Computer Science and Information Technology.",
+  "meta": {
+   "title": "Adaptive Vocabulary Construction for Frustration Intensity Modelling in Customer Support Dialog Texts",
+   "authors": [
+    "Jānis Zuters",
+    "Viktorija Leonova"
+   ],
+   "year": 2020,
+   "venue": "International Journal of Computer Science and Information Technology",
+   "doi": "10.5121/ijcsit.2020.12601",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Srivastava, A. (2019). A Comparative Analysis of Software Development Models Based On Various Parameters. International Journal of Computer Sciences and Engineering. https://doi.org/10.26438/ijcse/v7i9.1721",
+  "meta": {
+   "title": "A Comparative Analysis of Software Development Models Based On Various Parameters",
+   "authors": [
+    "Archana Srivastava"
+   ],
+   "year": 2019,
+   "venue": "International Journal of Computer Sciences and Engineering",
+   "doi": "10.26438/ijcse/v7i9.1721",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Kurniawan, H. (2023). Sistem Informasi Koran DPRD Kalimantan Timur Berbasis Web. Journal Of Informatics And Busisnes. https://doi.org/10.47233/b925e0c216",
+  "meta": {
+   "title": "Sistem Informasi Koran DPRD Kalimantan Timur Berbasis Web",
+   "authors": [
+    "Hery Kurniawan"
+   ],
+   "year": 2023,
+   "venue": "Journal Of Informatics And Busisnes",
+   "doi": "10.47233/jibs.v1i3.477",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wen, B., Li, Y., & Bresler, Y. (2020). Image Recovery via Transform Learning and Low-Rank Modeling: The Power of Complementary Regularizers. IEEE Transactions on Image Processing. https://doi.org/10.1109/tip.2020.2980753",
+  "meta": {
+   "title": "Image Recovery via Transform Learning and Low-Rank Modeling: The Power of Complementary Regularizers",
+   "authors": [
+    "Bihan Wen",
+    "Yanjun Li",
+    "Yoram Bresler"
+   ],
+   "year": 2020,
+   "venue": "IEEE Transactions on Image Processing",
+   "doi": "10.1109/tip.2020.2980753",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Mansyur, A. (2024). Pelaksana Teknis Perpustakaan Pascasarjana Universitas Islam Negeri Alauddin Makassar. Bata Ilyas Educational Management Review.",
+  "meta": {
+   "title": "Pelaksana Teknis Perpustakaan Pascasarjana Universitas Islam Negeri Alauddin Makassar",
+   "authors": [
+    "Andi Mansyur"
+   ],
+   "year": 2024,
+   "venue": "Bata Ilyas Educational Management Review",
+   "doi": "10.37531/biemr.v4i1.1650",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Cahyadi, R., & Damayanti, A. (2022). OPTIMASI NILAI K PADA KNN DENGAN INTEGRASI SIMULATED ANNEALING DAN HILL CLIMBING UNTUK PREDIKSI HARGA RUMAH. Rabit Jurnal Teknologi dan Sistem Informasi Univrab. https://doi.org/10.36341/rabit.v10i2.6214",
+  "meta": {
+   "title": "OPTIMASI NILAI K PADA KNN DENGAN INTEGRASI SIMULATED ANNEALING DAN HILL CLIMBING UNTUK PREDIKSI HARGA RUMAH",
+   "authors": [
+    "Rudy Cahyadi",
+    "Ariesta Damayanti"
+   ],
+   "year": 2025,
+   "venue": "Rabit Jurnal Teknologi dan Sistem Informasi Univrab",
+   "doi": "10.36341/rabit.v10i2.6214",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Oktavianus, A., Iskandar, R., & Afdhal, V. E. (2022). Perancangan Media Promosi Batik Mimi di Kota Solok dalam Bentuk Audio Visual. Judikatif Jurnal Desain Komunikasi Kreatif.",
+  "meta": {
+   "title": "Perancangan Media Promosi Batik Mimi di Kota Solok dalam Bentuk Audio Visual",
+   "authors": [
+    "Afif Oktavianus",
+    "Riki Iskandar",
+    "Vernanda Em Afdhal"
+   ],
+   "year": 2022,
+   "venue": "Judikatif Jurnal Desain Komunikasi Kreatif",
+   "doi": "10.35134/judikatif.v2i1.33",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Laksono, A.C. dan Prayudi, Y. (2021) “Threat Modeling Menggunakan Pendekatan STRIDE dan DREAD untuk Mengetahui Risiko dan Mitigasi Keamanan pada Sistem Informasi Akademik,” JUSTINDO (Jurnal Sistem dan Teknologi Informasi Indonesia). Tersedia pada: https://doi.org/10.32528/ef97433226.",
+  "meta": {
+   "title": "Threat Modeling Menggunakan Pendekatan STRIDE dan DREAD untuk Mengetahui Risiko dan Mitigasi Keamanan pada Sistem Informasi Akademik",
+   "authors": [
+    "Azis Catur Laksono",
+    "Yudi Prayudi"
+   ],
+   "year": 2021,
+   "venue": "JUSTINDO (Jurnal Sistem dan Teknologi Informasi Indonesia)",
+   "doi": "10.32528/justindo.v6i1.3944",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Novfirman, N., & Aulia, R. (2024). STUDY ON THE QUALITY OF SERVICE OF THE MOBILE-BASED JKN APPLICATION: A SENTIMENT ANALYSIS APPROACH. JIPI (Jurnal Ilmiah Penelitian dan Pembelajaran Informatika).",
+  "meta": {
+   "title": "STUDY ON THE QUALITY OF SERVICE OF THE MOBILE-BASED JKN APPLICATION: A SENTIMENT ANALYSIS APPROACH",
+   "authors": [
+    "Muhammad Farid Wajdi",
+    "Dedi I. Inan",
+    "Ratna Juita",
+    "Marlinda Sanglise"
+   ],
+   "year": 2024,
+   "venue": "JIPI (Jurnal Ilmiah Penelitian dan Pembelajaran Informatika)",
+   "doi": "10.29100/jipi.v9i3.5757",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Zolotariov, D. (2021) “PENINGKATAN PENGENALAN HURUF MELALUI MEDIA PEMBELAJARAN ISPRING PRESENTER PADA KELOMPOK BERMAIN MIFTAHUL ULUM,” Dar el-Ilmi jurnal studi keagamaan pendidikan dan humaniora.",
+  "meta": {
+   "title": "PENINGKATAN PENGENALAN HURUF MELALUI MEDIA PEMBELAJARAN ISPRING PRESENTER PADA KELOMPOK BERMAIN MIFTAHUL ULUM",
+   "authors": [
+    "Faizatul Widat",
+    "Nurjannah Nurjannah"
+   ],
+   "year": 2021,
+   "venue": "Dar el-Ilmi jurnal studi keagamaan pendidikan dan humaniora",
+   "doi": "10.52166/darelilmi.v8i1.2430",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Putra, D. S. (2022). Rancang Bangun Aplikasi PHP (Pertanian Hasil Penjualan) Sidomakmur Berbasis Web menggunakan Metode Prototype. Jurnal Repositor. https://doi.org/10.22219/repositor.v4i4.1356",
+  "meta": {
+   "title": "Rancang Bangun Aplikasi PHP (Pertanian Hasil Penjualan) Sidomakmur Berbasis Web menggunakan Metode Prototype",
+   "authors": [
+    "Dwi Sandy Putra"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Repositor",
+   "doi": "10.22219/repositor.v4i4.1356",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Jullfikar, R. dkk. (2025) “Pengembangan Chatbot Menggunakan BERT untuk Pengelolaan Komunikasi Beasiswa Ikatan Alumni Universitas Pendidikan Indonesia,” Digital Transformation Technology.",
+  "meta": {
+   "title": "Pengembangan Chatbot Menggunakan BERT untuk Pengelolaan Komunikasi Beasiswa Ikatan Alumni Universitas Pendidikan Indonesia",
+   "authors": [
+    "Raisyad Jullfikar",
+    "Rani Megasari",
+    "Rosa Ariani Sukamto"
+   ],
+   "year": 2025,
+   "venue": "Digital Transformation Technology",
+   "doi": "10.47709/digitech.v5i1.6367",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Feng, B., Li, G., Luo, Z. T., & Lu, W. (2023). Multilevel histogram shape‐based image watermarking invariant to geometric attacks. IET Image Processing.",
+  "meta": {
+   "title": "Multilevel histogram shape‐based image watermarking invariant to geometric attacks",
+   "authors": [
+    "Bingwen Feng",
+    "Guofeng Li",
+    "Zhi-Quan Tom Luo",
+    "Wei Lu"
+   ],
+   "year": 2023,
+   "venue": "IET Image Processing",
+   "doi": "10.1049/ipr2.12776",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Maf'ulla, H.A. (2022) “Perancangan Sistem Absensi Pegawai Kantoran Secara Online pada Website Berbasis HTML dan CSS,” Blend Sains Jurnal Teknik. Tersedia pada: https://doi.org/10.56211/blendsains.v1i1.66.",
+  "meta": {
+   "title": "Perancangan Sistem Absensi Pegawai Kantoran Secara Online pada Website Berbasis HTML dan CSS",
+   "authors": [
+    "Indah Purnama Sari",
+    "Azzahrah Azzahrah",
+    "Isnaini Faiz Qathrunada",
+    "Nurkumala Lubis"
+   ],
+   "year": 2022,
+   "venue": "Blend Sains Jurnal Teknik",
+   "doi": "10.56211/blendsains.v1i1.66",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Novfirman, N., & Aulia, R. (2024). Reputation-Driven Asynchronous Federated Learning for Enhanced Trajectory Prediction With Blockchain. IEEE Internet of Things Journal. https://doi.org/10.1109/jiot.2024.3495693",
+  "meta": {
+   "title": "Reputation-Driven Asynchronous Federated Learning for Enhanced Trajectory Prediction With Blockchain",
+   "authors": [
+    "Weiliang Chen",
+    "Li Jia",
+    "Yang Zhou",
+    "Qianqian Ren"
+   ],
+   "year": 2024,
+   "venue": "IEEE Internet of Things Journal",
+   "doi": "10.1109/jiot.2024.3495693",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Jia, Y., Liu, J., Chen, L., & Zhao, T. (2024). Pengembangan Aplikasi ASPERDIK (Asesmen Perkembangan Peserta Didik) Jenjang SMP Berbasis Spreadsheet Dalam Penyusunan Program Layanan BK Komprehensif. Emphaty Cons - Journal of Guidance and Counseling. https://doi.org/10.31331/emp.v6i1.3400",
+  "meta": {
+   "title": "Pengembangan Aplikasi ASPERDIK (Asesmen Perkembangan Peserta Didik) Jenjang SMP Berbasis Spreadsheet Dalam Penyusunan Program Layanan BK Komprehensif",
+   "authors": [
+    "Aditya Dwi Kurniawan",
+    "Widya Novi Angga Dewi",
+    "YM Indarwati"
+   ],
+   "year": 2024,
+   "venue": "Emphaty Cons - Journal of Guidance and Counseling",
+   "doi": "10.31331/emp.v6i1.3400",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "(PhD), P. I. O., & Mbanefo, K. I. (2020). Effects of Videotaped Instructional Method on Students Academic Achievement in Basic Technology in Secondary Schools in Anambra State. World Journal of Vocational Education and Training. https://doi.org/10.18488/journal.119.2020.22.102.108",
+  "meta": {
+   "title": "Effects of Videotaped Instructional Method on Students Academic Achievement in Basic Technology in Secondary Schools in Anambra State",
+   "authors": [
+    "Peter Izuoba Okoye (PhD)",
+    "Kelvin I. Mbanefo"
+   ],
+   "year": 2020,
+   "venue": "World Journal of Vocational Education and Training",
+   "doi": "10.18488/journal.119.2020.22.102.108",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Sugandi, Z. A. W., Nugraha, Y. A., Anam, S. N., & Darmayanti, I. (2022). Implementasi Konsep Pemrograman Berorientasi Objek Dalam Aplikasi Pembukuan Keuangan Penjual Jus Buah Menggunakan Bahasa Pemrograman Java. Jurnal Ilmiah IT CIDA. https://doi.org/10.55635/jic.v8i1.154",
+  "meta": {
+   "title": "Implementasi Konsep Pemrograman Berorientasi Objek Dalam Aplikasi Pembukuan Keuangan Penjual Jus Buah Menggunakan Bahasa Pemrograman Java",
+   "authors": [
+    "Zain Arif Wildan Sugandi",
+    "Yoga Adi Nugraha",
+    "Syaiful Nurul Anam",
+    "Irma Darmayanti"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Ilmiah IT CIDA",
+   "doi": "10.55635/jic.v8i1.154",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Zhao, Y. (2022). Interaction Design System for Artificial Intelligence User Interfaces Based on UML Extension Mechanisms. Mobile Information Systems.",
+  "meta": {
+   "title": "Interaction Design System for Artificial Intelligence User Interfaces Based on UML Extension Mechanisms",
+   "authors": [
+    "Yiyi Zhao"
+   ],
+   "year": 2022,
+   "venue": "Mobile Information Systems",
+   "doi": "10.1155/2022/3534167",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Wang, T., Zheng, H. W., Xiao, Z., & Tao, T. (2025). Reconstruction of Security Patterns Using Cross-Spectral Constraints in Smartphones. Applied Sciences. https://doi.org/10.3390/396dffc091",
+  "meta": {
+   "title": "Reconstruction of Security Patterns Using Cross-Spectral Constraints in Smartphones",
+   "authors": [
+    "T. Wang",
+    "Hong Wei Zheng",
+    "Zhenhua Xiao",
+    "Tao Tao"
+   ],
+   "year": 2025,
+   "venue": "Applied Sciences",
+   "doi": "10.3390/app151810085",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Hutasoit, F., & Saragih, E. L. L. (2022). Peningkatan Keterampilan Membaca Teks Berita Pada Siswa Kelas Viii Smp Negeri 2. Jurnal Syntax Fusion. https://doi.org/10.54543/fusion.v2i03.178",
+  "meta": {
+   "title": "Peningkatan Keterampilan Membaca Teks Berita Pada Siswa Kelas Viii Smp Negeri 2",
+   "authors": [
+    "Febriyanti Hutasoit",
+    "Elza Leyli Lisnora Saragih"
+   ],
+   "year": 2022,
+   "venue": "Jurnal Syntax Fusion",
+   "doi": "10.54543/fusion.v2i03.178",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Gao, Y. dkk. (2022) “Interpretable deep learning models for hourly solar radiation prediction based on graph neural network and attention,” Applied Energy. Tersedia pada: https://doi.org/10.1016/j.apenergy.2022.119288.",
+  "meta": {
+   "title": "Interpretable deep learning models for hourly solar radiation prediction based on graph neural network and attention",
+   "authors": [
+    "Yuan Gao",
+    "Shohei Miyata",
+    "Yasunori Akashi"
+   ],
+   "year": 2022,
+   "venue": "Applied Energy",
+   "doi": "10.1016/j.apenergy.2022.119288",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "GINTING, M., H, N. A., & Samosir, H. (2023). RANCANG BANGUN APLIKASI PENGOLAHAN TAGIHAN REKENING TANGKI AIR BERBASIS WEB (STUDI KASUS: PADA PDAM TIRTA PRABUJAYA KOTA PRABUMULIH). Jurnal RESTIKOM Riset Teknik Informatika dan Komputer. https://doi.org/10.52005/restikom.v5i2.161",
+  "meta": {
+   "title": "RANCANG BANGUN APLIKASI PENGOLAHAN TAGIHAN REKENING TANGKI AIR BERBASIS WEB (STUDI KASUS: PADA PDAM TIRTA PRABUJAYA KOTA PRABUMULIH)",
+   "authors": [
+    "MUTIARANI GINTING",
+    "Nur Aini H",
+    "Hepnyi Samosir"
+   ],
+   "year": 2023,
+   "venue": "Jurnal RESTIKOM Riset Teknik Informatika dan Komputer",
+   "doi": "10.52005/restikom.v5i2.161",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Bernard, A. V. (2022). Brain connectivity meets reservoir computing. PLoS Computational Biology.",
+  "meta": {
+   "title": "Brain connectivity meets reservoir computing",
+   "authors": [
+    "Fabrizio Damicelli",
+    "Claus Christian Hilgetag",
+    "Alexandros Goulas"
+   ],
+   "year": 2022,
+   "venue": "PLoS Computational Biology",
+   "doi": "10.1371/journal.pcbi.1010639",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Akihary, W., Maruanaya, R. F., Lestuny, C., & Maruanaya, S. P. (2023). The YouTube-assisted discovery learning model: Improving students’ cognitive learning outcomes and critical thinking. Journal of Education and Learning (EduLearn). https://doi.org/10.11591/edulearn.v17i4.20851",
+  "meta": {
+   "title": "The YouTube-assisted discovery learning model: Improving students’ cognitive learning outcomes and critical thinking",
+   "authors": [
+    "Wilma Akihary",
+    "Rita Fransina Maruanaya",
+    "Carolina Lestuny",
+    "Seplinovye Penina Maruanaya"
+   ],
+   "year": 2023,
+   "venue": "Journal of Education and Learning (EduLearn)",
+   "doi": "10.11591/edulearn.v17i4.20851",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Okonkwo, C. dan Lindqvist, A. (2021) “Zero-Knowledge Proofs of Fairness for Gradient-Boosted Recommender Cascades in Municipal Library Systems,” Journal of Civic Recommender Systems.",
+  "meta": {
+   "title": "Zero-Knowledge Proofs of Fairness for Gradient-Boosted Recommender Cascades in Municipal Library Systems",
+   "authors": [
+    "Chidi Okonkwo",
+    "Astrid Lindqvist"
+   ],
+   "year": 2021,
+   "venue": "Journal of Civic Recommender Systems"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Wang, Y. dkk. (2019) “GCFA: Generative class feature fusion with agent attention for medical text classification,” Information Fusion.",
+  "meta": {
+   "title": "GCFA: Generative class feature fusion with agent attention for medical text classification",
+   "authors": [
+    "Ye Wang",
+    "Qingyan Wang",
+    "Hong Qing Yu",
+    "Jiang Xie"
+   ],
+   "year": 2025,
+   "venue": "Information Fusion",
+   "doi": "10.1016/j.inffus.2025.103639",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_tahun",
+  "expected": "halu",
+  "text": "Majeed, A. (2025). Effective Handling of COVID-19 Pandemic: Experiences and Lessons from the Perspective of South Korea. COVID.",
+  "meta": {
+   "title": "Effective Handling of COVID-19 Pandemic: Experiences and Lessons from the Perspective of South Korea",
+   "authors": [
+    "Abdul Majeed"
+   ],
+   "year": 2021,
+   "venue": "COVID",
+   "doi": "10.3390/covid1010026",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Widodo, M. S. (2023). Mengoptimalkan Fungsi Payment Gateway Midtrans pada Website Coffee Shop Melalui Penggunaan Metode Prototype pada Proses Pengembangan. JRST (Jurnal Riset dan Sain Teknologi). https://doi.org/10.30595/jrst.v7i2.16964",
+  "meta": {
+   "title": "Mengoptimalkan Fungsi Payment Gateway Midtrans pada Website Coffee Shop Melalui Penggunaan Metode Prototype pada Proses Pengembangan",
+   "authors": [
+    "Budi Setiawan",
+    "Bintang Selviana",
+    "Agung Susilo Yuda Irawan"
+   ],
+   "year": 2023,
+   "venue": "JRST (Jurnal Riset dan Sain Teknologi)",
+   "doi": "10.30595/jrst.v7i2.16964",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Wardani, O.P. dan Turahmat, T. (2024) “Persepsi Mahasiswa terhadap Penggunaan Augmented Reality (Ar) sebagai Media Ajar Bahasa Indonesia,” Sasindo. Tersedia pada: https://doi.org/10.26877/sasindo.v12i1.18383.",
+  "meta": {
+   "title": "Persepsi Mahasiswa terhadap Penggunaan Augmented Reality (Ar) sebagai Media Ajar Bahasa Indonesia",
+   "authors": [
+    "Oktarina Puspita Wardani",
+    "Turahmat Turahmat"
+   ],
+   "year": 2024,
+   "venue": "Sasindo",
+   "doi": "10.26877/sasindo.v12i1.18383",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "palsu_doi",
+  "expected": "halu",
+  "text": "Kaur, S.P. dkk. (2022) “Optimizing Fast Fourier Transform (FFT) Image Compression using Intelligent Water Drop (IWD) Algorithm.,” International Journal of Interactive Multimedia and Artificial Intelligence. Tersedia pada: https://doi.org/10.9781/30621aa382.",
+  "meta": {
+   "title": "Optimizing Fast Fourier Transform (FFT) Image Compression using Intelligent Water Drop (IWD) Algorithm.",
+   "authors": [
+    "Surinder Pal Kaur",
+    "Gopal Chaudhary",
+    "Javalkar Dinesh Kumar",
+    "Manu S. Pillai"
+   ],
+   "year": 2022,
+   "venue": "International Journal of Interactive Multimedia and Artificial Intelligence",
+   "doi": "10.9781/ijimai.2022.01.004",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Zhou, M. (2020). Feature Extraction of Human Motion Video Based on Virtual Reality Technology. IEEE Access.",
+  "meta": {
+   "title": "Feature Extraction of Human Motion Video Based on Virtual Reality Technology",
+   "authors": [
+    "Mimi Zhou"
+   ],
+   "year": 2020,
+   "venue": "IEEE Access",
+   "doi": "10.1109/access.2020.3019233",
+   "lang": "en"
+  }
+ },
+ {
+  "group": "palsu_penulis",
+  "expected": "halu",
+  "text": "Silalahi, B. P., Novanto, M., & Supriyo, P. T. (2020). Pengembangan Learning Object pada Training Basic di PT.Circleka Indonesia Utama. Jurnal Pembelajaran Inovatif. https://doi.org/10.21009/jpi.031.05",
+  "meta": {
+   "title": "Pengembangan Learning Object pada Training Basic di PT.Circleka Indonesia Utama",
+   "authors": [
+    "Rafii Ramandika",
+    "Mulyadi, M. Pd",
+    "Kunto Imbar Nursetyo"
+   ],
+   "year": 2020,
+   "venue": "Jurnal Pembelajaran Inovatif",
+   "doi": "10.21009/jpi.031.05",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Silaban, P. O. J., Jalianery, J., Setiawan, R., & Rofiah, S. (2025). Peningkatan Minat Literasi Siswa pada Era Perkembangan Zaman di Sekolah Dasar Danau Sadar. Jurnal Pengabdian Masyarakat Bangsa. https://doi.org/10.59837/jpmba.v3i7.2979",
+  "meta": {
+   "title": "Peningkatan Minat Literasi Siswa pada Era Perkembangan Zaman di Sekolah Dasar Danau Sadar",
+   "authors": [
+    "Pangeran O. J Silaban",
+    "Joanita Jalianery",
+    "Rendy Setiawan",
+    "Siti Rofiah"
+   ],
+   "year": 2025,
+   "venue": "Jurnal Pengabdian Masyarakat Bangsa",
+   "doi": "10.59837/jpmba.v3i7.2979",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_eksternal",
+  "expected": "valid",
+  "text": "Saleha, S.A. dkk. (2023) “OPTIMALISASI JARINGAN WIRELESS MENGGUNAKAN METODE PENGEMBANGAN NETWORK DEVELOPMENT LIFE CYCLE (NDLC),” AnoaTIK Jurnal Teknologi Informasi dan Komputer.",
+  "meta": {
+   "title": "OPTIMALISASI JARINGAN WIRELESS MENGGUNAKAN METODE PENGEMBANGAN NETWORK DEVELOPMENT LIFE CYCLE (NDLC)",
+   "authors": [
+    "Siti Amalia Saleha",
+    "La Ode Saidi",
+    "Subardin Subardin"
+   ],
+   "year": 2023,
+   "venue": "AnoaTIK Jurnal Teknologi Informasi dan Komputer",
+   "doi": "10.33772/anoatik.v1i1.1",
+   "lang": "id"
+  }
+ },
+ {
+  "group": "real_dataset",
+  "expected": "valid",
+  "text": "Kaelbling, L. P. (1994). Associative Reinforcement Learning: Functions in k-DNF. Jurnal Ilmu Komputer.",
+  "meta": {
+   "title": "Associative Reinforcement Learning: Functions in k-DNF",
+   "authors": [
+    "Leslie Pack Kaelbling"
+   ],
+   "year": 1994,
+   "venue": "Jurnal Ilmu Komputer"
+  }
+ },
+ {
+  "group": "palsu_karangan",
+  "expected": "halu",
+  "text": "Simanjuntak, E. D., & Yuliana, T. (2020). Penerapan Algoritma Ant Colony pada Penentuan Rute Pengantaran Air Galon Isi Ulang di Perumahan Padat. Jurnal Optimasi Logistik Lokal. https://doi.org/10.38204/d6614",
+  "meta": {
+   "title": "Penerapan Algoritma Ant Colony pada Penentuan Rute Pengantaran Air Galon Isi Ulang di Perumahan Padat",
+   "authors": [
+    "Eko D. Simanjuntak",
+    "Tuti Yuliana"
+   ],
+   "year": 2020,
+   "venue": "Jurnal Optimasi Logistik Lokal"
+  }
+ }
+]

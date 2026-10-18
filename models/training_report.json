@@ -1,0 +1,193 @@
+{
+  "trained_at": "2026-10-14T09:12:16+00:00",
+  "best_model": "LogisticRegression",
+  "best_params": {
+    "clf__C": 0.003
+  },
+  "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "feature_dim": 768,
+  "features": "judul(384) + author(384), murni teks",
+  "dataset": {
+    "rows": 6743,
+    "valid": 5993,
+    "halu": 750,
+    "initials_augmentation_rate": 0.35,
+    "test_size": 0.2
+  },
+  "cv_folds": 5,
+  "model_comparison": [
+    {
+      "model": "LogisticRegression",
+      "best_params": "{\"clf__C\": 0.003}",
+      "cv_roc_auc": 0.7416926048721303,
+      "cv_roc_auc_std": 0.013883736177074571,
+      "cv_f1_macro": 0.5797649466372847,
+      "cv_ap_halu": 0.2902907822808615,
+      "test_roc_auc": 0.7356519321656936,
+      "test_ap_halu": 0.2546916835853725,
+      "test_f1_halu": 0.32798573975044565,
+      "test_f1_macro": 0.5757851019762992,
+      "fit_seconds": 4.9
+    },
+    {
+      "model": "RandomForest",
+      "best_params": "{\"min_samples_leaf\": 5}",
+      "cv_roc_auc": 0.7161488241274292,
+      "cv_roc_auc_std": 0.020489777408111084,
+      "cv_f1_macro": 0.4705535879198953,
+      "cv_ap_halu": 0.24315266118903806,
+      "test_roc_auc": 0.7268112315818738,
+      "test_ap_halu": 0.22519095935054367,
+      "test_f1_halu": 0.0,
+      "test_f1_macro": 0.4705651491365777,
+      "fit_seconds": 50.7
+    },
+    {
+      "model": "XGBoost",
+      "best_params": "{\"max_depth\": 3, \"n_estimators\": 500}",
+      "cv_roc_auc": 0.7353421709722854,
+      "cv_roc_auc_std": 0.018896114334704475,
+      "cv_f1_macro": 0.6141762779954807,
+      "cv_ap_halu": 0.2861225275677011,
+      "test_roc_auc": 0.740583819849875,
+      "test_ap_halu": 0.27161347743785,
+      "test_f1_halu": 0.2920634920634921,
+      "test_f1_macro": 0.599241985226039,
+      "fit_seconds": 220.3
+    }
+  ],
+  "holdout_calibrated": {
+    "roc_auc": 0.7356519321656936,
+    "ap_halu": 0.2546916835853725,
+    "accuracy": 0.6590066716085989,
+    "balanced_accuracy": 0.6856880733944954,
+    "mcc": 0.2393737025076632,
+    "precision_halu": 0.20532319391634982,
+    "recall_halu": 0.72,
+    "f1_halu": 0.31952662721893493,
+    "precision_valid": 0.9489671931956257,
+    "recall_valid": 0.6513761467889908,
+    "f1_valid": 0.7725024727992087,
+    "f1_macro": 0.5460145500090718,
+    "confusion": {
+      "halu_dideteksi_halu": 108,
+      "halu_lolos_sebagai_valid": 42,
+      "valid_salah_dituduh_halu": 418,
+      "valid_dikenali_valid": 781
+    },
+    "mean_p_valid_pada_valid": 0.5764385241044384,
+    "mean_p_valid_pada_halu": 0.4129406595909597
+  },
+  "holdout_uncalibrated": {
+    "roc_auc": 0.7356519321656936,
+    "ap_halu": 0.2546916835853725,
+    "accuracy": 0.720533728687917,
+    "balanced_accuracy": 0.6736391437308868,
+    "mcc": 0.23719772653825769,
+    "precision_halu": 0.22384428223844283,
+    "recall_halu": 0.6133333333333333,
+    "f1_halu": 0.32798573975044565,
+    "precision_valid": 0.9381663113006397,
+    "recall_valid": 0.7339449541284404,
+    "f1_valid": 0.8235844642021526,
+    "f1_macro": 0.5757851019762992,
+    "confusion": {
+      "halu_dideteksi_halu": 92,
+      "halu_lolos_sebagai_valid": 58,
+      "valid_salah_dituduh_halu": 319,
+      "valid_dikenali_valid": 880
+    },
+    "mean_p_valid_pada_valid": 0.6351973414421082,
+    "mean_p_valid_pada_halu": 0.4480592906475067
+  },
+  "ablation_holdout": {
+    "judul_saja": {
+      "roc_auc": 0.7367528495968863,
+      "ap_halu": 0.26409227000032875,
+      "accuracy": 0.6827279466271312,
+      "balanced_accuracy": 0.6786182930219627,
+      "mcc": 0.23457441640028923,
+      "precision_halu": 0.21041666666666667,
+      "recall_halu": 0.6733333333333333,
+      "f1_halu": 0.32063492063492066,
+      "precision_valid": 0.9436133486766398,
+      "recall_valid": 0.6839032527105922,
+      "f1_valid": 0.793036750483559,
+      "f1_macro": 0.5568358355592399,
+      "confusion": {
+        "halu_dideteksi_halu": 101,
+        "halu_lolos_sebagai_valid": 49,
+        "valid_salah_dituduh_halu": 379,
+        "valid_dikenali_valid": 820
+      },
+      "mean_p_valid_pada_valid": 0.6048948168754578,
+      "mean_p_valid_pada_halu": 0.42744868993759155
+    },
+    "author_saja": {
+      "roc_auc": 0.5731554072838476,
+      "ap_halu": 0.13358440851047476,
+      "accuracy": 0.6278724981467754,
+      "balanced_accuracy": 0.5573533500139005,
+      "mcc": 0.07491538996695697,
+      "precision_halu": 0.14227642276422764,
+      "recall_halu": 0.4666666666666667,
+      "f1_halu": 0.21806853582554517,
+      "precision_valid": 0.9066511085180864,
+      "recall_valid": 0.6480400333611342,
+      "f1_valid": 0.7558365758754864,
+      "f1_macro": 0.4869525558505158,
+      "confusion": {
+        "halu_dideteksi_halu": 70,
+        "halu_lolos_sebagai_valid": 80,
+        "valid_salah_dituduh_halu": 422,
+        "valid_dikenali_valid": 777
+      },
+      "mean_p_valid_pada_valid": 0.5456468462944031,
+      "mean_p_valid_pada_halu": 0.5145915746688843
+    },
+    "judul+author": {
+      "roc_auc": 0.7356519321656936,
+      "ap_halu": 0.2546916835853725,
+      "accuracy": 0.720533728687917,
+      "balanced_accuracy": 0.6736391437308868,
+      "mcc": 0.23719772653825769,
+      "precision_halu": 0.22384428223844283,
+      "recall_halu": 0.6133333333333333,
+      "f1_halu": 0.32798573975044565,
+      "precision_valid": 0.9381663113006397,
+      "recall_valid": 0.7339449541284404,
+      "f1_valid": 0.8235844642021526,
+      "f1_macro": 0.5757851019762992,
+      "confusion": {
+        "halu_dideteksi_halu": 92,
+        "halu_lolos_sebagai_valid": 58,
+        "valid_salah_dituduh_halu": 319,
+        "valid_dikenali_valid": 880
+      },
+      "mean_p_valid_pada_valid": 0.6351973414421082,
+      "mean_p_valid_pada_halu": 0.4480592906475067
+    }
+  },
+  "domain_filter": {
+    "knn_percentile": 25,
+    "corpus_size": 5993,
+    "loo_false_out_of_scope": 0.06691139662940097,
+    "sanity_non_cs_flagged": 1.0,
+    "sanity_cs_flagged": 0.0,
+    "knn_threshold": 0.6090726256370544
+  },
+  "versions": {
+    "python": "3.13.5",
+    "sklearn": "1.9.1",
+    "xgboost": "3.4.1",
+    "numpy": "2.5.4",
+    "pandas": "3.0.6"
+  },
+  "seed": 42,
+  "quick": false,
+  "catatan": [
+    "Probabilitas dikalibrasi (Platt, bobot kelas seimbang): P(valid)=0.5 adalah batas keputusan prior seimbang.",
+    "Dataset halusinasi bersifat sintetis; skor holdout mengukur kemampuan membedakan dataset ini, bukan halusinasi LLM di dunia nyata. Model tidak dapat memeriksa keberadaan sebuah makalah - itu tugas Tahap 2."
+  ],
+  "elapsed_seconds": 482.7
+}

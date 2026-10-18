@@ -1,0 +1,30 @@
+# CIVA - Citation Intelligence & Verification Assistant
+# Diuji pada Python 3.13 (Windows 11). Batas bawah = versi yang diuji; batas atas = major berikutnya.
+#
+#   python -m venv .venv
+#   .\.venv\Scripts\Activate.ps1
+#   pip install -r requirements.txt
+#
+# Catatan: di Windows, `pip install torch` memasang build CPU (cukup untuk proyek ini). Bila Python global Anda
+# sudah punya torch/sentence-transformers, buat venv dengan:  python -m venv .venv --system-site-packages
+
+# --- Backend (FastAPI) ---
+fastapi>=0.143,<1
+uvicorn[standard]>=0.54,<1
+httpx>=0.28,<1
+
+# --- Frontend (Streamlit) ---
+streamlit>=1.65,<2
+
+# --- Machine Learning (MultiBERT -> XGBoost / Random Forest / Logistic Regression) ---
+torch>=2.14,<3
+sentence-transformers>=6.1,<7
+scikit-learn>=1.9,<2
+xgboost>=3.4,<4
+numpy>=2.5,<3
+joblib>=1.6,<2
+
+# --- Data & utilitas ---
+pandas>=3.0,<4
+openpyxl>=3.1,<4       # membaca dataset_asli_cs.xlsx
+rapidfuzz>=3.14,<4     # kemiripan judul untuk pencarian & pencocokan metadata

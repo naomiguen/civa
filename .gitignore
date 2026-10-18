@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Lingkungan virtual (besar; dibuat ulang dengan `pip install -r requirements.txt`) ---
+.venv/
+venv/
+env/
+
+# --- Rahasia & konfigurasi lokal ---
+.env
+.env.*
+.streamlit/secrets.toml
+
+# --- Dibuat otomatis saat dijalankan ---
+# Database lokal (knowledge base + cache API); dibuat ulang dari dataset saat backend pertama jalan
+data/civa.db
+# Berkas WAL/SHM SQLite
+data/civa.db-*
+# Cache embedding (+-20 MB), dihitung ulang oleh train_model.py
+models/cache/
+*.log
+
+# Folder "skill" asisten AI yang dipasang otomatis oleh Streamlit (hanya berisi symlink ke .venv)
+.claude/
+.agents/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Opsional: artefak model hasil training (+-12 MB) ---
+# Dibiarkan ter-commit agar proyek bisa langsung dijalankan tanpa melatih ulang. Berkas .joblib bergantung versi
+# scikit-learn/xgboost; bila tidak ingin menyimpannya di Git, hapus tanda # pada baris berikut:
+# models/*.joblib
