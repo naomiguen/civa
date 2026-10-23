@@ -81,39 +81,38 @@
     },
     "real_eksternal": {
       "n": 80,
-      "benar": 0.9,
-      "ml_saja_benar": 0.75,
+      "benar": 0.9375,
+      "ml_saja_benar": 0.7375,
       "status": {
-        "valid": 61,
+        "valid": 64,
         "out_of_scope": 11,
-        "halu": 8
+        "halu": 5
       },
       "bukti": {
-        "verified": 72,
-        "mismatch": 7,
-        "not_found": 1
+        "verified": 75,
+        "mismatch": 5
       },
       "pola": {
-        "jumlah penulis": 5,
+        "jumlah penulis": 3,
         "DOI": 2
       }
     }
   },
   "halu_detection": {
     "tp": 96,
-    "fp": 9,
+    "fp": 6,
     "fn": 0,
-    "tn": 91,
-    "precision": 0.9142857142857143,
+    "tn": 94,
+    "precision": 0.9411764705882353,
     "recall": 1.0,
-    "f1": 0.955223880597015,
-    "accuracy": 0.9540816326530612
+    "f1": 0.9696969696969697,
+    "accuracy": 0.9693877551020408
   },
   "ml_saja": {
     "recall": 0.20833333333333334,
-    "false_alarm": 0.28
+    "false_alarm": 0.29
   },
-  "real_false_alarm": 0.09,
+  "real_false_alarm": 0.06,
   "real_out_of_scope": 0.11,
   "real_unparsed": 0.0,
   "fake_unparsed": 0.0

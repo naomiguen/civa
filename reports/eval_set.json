@@ -118,11 +118,12 @@
  {
   "group": "real_eksternal",
   "expected": "valid",
-  "text": "Efendi, R. (2024). SISTEM INFORMASI ABSENSI PADA PT. GARUDA INTI SENTOSA BERBASIS TEKNOLOGI WEB SERVICE RESTFULL API. INFOTECH journal. https://doi.org/10.31949/infotech.v10i1.9177",
+  "text": "Efendi, R., & Maruloh (2024). SISTEM INFORMASI ABSENSI PADA PT. GARUDA INTI SENTOSA BERBASIS TEKNOLOGI WEB SERVICE RESTFULL API. INFOTECH journal. https://doi.org/10.31949/infotech.v10i1.9177",
   "meta": {
    "title": "SISTEM INFORMASI ABSENSI PADA PT. GARUDA INTI SENTOSA BERBASIS TEKNOLOGI WEB SERVICE RESTFULL API",
    "authors": [
-    "Ruston Efendi"
+    "Ruston Efendi",
+    "Maruloh"
    ],
    "year": 2024,
    "venue": "INFOTECH journal",
@@ -355,10 +356,11 @@
  {
   "group": "real_eksternal",
   "expected": "valid",
-  "text": "Anam, K. dan Saleh, A. (2020) “Autentikasi Daun Herbal Menggunakan Convolutional Neural Network dan Raspberry Pi,” Jurnal Nasional Teknik Elektro dan Teknologi Informasi (JNTETI).",
+  "text": "Haryono dkk. (2020) “Autentikasi Daun Herbal Menggunakan Convolutional Neural Network dan Raspberry Pi,” Jurnal Nasional Teknik Elektro dan Teknologi Informasi (JNTETI).",
   "meta": {
    "title": "Autentikasi Daun Herbal Menggunakan Convolutional Neural Network dan Raspberry Pi",
    "authors": [
+    "Haryono",
     "Khairul Anam",
     "Azmi Saleh"
    ],
@@ -1931,7 +1933,7 @@
  {
   "group": "palsu_penulis",
   "expected": "halu",
-  "text": "Minatania, A. (2023) “Pengembangan Website Yayasan Al-Hizam Menggunakan Framework Nuxt JS,” Jurnal Teknologi dan Komputer (JTEK). Tersedia pada: https://doi.org/10.56923/jtek.v3i01.114.",
+  "text": "Tumini dan Minatania, A. (2023) “Pengembangan Website Yayasan Al-Hizam Menggunakan Framework Nuxt JS,” Jurnal Teknologi dan Komputer (JTEK). Tersedia pada: https://doi.org/10.56923/jtek.v3i01.114.",
   "meta": {
    "title": "Pengembangan Website Yayasan Al-Hizam Menggunakan Framework Nuxt JS",
    "authors": [
@@ -2033,11 +2035,13 @@
  {
   "group": "real_dataset",
   "expected": "valid",
-  "text": "Prihatmoko, S. (2022). Analisa Perancangan Sistem Informasi Inventory dengan Metode FIFO (First In First Out) pada Usaha Dagang Retail. Jurnal Ilmu Komputer.",
+  "text": "Sumaryanto, Prihatmoko, S., & Purwati (2022). Analisa Perancangan Sistem Informasi Inventory dengan Metode FIFO (First In First Out) pada Usaha Dagang Retail. Jurnal Ilmu Komputer.",
   "meta": {
    "title": "Analisa Perancangan Sistem Informasi Inventory dengan Metode FIFO (First In First Out) pada Usaha Dagang Retail",
    "authors": [
-    "Setiyo Prihatmoko"
+    "Sumaryanto",
+    "Setiyo Prihatmoko",
+    "Purwati"
    ],
    "year": 2022,
    "venue": "Jurnal Ilmu Komputer"
@@ -2486,10 +2490,11 @@
  {
   "group": "real_eksternal",
   "expected": "valid",
-  "text": "Minatania, A. (2023) “VISUALISASI DATA COVID19 TAHUN 2021 DI JAWA BARAT MENGGUNAKAN GOOGLE DATA STUDIO,” Jurnal Informasi dan Komputer. Tersedia pada: https://doi.org/10.35959/jik.v11i01.347.",
+  "text": "Tumini dan Minatania, A. (2023) “VISUALISASI DATA COVID19 TAHUN 2021 DI JAWA BARAT MENGGUNAKAN GOOGLE DATA STUDIO,” Jurnal Informasi dan Komputer. Tersedia pada: https://doi.org/10.35959/jik.v11i01.347.",
   "meta": {
    "title": "VISUALISASI DATA COVID19 TAHUN 2021 DI JAWA BARAT MENGGUNAKAN GOOGLE DATA STUDIO",
    "authors": [
+    "Tumini",
     "Alni Minatania"
    ],
    "year": 2023,
@@ -2795,12 +2800,14 @@
  {
   "group": "real_eksternal",
   "expected": "valid",
-  "text": "Setyawati, E. dan Sukma, H.S. (2024) “STRATEGI MANAJEMEN PENDIDIKAN BERBASIS TEKNOLOGI DALAM MENDUKUNG PEMBELAJARAN INOVATIF,” PROFETIK Jurnal Mahasiswa Pendidikan Agama Islam. Tersedia pada: https://doi.org/10.24127/profetik.v5i1.7465.",
+  "text": "Noormawanti dkk. (2024) “STRATEGI MANAJEMEN PENDIDIKAN BERBASIS TEKNOLOGI DALAM MENDUKUNG PEMBELAJARAN INOVATIF,” PROFETIK Jurnal Mahasiswa Pendidikan Agama Islam. Tersedia pada: https://doi.org/10.24127/profetik.v5i1.7465.",
   "meta": {
    "title": "STRATEGI MANAJEMEN PENDIDIKAN BERBASIS TEKNOLOGI DALAM MENDUKUNG PEMBELAJARAN INOVATIF",
    "authors": [
+    "Noormawanti",
     "Eny Setyawati",
-    "Hendri Setiabudi Sukma"
+    "Hendri Setiabudi Sukma",
+    "Badrudin"
    ],
    "year": 2024,
    "venue": "PROFETIK Jurnal Mahasiswa Pendidikan Agama Islam",

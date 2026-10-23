@@ -1,6 +1,6 @@
 # Uji manipulasi dataset CIVA (end-to-end)
 
-140 referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, filter domain) dalam 5.2 menit.
+140 referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, filter domain) dalam 5.5 menit.
 
 | Kelompok | n | Benar | ML saja benar | VALID | HALU | DI LUAR SCOPE | TIDAK TERBACA |
 |---|---|---|---|---|---|---|---|
@@ -25,7 +25,7 @@
 
 - Asli, Ilmu Komputer: -
 - Asli, di luar Ilmu Komputer: -
-- Halu: kata judul diacak: urutan judul (20), jumlah penulis (2), tahun (1), tanpa penulis (1)
+- Halu: kata judul diacak: urutan judul (20), tahun (1), tanpa penulis (1), jumlah penulis (1)
 - Halu: kata judul dihapus: kata judul (6), jumlah penulis (1)
 - Halu: susunan nama penulis dibalik: penulis (9), jumlah penulis (5), susunan nama (3)
 - Halu: penulis tidak lengkap / satu nama: jumlah penulis (8), nama penulis (4), susunan nama (1)

@@ -39,9 +39,9 @@
       },
       "pola": {
         "urutan judul": 20,
-        "jumlah penulis": 2,
         "tahun": 1,
-        "tanpa penulis": 1
+        "tanpa penulis": 1,
+        "jumlah penulis": 1
       }
     },
     "judul_kata_dihapus": {

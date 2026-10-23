@@ -228,16 +228,22 @@ asli. Model ML final dilatih pada seluruh dataset, jadi kolom "ML saja" optimist
 referensi berlabel, dengan backend & database sementara (tidak menyentuh `data/civa.db`; GROBID harus berjalan).
 Laporan lengkap: `reports/system_evaluation.md`, rincian per referensi: `reports/system_eval_results.csv`.
 
+Set: 100 referensi nyata (80 CS dari OpenAlex di luar dataset + 20 dari dataset seed) dan 96 palsu (DOI karangan,
+karangan penuh, judul nyata + penulis makalah lain, tahun digeser ≥ 3). Referensi di luar scope dinilai menurut
+penilaian valid/halu-nya.
+
 | Ukuran | Pipeline lengkap | Model ML saja |
 |---|---|---|
-| Recall halusinasi (96 referensi palsu) | **93%** | 54% |
-| Precision | **99%** | - |
-| Referensi nyata salah dituduh halu | **1%** | 41% |
+| Recall halusinasi (96 referensi palsu) | **100%** | 21% |
+| Precision | **94%** | - |
+| Referensi nyata salah dituduh halu | **6%** | 29% |
+| Referensi nyata dinyatakan DI LUAR SCOPE (tetap dinilai) | 11% | - |
 
-Kesalahan terbanyak berasal dari filter domain, bukan dari deteksi: 11 referensi "nyata" dinyatakan DI LUAR SCOPE (sebagian
-besar memang non-CS: label bidang OpenAlex yang dipakai sebagai kebenaran berisik), dan 6 referensi palsu lolos karena
-diisolasi sebagai di luar scope. Dua referensi berjudul HURUF KAPITAL tidak terbaca GROBID. Set uji bersifat sintetis dan
-sirkular untuk cakupan indeks (lihat catatan metodologi di laporan); jangan dibaca sebagai akurasi di dunia nyata.
+Dari 6 referensi nyata yang dituduh: 2 memang mencantumkan DOI yang tidak terdaftar (404 di Crossref dan doi.org; DOI
+dari metadata OpenAlex salah), 4 sisanya kasus tepi daftar penulis (daftar penulis OpenAlex dan Crossref berbeda, atau nama
+tunggal yang diurai GROBID secara aneh). Set uji bersifat sintetis dan sirkular untuk cakupan indeks (lihat catatan
+metodologi di laporan); jangan dibaca sebagai akurasi di dunia nyata. Model ML saja kini lebih lemah daripada versi
+sebelumnya karena dilatih membedakan manipulasi halus; deteksi bertumpu pada pemeriksaan Tahap 2.
 
 ## Catatan
 

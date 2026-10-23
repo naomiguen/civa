@@ -148,7 +148,7 @@ def fetch_openalex(client: httpx.Client, lang: str, n: int, seed: int) -> list[d
     for work in response.json().get("results", []):
         title = _plain(work.get("display_name"))
         names = [(a.get("author") or {}).get("display_name", "") for a in work.get("authorships", [])]
-        names = [n_ for n_ in names if n_ and len(n_.split()) >= 2][:4]
+        names = [n_ for n_ in names if n_][:4]  # 4 penulis PERTAMA apa adanya (nama tunggal ikut, seperti sitasi nyata)
         venue = _plain((((work.get("primary_location") or {}).get("source")) or {}).get("display_name", ""))
         doi = normalize_doi(work.get("doi"))
         if len(title) >= 25 and names and venue and doi and work.get("publication_year"):
@@ -244,7 +244,7 @@ def build_eval_set(seed: int = 7) -> list[dict]:
     kb = seed_frame[seed_frame["scope"] == "cs"].sample(20, random_state=seed)
     from civa_core import split_authors  # noqa: E402  (impor lambat: membawa sklearn)
     for row in kb.itertuples(index=False):
-        names = [n for n in split_authors("" if pd.isna(row.author) else row.author) if len(n.split()) >= 2][:4]
+        names = split_authors("" if pd.isna(row.author) else row.author)[:4]  # 4 penulis pertama apa adanya
         if not names:
             continue
         link = "" if pd.isna(row.link_referensi) else str(row.link_referensi)
