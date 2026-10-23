@@ -7,7 +7,8 @@ inference identik (tidak ada train/serve skew):
   1. clean_title() / clean_authors()  -> normalisasi teks mentah
   2. MultiBERTEmbedder                -> judul (384-d) + author (384-d) = 768-d, MURNI dari teks
   3. DomainFilter                     -> "Semantic Thresholding" untuk deteksi referensi di luar
-                                         disiplin Ilmu Komputer. Ini filter terpisah dan TIDAK
+                                         disiplin Ilmu Komputer: P(Ilmu Komputer) dari embedding judul,
+                                         dilatih dengan judul CS dan non-CS. Filter terpisah dan TIDAK
                                          pernah menjadi fitur untuk model klasifikasi.
 """
 from __future__ import annotations
@@ -21,7 +22,7 @@ import joblib
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin, clone
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedKFold, cross_val_predict
+from sklearn.model_selection import StratifiedGroupKFold, StratifiedKFold, cross_val_predict
 from sklearn.utils.class_weight import compute_sample_weight
 
 # --------------------------------------------------------------------------------------
@@ -44,7 +45,8 @@ MAX_AUTHORS = 10  # batasi panjang daftar author agar jumlah author tidak menjad
 # Normalisasi teks
 # --------------------------------------------------------------------------------------
 _WS_RE = re.compile(r"\s+")
-_NAME_SPLIT_RE = re.compile(r"\s*(?:,|;|&|\band\b|\bdan\b)\s*", re.IGNORECASE)
+# "and"/"dan" hanya pemisah bila huruf kecil (atau kapital semua): "Dan" pada "George Dan Mogoşanu" adalah nama orang.
+_NAME_SPLIT_RE = re.compile(r"\s*(?:,|;|&|\b(?:and|dan|AND|DAN)\b)\s*")
 _AFFILIATION_RE = re.compile(
     r"universit|fakultas|faculty|institut|politeknik|polytechnic|departemen|department|jurusan|"
     r"program studi|prodi|school of|college|laborator|kementerian|akademi|sekolah tinggi|"
@@ -226,10 +228,14 @@ class BalancedPlattClassifier(BaseEstimator, ClassifierMixin):
         self.cv = cv
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def fit(self, X, y, groups=None):
+        """`groups`: referensi asli + turunan halunya satu grup, agar prediksi out-of-fold tidak bocor."""
         y = np.asarray(y)
-        folds = StratifiedKFold(self.cv, shuffle=True, random_state=self.random_state)
-        out_of_fold = cross_val_predict(clone(self.base), X, y, cv=folds, method="predict_proba")
+        if groups is None:
+            folds = StratifiedKFold(self.cv, shuffle=True, random_state=self.random_state)
+        else:
+            folds = StratifiedGroupKFold(self.cv, shuffle=True, random_state=self.random_state)
+        out_of_fold = cross_val_predict(clone(self.base), X, y, groups=groups, cv=folds, method="predict_proba")
         positive = int(np.flatnonzero(np.unique(y) == 1)[0])
         self.calibrator_ = LogisticRegression(C=1e6, max_iter=1000).fit(
             _logit(out_of_fold[:, positive]), y, sample_weight=compute_sample_weight("balanced", y))
@@ -249,71 +255,29 @@ class BalancedPlattClassifier(BaseEstimator, ClassifierMixin):
 # --------------------------------------------------------------------------------------
 # Filter domain: Semantic Thresholding (terpisah dari model klasifikasi)
 # --------------------------------------------------------------------------------------
-# Deskripsi disiplin (EN + ID) sebagai "jangkar" semantik. Judul yang lebih dekat ke disiplin lain
-# daripada ke Ilmu Komputer menjadi kandidat DI LUAR SCOPE.
-CS_ANCHORS = [
-    "computer science", "software engineering and programming", "machine learning and artificial intelligence",
-    "computer networks and cybersecurity", "databases and information systems", "algorithms and data structures",
-    "computer vision and natural language processing", "internet of things and embedded systems",
-    "ilmu komputer", "rekayasa perangkat lunak", "kecerdasan buatan dan pembelajaran mesin",
-    "jaringan komputer dan keamanan siber", "sistem informasi dan basis data", "aplikasi web dan mobile",
-]
-OTHER_ANCHORS = [
-    "medicine and clinical research", "biology and ecology", "chemistry and materials science",
-    "physics and astronomy", "law and politics", "economics and finance", "education and teaching",
-    "psychology and behavior", "literature, language and arts", "agriculture and farming",
-    "nursing and public health", "sociology and culture", "environmental science",
-    "business management and marketing",
-    "kedokteran dan penelitian klinis", "biologi dan ekologi", "kimia dan ilmu material", "fisika dan astronomi",
-    "hukum dan politik", "ekonomi dan keuangan", "pendidikan dan pengajaran", "psikologi dan perilaku",
-    "sastra, bahasa dan seni", "pertanian dan perkebunan", "keperawatan dan kesehatan masyarakat",
-    "sosiologi dan budaya", "ilmu lingkungan", "manajemen bisnis dan pemasaran",
-]
-
-
-def _l2_normalize(matrix: np.ndarray) -> np.ndarray:
-    norms = np.linalg.norm(matrix, axis=1, keepdims=True)
-    return matrix / np.clip(norms, 1e-12, None)
-
-
 class DomainFilter:
-    """Semantic Thresholding: dua sinyal semantik pada embedding JUDUL harus sepakat agar sebuah referensi
-    dinyatakan DI LUAR SCOPE (konservatif, supaya referensi Ilmu Komputer tidak salah diisolasi):
+    """Semantic Thresholding: P(Ilmu Komputer) dari embedding JUDUL, lalu dibandingkan dengan ambang.
 
-      knn_score = rata-rata cosine similarity ke k judul terdekat pada korpus Ilmu Komputer (basis data seed)
-      margin    = kemiripan maks. ke jangkar Ilmu Komputer  -  kemiripan maks. ke jangkar disiplin lain
+      DI LUAR SCOPE  <=>  P(CS) < threshold
 
-      DI LUAR SCOPE  <=>  margin < margin_threshold   DAN   knn_score < knn_threshold
-
-    Referensi di luar Ilmu Komputer dengan begitu tidak keliru divonis "halusinasi" hanya karena tidak ada
-    di basis data Ilmu Komputer. Filter ini terpisah dari model klasifikasi dan tidak pernah menjadi fiturnya.
+    `model` adalah classifier (mis. Logistic Regression) yang dilatih dengan judul Ilmu Komputer DAN judul dari
+    disiplin lain (dataset_scope: kedokteran, hukum, kimia, ekonomi, ... dalam bahasa Inggris & Indonesia), sehingga
+    filter benar-benar mengenal konteks di luar Ilmu Komputer. Ambang dipilih konservatif agar referensi Ilmu
+    Komputer jarang salah diisolasi. Filter ini terpisah dari model halu dan tidak pernah menjadi fiturnya.
     """
 
-    def __init__(self, corpus_embeddings: np.ndarray, cs_anchor_embeddings: np.ndarray,
-                 other_anchor_embeddings: np.ndarray, knn_threshold: float, margin_threshold: float = 0.0,
-                 k: int = 5, meta: dict | None = None):
-        self.corpus = _l2_normalize(np.asarray(corpus_embeddings, dtype=np.float32))
-        self.cs_anchors = _l2_normalize(np.asarray(cs_anchor_embeddings, dtype=np.float32))
-        self.other_anchors = _l2_normalize(np.asarray(other_anchor_embeddings, dtype=np.float32))
-        self.knn_threshold = float(knn_threshold)
-        self.margin_threshold = float(margin_threshold)
-        self.k = int(k)
+    def __init__(self, model, threshold: float = 0.5, meta: dict | None = None):
+        self.model = model
+        self.threshold = float(threshold)
         self.meta = meta or {}
 
-    def analyze(self, title_embeddings: np.ndarray, exclude_self: bool = False) -> tuple[np.ndarray, np.ndarray]:
-        """(knn_score, margin) per judul. `exclude_self=True` untuk leave-one-out saat kalibrasi ambang."""
-        queries = _l2_normalize(np.asarray(title_embeddings, dtype=np.float32))
-        sims = queries @ self.corpus.T
-        if exclude_self:
-            sims[np.arange(len(queries)), np.arange(len(queries))] = -1.0
-        k = min(self.k, sims.shape[1])
-        knn = np.partition(sims, -k, axis=1)[:, -k:].mean(axis=1)
-        margin = (queries @ self.cs_anchors.T).max(axis=1) - (queries @ self.other_anchors.T).max(axis=1)
-        return knn, margin
+    def p_cs(self, title_embeddings: np.ndarray) -> np.ndarray:
+        """Peluang setiap judul termasuk literatur Ilmu Komputer (0-1)."""
+        proba = self.model.predict_proba(np.asarray(title_embeddings, dtype=np.float32))
+        return proba[:, list(self.model.classes_).index(1)]
 
-    def in_scope(self, knn_score: np.ndarray, margin: np.ndarray) -> np.ndarray:
-        out_of_scope = (np.asarray(margin) < self.margin_threshold) & (np.asarray(knn_score) < self.knn_threshold)
-        return ~out_of_scope
+    def in_scope(self, p_cs: np.ndarray) -> np.ndarray:
+        return np.asarray(p_cs) >= self.threshold
 
 
 def load_artifacts():

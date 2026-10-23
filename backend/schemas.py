@@ -111,9 +111,8 @@ class MLOut(BaseModel):
 class DomainOut(BaseModel):
     """Filter domain (Semantic Thresholding) - dihitung dari embedding judul, terpisah dari model ML."""
 
-    knn_score: float  # kemiripan ke korpus Ilmu Komputer
-    knn_threshold: float
-    margin: float  # kemiripan ke jangkar Ilmu Komputer - kemiripan ke jangkar disiplin lain
+    p_cs: float  # peluang judul termasuk literatur Ilmu Komputer
+    threshold: float  # di bawah ambang ini = di luar scope
     in_scope: bool
     forced_by_knowledge_base: bool = False  # True: ada di basis data Ilmu Komputer, otomatis in-scope
 
@@ -129,7 +128,13 @@ class ReferenceResult(BaseModel):
     type: str = "Lainnya"  # Jurnal | Buku | Prosiding | Preprint | Lainnya
     status: Status
     label: str  # teks badge: "VALID" | "HALU" | "DI LUAR SCOPE" | "TIDAK TERBACA"
-    confidence: Optional[float] = None  # 0-1, keyakinan pada label akhir (None utk out_of_scope/unparsed)
+    # Referensi di luar scope tetap dinilai: "valid" | "halu" (None untuk status lain).
+    scope_verdict: Optional[Literal["valid", "halu"]] = None
+    # 0-1, keyakinan pada valid/halu (untuk out_of_scope: pada scope_verdict; None utk unparsed).
+    confidence: Optional[float] = None
+    # Perkiraan peluang halusinasi (0-1) untuk SEMUA referensi yang terbaca, termasuk "di luar scope" (None = tidak terbaca).
+    halu_probability: Optional[float] = None
+    warning: Optional[str] = None  # peringatan "perlu dicek ulang" (mis. di luar domain Ilmu Komputer)
     reason: str
     ml: Optional[MLOut] = None
     domain: Optional[DomainOut] = None
@@ -141,8 +146,14 @@ class Summary(BaseModel):
     valid: int
     halu: int
     out_of_scope: int
+    out_of_scope_valid: int = 0  # rincian "di luar scope" menurut scope_verdict
+    out_of_scope_halu: int = 0
     unparsed: int
     valid_percent: float  # valid / total * 100
+    # Persentase keseluruhan dari referensi yang terbaca: (valid + di luar scope yang valid) vs (halu + di luar scope
+    # yang halu), sehingga hanya ada hijau dan merah. Jumlahnya 100 (0 dan 0 bila tidak ada yang terbaca).
+    overall_valid_percent: float = 0.0
+    overall_halu_percent: float = 0.0
 
 
 class VerifyResponse(BaseModel):

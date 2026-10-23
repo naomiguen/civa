@@ -26,5 +26,4 @@ joblib>=1.6,<2
 
 # --- Data & utilitas ---
 pandas>=3.0,<4
-openpyxl>=3.1,<4       # membaca dataset_asli_cs.xlsx
 rapidfuzz>=3.14,<4     # kemiripan judul untuk pencarian & pencocokan metadata

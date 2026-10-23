@@ -7,12 +7,20 @@ ATURAN FITUR (sangat penting)
   * judul  -> embedding MultiBERT 384-d      author -> embedding MultiBERT 384-d
     digabung (concatenate) = 768-d  ->  XGBoost / Random Forest / Logistic Regression.
   * TIDAK ADA fitur angka perbandingan, similarity, atau jarak ke database.
-  * Target `status`: 1 = Valid (dataset_asli_cs.xlsx) ; 0 = Halu (dataset_hallucination_*.csv).
+  * Target `status`: 1 = Valid (dataset_scope_6000.csv) ; 0 = Halu (dataset_halu_6000_2kolom.csv).
+
+DATA
+  dataset_scope_6000.csv        referensi ASLI: 3.000 Ilmu Komputer + 3.000 dari 23 bidang lain (kolom `scope`)
+  dataset_halu_6000_2kolom.csv  referensi HALU turunan data asli di atas: kata judul diacak, kata judul dihapus,
+                                susunan nama penulis dibalik, nama penulis tidak lengkap / tinggal satu
+  Tiap baris halu ditautkan ke referensi asli sumbernya, sehingga (1) deteksi diukur per jenis manipulasi,
+  (2) referensi asli + turunannya selalu di sisi split yang sama (tanpa kebocoran), dan (3) baris "halu" yang
+  ternyata identik dengan aslinya dibuang (label kontradiktif).
 
 HASIL (folder models/)
   civa_pipeline.joblib        Pipeline sklearn [MultiBERTEmbedder -> classifier terkalibrasi]
   multibert_tokenizer.joblib  tokenizer MultiBERT
-  domain_filter.joblib        filter domain (Semantic Thresholding) - terpisah dari classifier
+  domain_filter.joblib        filter domain (Semantic Thresholding: Ilmu Komputer vs non-CS) - terpisah dari classifier
   training_report.json, model_comparison.csv
 
 PEMAKAIAN
@@ -25,11 +33,14 @@ import argparse
 import hashlib
 import json
 import platform
+import re
 import sys
 import time
 import warnings
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Sequence
 
 import joblib
 import numpy as np
@@ -41,17 +52,28 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (average_precision_score, balanced_accuracy_score, confusion_matrix, make_scorer,
                              matthews_corrcoef, precision_recall_fscore_support, roc_auc_score)
-from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
+from sklearn.model_selection import GridSearchCV, StratifiedGroupKFold, cross_val_predict
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 import civa_core
-from civa_core import (CS_ANCHORS, EMB_DIM, FEATURE_DIM, MODEL_NAME, OTHER_ANCHORS, BalancedPlattClassifier,
-                       DomainFilter, MultiBERTEmbedder, clean_authors, clean_title, to_initials)
+from civa_core import (EMB_DIM, FEATURE_DIM, MODEL_NAME, BalancedPlattClassifier, DomainFilter, MultiBERTEmbedder,
+                       clean_authors, clean_title, to_initials)
 
 ROOT = Path(__file__).resolve().parent
-DOMAIN_KNN_PERCENTILE = 25  # ambang kNN = persentil ke-25 skor leave-one-out korpus Ilmu Komputer
+VALID_FILE = "dataset_scope_6000.csv"
+HALU_FILE = "dataset_halu_6000_2kolom.csv"
+# Ambang filter domain: paling banyak sekian persen judul Ilmu Komputer (out-of-fold) yang boleh salah diisolasi.
+SCOPE_MAX_FALSE_OOS = 0.05
+
+# Nama jenis manipulasi (kolom `jenis`) untuk laporan.
+JENIS_LABEL = {
+    "judul_diacak": "kata judul diacak", "judul_kata_dihapus": "kata judul dihapus",
+    "judul_diubah": "judul diubah lain", "nama_dibalik": "susunan nama penulis dibalik",
+    "penulis_tidak_lengkap": "nama penulis tidak lengkap / satu nama", "tanpa_penulis": "tanpa nama penulis",
+    "penulis_diubah": "penulis diubah lain", "tidak_tertaut": "tidak tertaut ke data asli",
+}
 
 # Daftar kecil judul tulisan tangan HANYA untuk uji kewarasan filter domain (tidak dipakai melatih apa pun).
 SANITY_NON_CS = [
@@ -94,28 +116,100 @@ def log(message: str = "") -> None:
 # --------------------------------------------------------------------------------------
 # 1. Data
 # --------------------------------------------------------------------------------------
-def load_dataset(dataset_dir: Path, initials_rate: float, seed: int) -> pd.DataFrame:
-    """Gabungkan dataset asli (status=1) dan halusinasi (status=0); bersihkan; augmentasi inisial."""
-    real_path = dataset_dir / "dataset_asli_cs.xlsx"
-    fake_candidates = sorted(dataset_dir.glob("dataset_hallucination*.csv"))
-    if not real_path.exists() or not fake_candidates:
-        sys.exit(f"Dataset tidak ditemukan di {dataset_dir} (butuh dataset_asli_cs.xlsx dan dataset_hallucination*.csv)")
+def _tokens(text: object) -> list[str]:
+    """Kata-kata huruf kecil, untuk membandingkan referensi halu dengan sumber aslinya."""
+    return re.findall(r"\w+", clean_title(text))
 
-    real = pd.read_excel(real_path)
-    fake = pd.read_csv(fake_candidates[0])
+
+def link_sources(source_titles: Sequence[str], source_authors: Sequence[str], titles: Sequence[str],
+                 authors: Sequence[str]) -> np.ndarray:
+    """Indeks referensi asli yang menjadi sumber tiap referensi halu (-1 bila tidak tertaut).
+
+    Urutan: judul sama -> kata-katanya sama tetapi diacak -> kata judul halu (min. 3 kata unik) >= 80% berasal dari
+    satu judul asli -> penulis sama persis dengan tepat satu referensi asli yang memuat semua kata judulnya (judul
+    yang tinggal 1-2 kata setelah penghapusan).
+    """
+    keys = [tuple(_tokens(t)) for t in source_titles]
+    exact, bags, postings, by_author = {}, {}, defaultdict(set), defaultdict(list)
+    for i, (key, author) in enumerate(zip(keys, source_authors)):
+        exact.setdefault(key, i)
+        bags.setdefault(tuple(sorted(key)), i)
+        by_author[tuple(_tokens(author))].append(i)
+        for word in set(key):
+            postings[word].add(i)
+    out = np.full(len(titles), -1)
+    for j, (title, author) in enumerate(zip(titles, authors)):
+        key = tuple(_tokens(title))
+        match = exact.get(key, bags.get(tuple(sorted(key))))
+        if match is None and len(set(key)) >= 3:
+            votes = Counter(i for word in set(key) for i in postings.get(word, ()))
+            # seri dipecah ke indeks terkecil: hasil sama di setiap proses (urutan set str ikut hash acak Python)
+            best, shared = max(votes.items(), key=lambda item: (item[1], -item[0])) if votes else (-1, 0)
+            match = best if shared >= 0.8 * len(set(key)) else None
+        if match is None and key:
+            same_author = [i for i in by_author.get(tuple(_tokens(author)), ()) if not Counter(key) - Counter(keys[i])]
+            match = same_author[0] if len(same_author) == 1 else None
+        out[j] = -1 if match is None else match
+    return out
+
+
+def perturbation_type(source_title: object, source_author: object, title: object, author: object) -> str:
+    """Jenis manipulasi referensi halu dibanding sumber aslinya (kunci JENIS_LABEL; "identik" = tidak diubah)."""
+    src_t, t = _tokens(source_title), _tokens(title)
+    if src_t != t:
+        if sorted(src_t) == sorted(t):
+            return "judul_diacak"
+        return "judul_kata_dihapus" if not Counter(t) - Counter(src_t) else "judul_diubah"
+    src_a, a = _tokens(source_author), _tokens(author)
+    if not a:
+        return "identik" if not src_a else "tanpa_penulis"
+    if src_a == a:
+        return "identik"
+    if sorted(src_a) == sorted(a):
+        return "nama_dibalik"
+    return "penulis_tidak_lengkap" if not Counter(a) - Counter(src_a) else "penulis_diubah"
+
+
+def load_dataset(dataset_dir: Path, initials_rate: float, seed: int) -> pd.DataFrame:
+    """Data asli (status=1) + halu (status=0) -> kolom judul, author, status, scope, jenis, group."""
+    valid_path, halu_path = dataset_dir / VALID_FILE, dataset_dir / HALU_FILE
+    if not valid_path.exists() or not halu_path.exists():
+        sys.exit(f"Dataset tidak ditemukan di {dataset_dir} (butuh {VALID_FILE} dan {HALU_FILE})")
+    real = pd.read_csv(valid_path, encoding="utf-8-sig").fillna({"judul": "", "author": ""})
+    fake = pd.read_csv(halu_path, encoding="utf-8-sig").fillna({"judul": "", "author": ""})
+
+    source = link_sources(real["judul"].tolist(), real["author"].tolist(), fake["judul"].tolist(),
+                          fake["author"].tolist())
+    linked = source >= 0
+    kinds = [perturbation_type(real["judul"].iat[i], real["author"].iat[i], t, a) if i >= 0 else "tidak_tertaut"
+             for i, t, a in zip(source, fake["judul"], fake["author"])]
     frame = pd.concat([
-        pd.DataFrame({"judul": real["judul"], "author": real["author"].fillna(""), "status": 1}),
-        pd.DataFrame({"judul": fake["judul"], "author": fake["author"].fillna(""), "status": 0}),
+        pd.DataFrame({"judul": real["judul"], "author": real["author"], "status": 1, "scope": real["scope"],
+                      "jenis": "asli", "group": np.arange(len(real))}),
+        pd.DataFrame({"judul": fake["judul"], "author": fake["author"], "status": 0,
+                      "scope": np.where(linked, real["scope"].to_numpy()[source], None), "jenis": kinds,
+                      "group": np.where(linked, source, len(real) + np.arange(len(fake)))}),
     ], ignore_index=True)
-    raw_rows = len(frame)
+    log(f"  asli {len(real)} (scope: {real['scope'].value_counts().to_dict()}) | halu {len(fake)}, "
+        f"{int(linked.sum())} tertaut ke referensi asli sumbernya")
+    log("  jenis manipulasi pada data halu: " + ", ".join(f"{k}={v}" for k, v in Counter(kinds).most_common()))
 
     frame["judul"] = frame["judul"].astype(str).str.strip()
     frame["author"] = frame["author"].astype(str)
-    key = frame["judul"].map(clean_title)
-    frame = frame[(key.str.len() >= 4) & (frame["author"].map(clean_authors).str.len() > 0)]
-    frame = frame.loc[~key.loc[frame.index].duplicated()].reset_index(drop=True)
-    log(f"  baris mentah {raw_rows} -> setelah pembersihan {len(frame)} "
-        f"(valid={int((frame.status == 1).sum())}, halu={int((frame.status == 0).sum())})")
+    title_key, author_key = frame["judul"].map(clean_title), frame["author"].map(clean_authors)
+    pair = title_key + "\x1f" + author_key
+    usable = (title_key.str.len() >= 4) & (author_key.str.len() > 0)
+    # Baris "halu" yang sama dengan referensi asli = label kontradiktif: tidak bisa dipelajari, jadi dibuang.
+    is_halu = frame["status"] == 0
+    contradictory = is_halu & ((frame["jenis"] == "identik") | pair.isin(set(pair[~is_halu])))
+    keep = usable & ~contradictory
+    duplicate = keep & pair.where(keep).duplicated()
+    keep &= ~duplicate
+    log(f"  dibuang: {int(contradictory.sum())} halu identik dengan aslinya | {int((~usable & ~contradictory).sum())} "
+        f"tanpa judul/penulis | {int(duplicate.sum())} duplikat")
+    frame = frame[keep].reset_index(drop=True)
+    log(f"  setelah pembersihan {len(frame)} baris (valid={int((frame.status == 1).sum())}, "
+        f"halu={int((frame.status == 0).sum())})")
 
     # Augmentasi: sebagian author diubah ke gaya inisial ("Y. Zhang") -- sama rata untuk kedua kelas, jadi bukan
     # jalan pintas. Alasannya: input pengguna bergaya APA ("Zhang, Y.") jauh lebih sering berinisial daripada dataset.
@@ -142,6 +236,12 @@ def embed_dataset(embedder: MultiBERTEmbedder, frame: pd.DataFrame, cache_dir: P
     return features
 
 
+def grouped_holdout(y: np.ndarray, groups: np.ndarray, test_size: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
+    """Split stratified per GRUP: referensi asli dan semua turunan halunya selalu di sisi yang sama."""
+    splitter = StratifiedGroupKFold(max(2, round(1 / test_size)), shuffle=True, random_state=seed)
+    return next(splitter.split(np.zeros(len(y)), y, groups))
+
+
 # --------------------------------------------------------------------------------------
 # 2. Evaluasi
 # --------------------------------------------------------------------------------------
@@ -165,6 +265,22 @@ def evaluate(y_true: np.ndarray, p_valid: np.ndarray, threshold: float = 0.5) ->
     }
 
 
+def evaluate_by_kind(test: pd.DataFrame, p_valid: np.ndarray, threshold: float = 0.5) -> dict:
+    """{"jenis|scope": {"n", "rate"}}: rate = % halu yang terdeteksi; untuk "asli" = % yang salah dituduh halu.
+
+    scope "semua" = gabungan Ilmu Komputer dan di luar Ilmu Komputer.
+    """
+    flagged = p_valid < threshold
+    scopes = test["scope"].fillna("?").to_numpy()
+    out = {}
+    for jenis, idx in test.groupby("jenis").indices.items():
+        for scope in ("semua", "cs", "non_cs"):
+            part = idx if scope == "semua" else idx[scopes[idx] == scope]
+            if len(part):
+                out[f"{jenis}|{scope}"] = {"n": int(len(part)), "rate": float(flagged[part].mean())}
+    return out
+
+
 def _ap_halu(y_true, p_valid):
     return average_precision_score(1 - np.asarray(y_true), 1 - np.asarray(p_valid))
 
@@ -180,8 +296,7 @@ def brief(m: dict) -> str:
 def candidates(seed: int, halu_over_valid: float, quick: bool) -> dict[str, tuple[object, dict]]:
     """Tiga algoritma yang dibandingkan (sesuai desain): Logistic Regression, Random Forest, XGBoost.
 
-    Ketidakseimbangan kelas (89% valid / 11% halu) ditangani dengan bobot kelas, bukan dengan membuang data.
-    Grid sengaja berfokus pada regularisasi kuat karena sinyal teks lemah (model besar cepat overfit).
+    Kelas hampir seimbang (data halu adalah turunan data asli); bobot kelas tetap dipakai untuk sisa selisihnya.
     """
     logreg = Pipeline([("scale", StandardScaler()),
                        ("clf", LogisticRegression(max_iter=4000, class_weight="balanced"))])
@@ -191,13 +306,19 @@ def candidates(seed: int, halu_over_valid: float, quick: bool) -> dict[str, tupl
                           min_child_weight=3, reg_lambda=5.0, scale_pos_weight=halu_over_valid,
                           tree_method="hist", eval_metric="logloss", n_jobs=-1, random_state=seed)
     if quick:
-        grids = ({"clf__C": [0.01]}, {"min_samples_leaf": [3]}, {"max_depth": [3]})
+        grids = ({"clf__C": [0.03]}, {"min_samples_leaf": [3]}, {"max_depth": [4]})
     else:
-        grids = ({"clf__C": [0.003, 0.01, 0.03, 0.1]},
+        grids = ({"clf__C": [0.003, 0.01, 0.03, 0.1, 0.3]},
                  {"min_samples_leaf": [1, 3, 5]},
-                 {"max_depth": [3, 4], "n_estimators": [300, 500]})
+                 {"max_depth": [3, 5], "n_estimators": [300, 600]})
     return {"LogisticRegression": (logreg, grids[0]), "RandomForest": (forest, grids[1]),
             "XGBoost": (boost, grids[2])}
+
+
+def scope_model(C: float = 0.1) -> Pipeline:
+    """Classifier filter domain: Ilmu Komputer (1) vs disiplin lain (0) dari embedding judul 384-d."""
+    return Pipeline([("scale", StandardScaler()),
+                     ("clf", LogisticRegression(C=C, max_iter=4000, class_weight="balanced"))])
 
 
 def main() -> None:
@@ -224,7 +345,7 @@ def main() -> None:
     # ---- 1. data & fitur ---------------------------------------------------------------------
     log("\n[1/7] Memuat dataset")
     frame = load_dataset(args.dataset_dir, args.initials_rate, args.seed)
-    y = frame["status"].to_numpy()
+    y, groups = frame["status"].to_numpy(), frame["group"].to_numpy()
 
     log("\n[2/7] Embedding MultiBERT")
     embedder = MultiBERTEmbedder(batch_size=64, show_progress=True)
@@ -232,23 +353,23 @@ def main() -> None:
     assert X.shape == (len(frame), FEATURE_DIM), X.shape
     log(f"  matriks fitur: {X.shape}  (judul 0:{EMB_DIM} | author {EMB_DIM}:{FEATURE_DIM})")
 
-    train_idx, test_idx = train_test_split(np.arange(len(y)), test_size=args.test_size, stratify=y,
-                                           random_state=args.seed)
+    train_idx, test_idx = grouped_holdout(y, groups, args.test_size, args.seed)
     X_train, X_test, y_train, y_test = X[train_idx], X[test_idx], y[train_idx], y[test_idx]
-    log(f"  split stratified: train={len(train_idx)} (halu {int((y_train == 0).sum())}) | "
-        f"test={len(test_idx)} (halu {int((y_test == 0).sum())})")
+    g_train = groups[train_idx]
+    log(f"  split stratified per grup (asli + turunannya tidak terpisah): train={len(train_idx)} "
+        f"(halu {int((y_train == 0).sum())}) | test={len(test_idx)} (halu {int((y_test == 0).sum())})")
 
     # ---- 2. perbandingan model ----------------------------------------------------------------
     log(f"\n[3/7] Membandingkan Logistic Regression / Random Forest / XGBoost ({folds}-fold CV pada data train)")
     scoring = {"roc_auc": "roc_auc", "f1_macro": "f1_macro",
                "ap_halu": make_scorer(_ap_halu, response_method="predict_proba")}
-    cv = StratifiedKFold(folds, shuffle=True, random_state=args.seed)
+    cv = StratifiedGroupKFold(folds, shuffle=True, random_state=args.seed)
     halu_over_valid = float((y_train == 0).sum() / (y_train == 1).sum())
     rows, searches = [], {}
     for name, (estimator, grid) in candidates(args.seed, halu_over_valid, args.quick).items():
         t0 = time.time()
         search = GridSearchCV(estimator, grid, scoring=scoring, refit="roc_auc", cv=cv, n_jobs=1)
-        search.fit(X_train, y_train)
+        search.fit(X_train, y_train, groups=g_train)
         searches[name] = search
         best = search.best_index_
         test_metrics = evaluate(y_test, search.best_estimator_.predict_proba(X_test)[:, 1])
@@ -275,7 +396,7 @@ def main() -> None:
     # ---- 3. evaluasi holdout + kalibrasi -------------------------------------------------------
     log("\n[4/7] Evaluasi pada data uji (holdout) dengan probabilitas terkalibrasi")
     calibrated = BalancedPlattClassifier(base=clone(best_estimator), cv=folds, random_state=args.seed)
-    calibrated.fit(X_train, y_train)
+    calibrated.fit(X_train, y_train, groups=g_train)
     p_test = calibrated.predict_proba(X_test)[:, 1]
     holdout = evaluate(y_test, p_test)
     uncalibrated = evaluate(y_test, best_estimator.predict_proba(X_test)[:, 1])
@@ -287,6 +408,21 @@ def main() -> None:
     log(f"  rata-rata P(valid): pada referensi valid = {holdout['mean_p_valid_pada_valid']:.2f} | "
         f"pada referensi halu = {holdout['mean_p_valid_pada_halu']:.2f}  (makin jauh = makin terpisah)")
 
+    test_frame = frame.iloc[test_idx].reset_index(drop=True)
+    by_kind = evaluate_by_kind(test_frame, p_test)
+    by_scope = {}
+    for scope in ("cs", "non_cs"):
+        idx = np.flatnonzero(test_frame["scope"].to_numpy() == scope)
+        by_scope[scope] = evaluate(y_test[idx], p_test[idx])
+    log("  per jenis (data uji, ambang 0.5)                 n   semua |    CS | non-CS")
+    for jenis in ["asli"] + [k for k in JENIS_LABEL if f"{k}|semua" in by_kind]:
+        cells = [f"{100 * by_kind[f'{jenis}|{s}']['rate']:4.0f}%" if f"{jenis}|{s}" in by_kind else "    -"
+                 for s in ("semua", "cs", "non_cs")]
+        label = "ASLI yang salah dituduh halu" if jenis == "asli" else "terdeteksi: " + JENIS_LABEL[jenis]
+        log(f"    {label:<45} {by_kind[f'{jenis}|semua']['n']:>4}  {cells[0]} | {cells[1]} | {cells[2]}")
+    log(f"  AUC per scope: Ilmu Komputer {by_scope['cs']['roc_auc']:.3f} | "
+        f"di luar Ilmu Komputer {by_scope['non_cs']['roc_auc']:.3f}")
+
     # ---- 4. ablasi modalitas -------------------------------------------------------------------
     log("\n[5/7] Ablasi: modalitas mana yang membawa sinyal? (algoritma & parameter terbaik, data uji)")
     ablation = {}
@@ -297,29 +433,42 @@ def main() -> None:
         log(f"  {label:<13} AUC={ablation[label]['roc_auc']:.3f}  AP(halu)={ablation[label]['ap_halu']:.3f}")
 
     # ---- 5. filter domain ----------------------------------------------------------------------
-    log("\n[6/7] Filter domain (Semantic Thresholding) - terpisah dari classifier")
-    title_emb = X[:, :EMB_DIM]
-    corpus = title_emb[y == 1]  # hanya referensi ASLI Ilmu Komputer
-    anchors_cs = embedder.encode_texts([clean_title(a) for a in CS_ANCHORS])
-    anchors_other = embedder.encode_texts([clean_title(a) for a in OTHER_ANCHORS])
-    domain = DomainFilter(corpus, anchors_cs, anchors_other, knn_threshold=0.0, margin_threshold=0.0, k=5)
-    knn_loo, margin_loo = domain.analyze(corpus, exclude_self=True)
-    domain.knn_threshold = float(np.percentile(knn_loo, DOMAIN_KNN_PERCENTILE))
-    false_oos = float((~domain.in_scope(knn_loo, margin_loo)).mean())
-    sanity = {}
-    for name, titles in (("non_cs", SANITY_NON_CS), ("cs", SANITY_CS)):
-        k_, m_ = domain.analyze(embedder.encode_titles(titles))
-        sanity[name] = float((~domain.in_scope(k_, m_)).mean())
-    domain.meta = {"knn_percentile": DOMAIN_KNN_PERCENTILE, "corpus_size": int(len(corpus)),
-                   "loo_false_out_of_scope": false_oos, "sanity_non_cs_flagged": sanity["non_cs"],
-                   "sanity_cs_flagged": sanity["cs"]}
-    log(f"  korpus CS: {len(corpus)} judul | ambang kNN={domain.knn_threshold:.3f} (persentil {DOMAIN_KNN_PERCENTILE} LOO)")
-    log(f"  referensi CS asli yang salah diisolasi (leave-one-out): {false_oos:.1%}")
+    log("\n[6/7] Filter domain (Semantic Thresholding): Ilmu Komputer vs disiplin lain, dari embedding judul")
+    # Judul halu ikut dipakai dengan scope sumber aslinya: judul yang diacak/terpotong tetap harus dikenali domainnya.
+    known = frame["scope"].notna().to_numpy()
+    y_scope = (frame["scope"] == "cs").to_numpy().astype(int)
+    titles = X[:, :EMB_DIM]
+    s_train, s_test = train_idx[known[train_idx]], test_idx[known[test_idx]]
+    scope_search = GridSearchCV(scope_model(), {"clf__C": [0.01, 0.1, 1.0]}, scoring="roc_auc", cv=cv, n_jobs=1)
+    scope_search.fit(titles[s_train], y_scope[s_train], groups=groups[s_train])
+    best_c = scope_search.best_params_["clf__C"]
+    oof = cross_val_predict(scope_model(best_c), titles[s_train], y_scope[s_train], groups=groups[s_train], cv=cv,
+                            method="predict_proba")[:, 1]
+    threshold = float(min(0.5, np.quantile(oof[y_scope[s_train] == 1], SCOPE_MAX_FALSE_OOS)))
+    p_cs_test = scope_model(best_c).fit(titles[s_train], y_scope[s_train]).predict_proba(titles[s_test])[:, 1]
+    cs_test, real_test = y_scope[s_test] == 1, y[s_test] == 1
+    scope_eval = {
+        "roc_auc": float(roc_auc_score(y_scope[s_test], p_cs_test)),
+        "cs_salah_diisolasi": float((p_cs_test[cs_test] < threshold).mean()),
+        "non_cs_terisolasi": float((p_cs_test[~cs_test] < threshold).mean()),
+        "non_cs_terisolasi_asli": float((p_cs_test[~cs_test & real_test] < threshold).mean()),
+        "non_cs_terisolasi_halu": float((p_cs_test[~cs_test & ~real_test] < threshold).mean()),
+    }
+    domain = DomainFilter(scope_model(best_c).fit(titles[known], y_scope[known]), threshold)
+    sanity = {name: float((~domain.in_scope(domain.p_cs(embedder.encode_titles(items)))).mean())
+              for name, items in (("non_cs", SANITY_NON_CS), ("cs", SANITY_CS))}
+    domain.meta = {"trained_on": int(known.sum()), "C": best_c, "max_false_out_of_scope": SCOPE_MAX_FALSE_OOS,
+                   "holdout": scope_eval, "sanity_non_cs_flagged": sanity["non_cs"], "sanity_cs_flagged": sanity["cs"]}
+    log(f"  data: {int(known.sum())} judul (CS {int(y_scope[known].sum())} | non-CS {int((1 - y_scope[known]).sum())}), "
+        f"C={best_c} | ambang P(CS) = {threshold:.3f} (maks. {SCOPE_MAX_FALSE_OOS:.0%} CS salah diisolasi, out-of-fold)")
+    log(f"  data uji: AUC={scope_eval['roc_auc']:.3f} | CS salah diisolasi {scope_eval['cs_salah_diisolasi']:.1%} | "
+        f"non-CS terisolasi {scope_eval['non_cs_terisolasi']:.1%} (asli {scope_eval['non_cs_terisolasi_asli']:.1%}, "
+        f"halu {scope_eval['non_cs_terisolasi_halu']:.1%})")
     log(f"  uji kewarasan tulisan tangan: non-CS terisolasi {sanity['non_cs']:.0%} | CS salah terisolasi {sanity['cs']:.0%}")
 
     # ---- 6. latih final & simpan ---------------------------------------------------------------
     log("\n[7/7] Melatih model final pada SELURUH data dan menyimpan artefak")
-    final_clf = BalancedPlattClassifier(base=clone(best_estimator), cv=folds, random_state=args.seed).fit(X, y)
+    final_clf = BalancedPlattClassifier(base=clone(best_estimator), cv=folds, random_state=args.seed).fit(X, y, groups)
     pipeline = Pipeline([("embed", MultiBERTEmbedder(batch_size=64)), ("clf", final_clf)])
 
     joblib.dump(embedder.get_encoder().tokenizer, civa_core.TOKENIZER_PATH, compress=3)
@@ -332,25 +481,32 @@ def main() -> None:
     reloaded = loaded_pipeline.predict_proba(frame.iloc[probe][["judul", "author"]])[:, 1]
     in_memory = final_clf.predict_proba(X[probe])[:, 1]
     assert np.allclose(reloaded, in_memory, atol=1e-4), "Artefak yang dimuat ulang tidak identik dengan model training!"
-    assert loaded_domain.knn_threshold == domain.knn_threshold
+    assert loaded_domain.threshold == domain.threshold
     log("  verifikasi muat-ulang artefak: OK (prediksi identik)")
 
     report = {
         "trained_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "best_model": best_name, "best_params": searches[best_name].best_params_,
         "encoder": MODEL_NAME, "feature_dim": FEATURE_DIM, "features": "judul(384) + author(384), murni teks",
-        "dataset": {"rows": int(len(frame)), "valid": int((y == 1).sum()), "halu": int((y == 0).sum()),
-                    "initials_augmentation_rate": args.initials_rate, "test_size": args.test_size},
+        "dataset": {"files": [VALID_FILE, HALU_FILE], "rows": int(len(frame)), "valid": int((y == 1).sum()),
+                    "halu": int((y == 0).sum()), "per_jenis": frame["jenis"].value_counts().to_dict(),
+                    "per_scope": {f"{scope}|{'valid' if status else 'halu'}": int(n) for (scope, status), n
+                                  in frame.groupby(["scope", "status"]).size().items()},
+                    "initials_augmentation_rate": args.initials_rate, "test_size": args.test_size,
+                    "split": "StratifiedGroupKFold (referensi asli + turunan halunya satu grup)"},
         "cv_folds": folds, "model_comparison": rows,
-        "holdout_calibrated": holdout, "holdout_uncalibrated": uncalibrated, "ablation_holdout": ablation,
-        "domain_filter": domain.meta | {"knn_threshold": domain.knn_threshold},
+        "holdout_calibrated": holdout, "holdout_uncalibrated": uncalibrated, "holdout_per_jenis": by_kind,
+        "holdout_per_scope": by_scope, "ablation_holdout": ablation,
+        "domain_filter": domain.meta | {"threshold": domain.threshold},
         "versions": {"python": platform.python_version(), "sklearn": sklearn.__version__,
                      "xgboost": xgboost.__version__, "numpy": np.__version__, "pandas": pd.__version__},
         "seed": args.seed, "quick": args.quick,
         "catatan": [
             "Probabilitas dikalibrasi (Platt, bobot kelas seimbang): P(valid)=0.5 adalah batas keputusan prior seimbang.",
-            "Dataset halusinasi bersifat sintetis; skor holdout mengukur kemampuan membedakan dataset ini, bukan "
-            "halusinasi LLM di dunia nyata. Model tidak dapat memeriksa keberadaan sebuah makalah - itu tugas Tahap 2.",
+            "Dataset halusinasi bersifat sintetis (manipulasi data asli); skor holdout mengukur kemampuan membedakan "
+            "dataset ini, bukan halusinasi LLM di dunia nyata. Model tidak dapat memeriksa keberadaan sebuah makalah - "
+            "itu tugas Tahap 2.",
+            "holdout_per_jenis: rate = persentase halu yang terdeteksi; untuk 'asli' = persentase yang salah dituduh halu.",
         ],
         "elapsed_seconds": round(time.time() - started, 1),
     }

@@ -8,6 +8,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def _load_dotenv(path: Path) -> None:
+    """Baca NAMA=nilai dari .env lokal (tidak ikut Git) ke os.environ; environment variable yang sudah ada menang."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        name, sep, value = line.partition("=")
+        if sep and name.strip() and not name.lstrip().startswith("#"):
+            os.environ.setdefault(name.strip(), value.strip().strip("\"'"))
+
+
+_load_dotenv(ROOT / ".env")
+
+
 def _env_float(name: str, default: float) -> float:
     try:
         return float(os.getenv(name, default))
@@ -30,11 +43,14 @@ class Settings:
 
     # --- Tahap 2: Database lokal + API eksternal ----------------------------------------
     db_path: Path = Path(os.getenv("CIVA_DB_PATH", ROOT / "data" / "civa.db"))
-    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset" / "dataset_asli_cs.xlsx"))
+    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset" / "dataset_scope_6000.csv"))
     external_timeout: float = _env_float("CIVA_EXTERNAL_TIMEOUT", 12.0)
     # Email kontak OPSIONAL untuk "polite pool" Crossref/OpenAlex (lebih cepat & stabil).
     # Tidak diisi otomatis; isi sendiri bila mau: set CIVA_CONTACT_EMAIL=email.anda@contoh.com
     contact_email: str = os.getenv("CIVA_CONTACT_EMAIL", "").strip()
+    # Kunci API OpenAlex OPSIONAL. Tanpa kunci, kuota harian dibagi per alamat IP dan bisa habis (HTTP 429); OpenAlex
+    # lalu dilewati dan sumber lain tetap dipakai. Isi sendiri bila punya: set CIVA_OPENALEX_API_KEY=...
+    openalex_api_key: str = os.getenv("CIVA_OPENALEX_API_KEY", "").strip()
     arxiv_min_interval: float = _env_float("CIVA_ARXIV_MIN_INTERVAL", 3.0)  # ketentuan arXiv: 1 request / 3 detik
     negative_cache_hours: float = _env_float("CIVA_NEGATIVE_CACHE_HOURS", 24.0)
     # Judul dianggap "ditemukan" (dan dapat diverifikasi) bila kemiripan teks >= nilai ini (0-1).

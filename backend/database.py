@@ -1,7 +1,8 @@
 """
 Database lokal (SQLite) = Closed-Domain Knowledge Base CIVA.
 
-* Terisi otomatis dari dataset/dataset_asli_cs.xlsx (referensi nyata Crossref/arXiv) saat pertama kali jalan.
+* Terisi otomatis dari dataset/dataset_scope_6000.csv (referensi nyata Crossref/arXiv/OpenAlex: Ilmu Komputer dan
+  bidang lain, kolom `scope`) saat pertama kali jalan.
 * Setiap referensi yang ditemukan lewat API eksternal di-INSERT ke sini, sehingga pencarian berikutnya
   cukup dari database lokal (tanpa memanggil API lagi).
 * Pencarian "tidak ditemukan" di-cache sementara (lookup_misses) agar API tidak dipanggil berulang untuk
@@ -163,20 +164,24 @@ class KnowledgeBase:
                             (key, time.time()))
 
     # -- seed dari dataset -----------------------------------------------------------------
-    def seed_if_empty(self, xlsx_path: Path) -> int:
-        """Isi KB dari dataset_asli_cs.xlsx bila masih kosong. Mengembalikan jumlah baris yang dimasukkan."""
-        if self.count() > 0:
-            return 0
-        xlsx_path = Path(xlsx_path)
-        if not xlsx_path.exists():
-            log.warning("Dataset seed tidak ditemukan (%s); knowledge base dimulai kosong.", xlsx_path)
+    def seed_if_needed(self, csv_path: Path) -> int:
+        """Isi KB dari dataset seed (CSV) bila belum ada baris seed. Mengembalikan jumlah baris yang dimasukkan.
+
+        Rekaman hasil API eksternal (origin='cache') tidak dihitung, jadi KB lama yang seed-nya dihapus ikut terisi lagi.
+        """
+        with self._session() as con:
+            if con.execute("SELECT 1 FROM kb_references WHERE origin = 'seed' LIMIT 1").fetchone():
+                return 0
+        csv_path = Path(csv_path)
+        if not csv_path.exists():
+            log.warning("Dataset seed tidak ditemukan (%s); knowledge base dimulai tanpa seed.", csv_path)
             return 0
         import pandas as pd  # impor lazy: hanya perlu saat seeding
 
         def text(value: object) -> str:
             return "" if pd.isna(value) else str(value).strip()
 
-        frame = pd.read_excel(xlsx_path)
+        frame = pd.read_csv(csv_path, encoding="utf-8-sig")
         rows = []
         for item in frame.itertuples(index=False):
             title = text(item.judul)
@@ -190,13 +195,13 @@ class KnowledgeBase:
                 None if pd.isna(item.tahun) else int(item.tahun),
                 normalize_doi(link), link if link.startswith("http") and "doi.org" not in link else None,
                 "", "book" if text(item.jenis_referensi).lower() == "book" else "journal",
-                text(item.sumber_api).lower(),  # "crossref" | "arxiv"
-                "seed", 1,  # dataset seed = korpus Ilmu Komputer
+                text(item.sumber_api).lower(),  # "crossref" | "arxiv" | "openalex"
+                "seed", 1 if text(item.scope) == "cs" else 0,  # in_cs: 1 = Ilmu Komputer, 0 = bidang lain
             ))
         with self._lock, self._session() as con:
             before = con.execute("SELECT COUNT(*) FROM kb_references").fetchone()[0]
             con.executemany(_INSERT_SQL, rows)
             inserted = con.execute("SELECT COUNT(*) FROM kb_references").fetchone()[0] - before
         self._reload_index()
-        log.info("Knowledge base di-seed dari %s: %d referensi.", xlsx_path.name, inserted)
+        log.info("Knowledge base di-seed dari %s: %d referensi.", csv_path.name, inserted)
         return inserted

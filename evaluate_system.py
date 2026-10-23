@@ -14,12 +14,18 @@ yang kebenarannya diketahui:
     palsu_tahun     judul & penulis nyata + tahun digeser >= 3 tahun
     palsu_doi       judul, penulis, tahun nyata + DOI karangan
 
+Set kedua (--set manipulasi): uji manipulasi dataset - referensi ASLI dari dataset_scope_6000.csv (CS & non-CS) dan
+manipulasinya dari dataset_halu_6000_2kolom.csv (kata judul diacak / dihapus, susunan nama dibalik, penulis tidak
+lengkap), ditambah referensi asli yang penulisnya dihapus (tanpa_penulis), diformat APA.
+
 Cara kerja: skrip menyalakan backend sendiri (port & database SEMENTARA, jadi data/civa.db Anda tidak tersentuh) dan
 memakai GROBID yang berjalan di CIVA_GROBID_URL (default http://localhost:8070). Butuh internet.
 
-  python evaluate_system.py            # susun set evaluasi (disimpan di reports/eval_set.json) lalu jalankan
-  python evaluate_system.py --rebuild  # susun ulang set evaluasi
+  python evaluate_system.py                    # susun set evaluasi (disimpan di reports/eval_set.json) lalu jalankan
+  python evaluate_system.py --rebuild          # susun ulang set evaluasi
+  python evaluate_system.py --set manipulasi   # uji manipulasi dataset (reports/manipulation_eval_set.json)
 Keluaran: reports/system_evaluation.md, system_evaluation.json, system_eval_results.csv
+          (--set manipulasi: reports/manipulation_evaluation.md, .json, manipulation_eval_results.csv)
 """
 from __future__ import annotations
 
@@ -40,10 +46,11 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
+from backend.config import settings  # noqa: E402  (juga membaca .env lokal, mis. kunci API OpenAlex)
 from backend.textutil import norm_key, normalize_doi, title_similarity  # noqa: E402
 
 REPORTS = ROOT / "reports"
-SEED_XLSX = ROOT / "dataset" / "dataset_asli_cs.xlsx"
+SEED_CSV = ROOT / "dataset" / "dataset_scope_6000.csv"  # juga dataset seed basis data lokal
 GROBID_URL = os.getenv("CIVA_GROBID_URL", "http://localhost:8070").rstrip("/")
 
 # Referensi karangan penuh (judul sangat spesifik agar hampir pasti tidak ada). (judul, [penulis], tahun, jurnal)
@@ -105,6 +112,15 @@ GROUP_TITLE = {
     "palsu_karangan": "Palsu: karangan penuh", "palsu_penulis": "Palsu: judul nyata + penulis salah",
     "palsu_tahun": "Palsu: tahun digeser >= 3", "palsu_doi": "Palsu: DOI karangan",
 }
+# Set "manipulasi" (dataset_scope_6000 + dataset_halu_6000_2kolom); nama kelompok halu = jenis di train_model.py.
+MANIPULATION_TITLE = {
+    "asli_cs": "Asli, Ilmu Komputer", "asli_non_cs": "Asli, di luar Ilmu Komputer",
+    "judul_diacak": "Halu: kata judul diacak", "judul_kata_dihapus": "Halu: kata judul dihapus",
+    "nama_dibalik": "Halu: susunan nama penulis dibalik", "penulis_tidak_lengkap": "Halu: penulis tidak lengkap / satu nama",
+    "tanpa_penulis": "Halu: tanpa nama penulis (disusun dari data asli)",
+}
+GROUP_TITLE.update(MANIPULATION_TITLE)
+GROUP_LABEL.update({g: "valid" if g.startswith("asli") else "halu" for g in MANIPULATION_TITLE})
 
 
 # --------------------------------------------------------------------------------------
@@ -118,8 +134,16 @@ def fetch_openalex(client: httpx.Client, lang: str, n: int, seed: int) -> list[d
     params = {"filter": f"primary_topic.field.id:17,language:{lang},type:article,has_doi:true,publication_year:2019-2025",
               "sample": n, "seed": seed, "per-page": min(n, 200),
               "select": "display_name,publication_year,authorships,doi,primary_location"}
-    response = client.get("https://api.openalex.org/works", params=params)
-    response.raise_for_status()
+    if settings.openalex_api_key:  # tanpa kunci: kuota harian bersama per IP
+        params["api_key"] = settings.openalex_api_key
+    for wait in (20, 60, 120, None):  # OpenAlex membatasi laju (429): tunggu lalu ulangi
+        response = client.get("https://api.openalex.org/works", params=params)
+        if response.status_code != 429 or wait is None:
+            break
+        print(f"  OpenAlex 429, menunggu {wait} detik ...", flush=True)
+        time.sleep(wait)
+    if response.status_code >= 400:  # tanpa URL di pesan: URL memuat kunci API
+        sys.exit(f"OpenAlex menjawab {response.status_code}: {response.text[:300]}")
     out = []
     for work in response.json().get("results", []):
         title = _plain(work.get("display_name"))
@@ -168,7 +192,7 @@ def fake_doi(real_doi: str, rng: random.Random) -> str:
 
 def build_eval_set(seed: int = 7) -> list[dict]:
     rng = random.Random(seed)
-    seed_frame = pd.read_excel(SEED_XLSX)
+    seed_frame = pd.read_csv(SEED_CSV, encoding="utf-8-sig")
     seed_titles = {norm_key(t) for t in seed_frame["judul"].astype(str)}
     print("  mengambil sampel referensi nyata dari OpenAlex ...", flush=True)
     with httpx.Client(timeout=60, headers={"User-Agent": "CIVA-evaluation/1.0"}) as client:
@@ -180,8 +204,14 @@ def build_eval_set(seed: int = 7) -> list[dict]:
         # karangan penuh: pastikan benar-benar tidak ada di Crossref
         fabricated = []
         for title, authors, year, venue in FABRICATED:
-            response = client.get("https://api.crossref.org/works",
-                                  params={"query.bibliographic": title, "rows": 3, "select": "title"})
+            for attempt in range(4):  # Crossref kadang menjawab galat/HTML sesaat: ulangi dengan jeda
+                response = client.get("https://api.crossref.org/works",
+                                      params={"query.bibliographic": title, "rows": 3, "select": "title"})
+                if response.status_code == 200 and response.headers.get("content-type", "").startswith("application/json"):
+                    break
+                time.sleep(5 * (attempt + 1))
+            else:
+                sys.exit(f"Crossref tidak menjawab dengan benar (HTTP {response.status_code}); coba lagi nanti.")
             best = max((title_similarity(title, (it.get("title") or [""])[0])
                         for it in response.json()["message"]["items"]), default=0.0)
             if best < 0.85:
@@ -211,7 +241,7 @@ def build_eval_set(seed: int = 7) -> list[dict]:
     for it in f_doi:
         add("palsu_doi", format_reference(it, rng, fake_doi(it["doi"], rng)), it)
 
-    kb = seed_frame.sample(20, random_state=seed)
+    kb = seed_frame[seed_frame["scope"] == "cs"].sample(20, random_state=seed)
     from civa_core import split_authors  # noqa: E402  (impor lambat: membawa sklearn)
     for row in kb.itertuples(index=False):
         names = [n for n in split_authors("" if pd.isna(row.author) else row.author) if len(n.split()) >= 2][:4]
@@ -221,6 +251,44 @@ def build_eval_set(seed: int = 7) -> list[dict]:
         item = {"title": str(row.judul).strip(), "authors": names, "year": int(row.tahun),
                 "venue": "arXiv preprint" if str(row.sumber_api).lower() == "arxiv" else "Jurnal Ilmu Komputer"}
         add("real_dataset", format_reference(item, rng, normalize_doi(link) if rng.random() < .5 else None), item)
+    rng.shuffle(items)
+    return items
+
+
+def build_manipulation_set(per_group: int = 20, seed: int = 7) -> list[dict]:
+    """Referensi asli (dataset_scope) dan manipulasinya (dataset_halu), separuh CS separuh non-CS per kelompok, APA."""
+    import train_model  # noqa: E402  (impor lambat: membawa sklearn/xgboost)
+    rng = random.Random(seed)
+    real = pd.read_csv(ROOT / "dataset" / train_model.VALID_FILE, encoding="utf-8-sig").fillna("")
+    fake = pd.read_csv(ROOT / "dataset" / train_model.HALU_FILE, encoding="utf-8-sig").fillna("")
+    source = train_model.link_sources(real["judul"].tolist(), real["author"].tolist(), fake["judul"].tolist(),
+                                      fake["author"].tolist())
+    pools = defaultdict(list)  # kelompok -> [(indeks sumber asli, judul, author)]
+    for i, row in real.iterrows():
+        if row["author"].strip():
+            pools["asli_" + row["scope"]].append((i, row["judul"], row["author"]))
+            pools["tanpa_penulis"].append((i, row["judul"], ""))
+    for j, i in enumerate(source):
+        if i >= 0:
+            kind = train_model.perturbation_type(real["judul"][i], real["author"][i], fake["judul"][j], fake["author"][j])
+            pools[kind].append((i, fake["judul"][j], fake["author"][j]))
+
+    items: list[dict] = []
+    for group in MANIPULATION_TITLE:
+        picked = []
+        for scope in ("cs", "non_cs"):
+            pool = [p for p in pools[group] if real["scope"][p[0]] == scope]
+            picked += rng.sample(pool, min(len(pool), per_group if group.startswith("asli") else per_group // 2))
+        for i, title, author in picked:
+            src = real.iloc[i]
+            names = [n.strip() for n in author.split(",") if n.strip()]
+            title, year = str(title).strip().rstrip("."), int(src["tahun"])
+            venue = "arXiv preprint" if src["sumber_api"].lower() == "arxiv" else "Jurnal Ilmiah"
+            text = f"{authors_apa(names)} ({year}). {title}. {venue}." if names else f"{title}. ({year}). {venue}."
+            doi = normalize_doi(src["link_referensi"]) if rng.random() < 0.5 else None
+            items.append({"group": group, "expected": GROUP_LABEL[group],
+                          "text": text + (f" https://doi.org/{doi}" if doi else ""),
+                          "meta": {"source_id": int(src["id"]), "scope": src["scope"], "bidang": src["bidang"]}})
     rng.shuffle(items)
     return items
 
@@ -275,11 +343,14 @@ def evaluate(api: str, items: list[dict]) -> list[dict]:
             for it, res in zip(chunk, results):
                 rows.append({
                     "group": it["group"], "expected": it["expected"], "predicted": res["status"],
+                    # di luar scope tetap dinilai valid/halu: itulah penilaian yang dibandingkan dengan kebenaran
+                    "verdict": res.get("scope_verdict") or res["status"],
                     "confidence": res.get("confidence"), "ml_label": (res.get("ml") or {}).get("label"),
                     "ml_p_valid": (res.get("ml") or {}).get("probability_valid"),
                     "evidence": (res.get("evidence") or {}).get("status"),
                     "evidence_source": (res.get("evidence") or {}).get("source"),
                     "doi_issue": (res.get("evidence") or {}).get("doi_issue"),
+                    "mismatch_fields": ", ".join((res.get("evidence") or {}).get("mismatch_fields") or []),
                     "in_scope": (res.get("domain") or {}).get("in_scope"),
                     "reason": res["reason"], "text": it["text"], "parsed_title": res.get("title"),
                 })
@@ -292,14 +363,15 @@ def summarize(rows: list[dict]) -> dict:
     groups = {}
     for group, g in df.groupby("group"):
         expected = g["expected"].iloc[0]
-        correct = (g["predicted"] == expected).mean()
+        correct = (g["verdict"] == expected).mean()
         ml_correct = (g["ml_label"] == expected).mean()
         groups[group] = {
             "n": int(len(g)), "benar": float(correct), "ml_saja_benar": float(ml_correct),
             "status": {k: int(v) for k, v in g["predicted"].value_counts().items()},
             "bukti": {str(k): int(v) for k, v in g["evidence"].value_counts(dropna=False).items()},
+            "pola": {k: int(v) for k, v in g["mismatch_fields"].str.split(", ").explode().value_counts().items() if k},
         }
-    truth_fake, pred_fake = df["expected"] == "halu", df["predicted"] == "halu"
+    truth_fake, pred_fake = df["expected"] == "halu", df["verdict"] == "halu"
     tp, fp = int((truth_fake & pred_fake).sum()), int((~truth_fake & pred_fake).sum())
     fn, tn = int((truth_fake & ~pred_fake).sum()), int((~truth_fake & ~pred_fake).sum())
     precision = tp / (tp + fp) if tp + fp else 0.0
@@ -313,19 +385,44 @@ def summarize(rows: list[dict]) -> dict:
                            "f1": 2 * precision * recall / (precision + recall) if precision + recall else 0.0,
                            "accuracy": (tp + tn) / len(df)},
         "ml_saja": {"recall": ml_tp / max(int(truth_fake.sum()), 1), "false_alarm": ml_fp / max(len(real), 1)},
-        "real_false_alarm": float((real["predicted"] == "halu").mean()),
+        "real_false_alarm": float((real["verdict"] == "halu").mean()),
         "real_out_of_scope": float((real["predicted"] == "out_of_scope").mean()),
         "real_unparsed": float((real["predicted"] == "unparsed").mean()),
         "fake_unparsed": float((df[truth_fake]["predicted"] == "unparsed").mean()),
     }
 
 
-def write_reports(rows: list[dict], summary: dict, seconds: float) -> None:
+SETS = {  # --set -> (berkas set evaluasi, awalan berkas laporan, judul laporan)
+    "sistem": ("eval_set.json", "system", "Evaluasi sistem CIVA (end-to-end)"),
+    "manipulasi": ("manipulation_eval_set.json", "manipulation", "Uji manipulasi dataset CIVA (end-to-end)"),
+}
+NOTES = {
+    "sistem": [
+        "- Referensi nyata diambil dari OpenAlex; sistem mencari ke Crossref/OpenAlex juga, sehingga ada unsur "
+        "sirkular: angka 'nyata' mengukur kebenaran parsing + pencocokan + keputusan, bukan cakupan indeks.",
+        "- Referensi palsu bersifat sintetis (karangan tangan dan korupsi terkontrol: penulis, tahun, DOI). "
+        "Halusinasi LLM nyata bisa lebih beragam.",
+        "- Referensi yang tidak berDOI atau tidak terindeks (buku, skripsi, jurnal lokal) kurang terwakili.",
+    ],
+    "manipulasi": [
+        "- Referensi asli dari dataset_scope_6000.csv; referensi halu dari dataset_halu_6000_2kolom.csv, masing-masing "
+        "ditautkan ke referensi asli sumbernya (tahun & DOI diambil dari sumber; 50% diberi DOI). Diformat APA.",
+        "- 'Tanpa nama penulis' disusun dari referensi asli yang penulisnya dihapus, karena dataset halu praktis tidak "
+        "memuat kasus ini.",
+        "- Model ML final dilatih pada SELURUH dataset, termasuk baris-baris ini: kolom 'ML saja benar' optimistis.",
+        "- Semua referensi halu di sini adalah manipulasi makalah NYATA, sehingga makalah aslinya bisa ditemukan di "
+        "basis data lokal/API; yang diuji adalah pemeriksaan kecocokan Tahap 2 terhadap rekaman asli tersebut.",
+    ],
+}
+
+
+def write_reports(rows: list[dict], summary: dict, seconds: float, which: str = "sistem") -> Path:
+    set_file, prefix, title = SETS[which]
     REPORTS.mkdir(exist_ok=True)
-    pd.DataFrame(rows).to_csv(REPORTS / "system_eval_results.csv", index=False, encoding="utf-8-sig")
-    (REPORTS / "system_evaluation.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    pd.DataFrame(rows).to_csv(REPORTS / f"{prefix}_eval_results.csv", index=False, encoding="utf-8-sig")
+    (REPORTS / f"{prefix}_evaluation.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     d, m = summary["halu_detection"], summary["ml_saja"]
-    lines = ["# Evaluasi sistem CIVA (end-to-end)", "",
+    lines = [f"# {title}", "",
              f"{summary['total']} referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, "
              f"filter domain) dalam {seconds / 60:.1f} menit.", "",
              "| Kelompok | n | Benar | ML saja benar | VALID | HALU | DI LUAR SCOPE | TIDAK TERBACA |", "|---|---|---|---|---|---|---|---|"]
@@ -338,17 +435,20 @@ def write_reports(rows: list[dict], summary: dict, seconds: float) -> None:
               f"- Precision: **{d['precision']:.0%}** ({d['fp']} referensi nyata salah dituduh halu)",
               f"- F1: **{d['f1']:.2f}** | akurasi keseluruhan: {d['accuracy']:.0%}",
               f"- Referensi nyata: salah dituduh HALU {summary['real_false_alarm']:.0%}, "
-              f"salah dinyatakan DI LUAR SCOPE {summary['real_out_of_scope']:.0%}, tidak terbaca {summary['real_unparsed']:.0%}",
+              f"dinyatakan DI LUAR SCOPE {summary['real_out_of_scope']:.0%}, tidak terbaca {summary['real_unparsed']:.0%}",
+              "- Referensi DI LUAR SCOPE tetap dinilai valid/halu (dengan peringatan); kolom Benar dan angka deteksi "
+              "memakai penilaian itu.",
               f"- Pembanding, model ML saja (tanpa bukti pangkalan data): recall {m['recall']:.0%}, "
               f"alarm palsu {m['false_alarm']:.0%}", "",
-              "## Catatan metodologi", "",
-              "- Referensi nyata diambil dari OpenAlex; sistem mencari ke Crossref/OpenAlex juga, sehingga ada unsur "
-              "sirkular: angka 'nyata' mengukur kebenaran parsing + pencocokan + keputusan, bukan cakupan indeks.",
-              "- Referensi palsu bersifat sintetis (karangan tangan dan korupsi terkontrol: penulis, tahun, DOI). "
-              "Halusinasi LLM nyata bisa lebih beragam.",
-              "- Referensi yang tidak berDOI atau tidak terindeks (buku, skripsi, jurnal lokal) kurang terwakili.",
-              f"- GROBID: {GROBID_URL}. Set evaluasi tersimpan di reports/eval_set.json (reproduksibel)."]
-    (REPORTS / "system_evaluation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+              "## Pola yang ditemukan Tahap 2 (kolom mismatch) per kelompok", ""]
+    for group, info in summary["groups"].items():
+        found = ", ".join(f"{k} ({v})" for k, v in info["pola"].items()) or "-"
+        lines.append(f"- {GROUP_TITLE[group]}: {found}")
+    lines += ["", "## Catatan metodologi", "", *NOTES[which],
+              f"- GROBID: {GROBID_URL}. Set evaluasi tersimpan di reports/{set_file} (reproduksibel)."]
+    path = REPORTS / f"{prefix}_evaluation.md"
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return path
 
 
 def main() -> None:
@@ -356,16 +456,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluasi end-to-end sistem CIVA.")
     parser.add_argument("--rebuild", action="store_true", help="susun ulang set evaluasi")
     parser.add_argument("--api", help="pakai backend yang sudah berjalan (default: nyalakan backend terisolasi)")
+    parser.add_argument("--set", choices=list(SETS), default="sistem", dest="which",
+                        help="sistem: set evaluasi umum | manipulasi: uji manipulasi dataset_scope/dataset_halu")
+    parser.add_argument("--per-group", type=int, default=20, help="--set manipulasi: referensi per kelompok")
     args = parser.parse_args()
 
     REPORTS.mkdir(exist_ok=True)
-    set_path = REPORTS / "eval_set.json"
+    set_path = REPORTS / SETS[args.which][0]
     if set_path.exists() and not args.rebuild:
         items = json.loads(set_path.read_text(encoding="utf-8"))
         print(f"Memuat set evaluasi: {len(items)} referensi ({set_path.name})")
     else:
         print("Menyusun set evaluasi ...")
-        items = build_eval_set()
+        items = build_eval_set() if args.which == "sistem" else build_manipulation_set(args.per_group)
         set_path.write_text(json.dumps(items, indent=1, ensure_ascii=False), encoding="utf-8")
         print("  komposisi:", dict(Counter(it["group"] for it in items)))
 
@@ -391,8 +494,8 @@ def main() -> None:
         if proc:
             proc.terminate()
     summary = summarize(rows)
-    write_reports(rows, summary, time.time() - started)
-    print("\n" + (REPORTS / "system_evaluation.md").read_text(encoding="utf-8"))
+    path = write_reports(rows, summary, time.time() - started, args.which)
+    print("\n" + path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

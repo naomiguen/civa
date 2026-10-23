@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from collections import Counter
 from typing import Iterable, Optional, Sequence
 
 from rapidfuzz import fuzz
 
 _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
+_TITLE_SEGMENT_RE = re.compile(r"\s*[:;?!.]\s+|\s+[-–—]+\s+")  # pemisah judul utama / subjudul
+_ET_AL_RE = re.compile(r"\bet\.?\s*al\b|\bdkk\b|\.\.\.|…", re.IGNORECASE)  # daftar penulis sengaja dipersingkat
 _DOI_RE = re.compile(r"10\.\d{4,9}/[^\s\"<>]+", re.IGNORECASE)
 _YEAR_RE = re.compile(r"\b(1[89]\d{2}|20\d{2})\b")
 _DBLP_SUFFIX_RE = re.compile(r"\s+\d{4}$")  # DBLP membedakan nama kembar: "Wei Zhang 0001"
@@ -42,6 +45,45 @@ def title_similarity(a: object, b: object) -> float:
     if len(short) >= 25 and long_.startswith(short + " "):  # mis. subjudul setelah ':' tidak ditulis
         score = max(score, 0.93)
     return score
+
+
+def _title_words(text: object) -> list[str]:
+    return norm_key(str(text or "").replace("&", " and ")).split()
+
+
+def title_word_issue(reference: object, record: object) -> Optional[str]:
+    """Pola manipulasi kata judul referensi terhadap judul aslinya (title_similarity sengaja toleran urutan kata).
+
+    "urutan judul" : kata-katanya sama persis, tetapi urutannya diacak
+    "kata judul"   : semua kata referensi ada di judul asli, tetapi ada kata asli yang dihilangkan
+    None           : tidak ada pola tersebut. Menghilangkan judul utama/subjudul secara utuh (bagian yang dipisah
+                     ':' '?' '.' atau ' - ') dan kata sandang "a/an/the" di awal tetap dianggap wajar.
+    """
+    ref, rec = _title_words(reference), _title_words(record)
+    if not ref or ref == rec:
+        return None
+    if sorted(ref) == sorted(rec):
+        return "urutan judul"
+    if not Counter(ref) - Counter(rec):  # semua kata referensi berasal dari judul asli -> ada yang dihilangkan
+        if all(word.isdigit() for word in (Counter(rec) - Counter(ref)).elements()):
+            return None  # hanya angka (mis. tahun di ujung judul) yang hilang
+        allowed = {" ".join(rec[1:])} if rec[0] in ("a", "an", "the") else set()
+        segments = [" ".join(_title_words(s)) for s in _TITLE_SEGMENT_RE.split(str(record)) if _title_words(s)]
+        allowed |= {" ".join(segments[i:j]) for i in range(len(segments)) for j in range(i + 1, len(segments) + 1)}
+        return None if " ".join(ref) in allowed else "kata judul"
+    joined_ref, joined_rec = " ".join(ref), " ".join(rec)
+    if fuzz.token_sort_ratio(joined_ref, joined_rec) >= 90 and fuzz.ratio(joined_ref, joined_rec) < 75:
+        return "urutan judul"  # kata-katanya hampir sama tetapi diacak (tokenisasi sedikit beda, mis. "V4+/V5+")
+    return None
+
+
+def contains_title(raw: object, title: object, min_words: int = 4) -> bool:
+    """Judul (min. `min_words` kata) tertulis utuh dan berurutan di teks referensi mentah.
+
+    Dipakai untuk membedakan judul yang memang dimanipulasi dari judul yang terpotong saat diekstraksi GROBID.
+    """
+    words = _title_words(title)
+    return len(words) >= min_words and f" {' '.join(words)} " in f" {' '.join(_title_words(raw))} "
 
 
 _DASHES_RE = re.compile("[‐-―−﹘﹣－]")  # berbagai "tanda hubung" hasil salin PDF/Word
@@ -88,6 +130,29 @@ def paren_year(text: object) -> Optional[int]:
     """Tahun dalam tanda kurung pertama pada teks referensi gaya APA/Harvard: '(2025)' atau '(2025a)'."""
     match = _PAREN_YEAR_RE.search("" if text is None else str(text))
     return int(match.group(1)) if match else None
+
+
+_QUOTED_TITLE_RE = re.compile(r"[“\"]([^”\"]{10,})[”\"]")
+
+
+def title_from_raw(raw: object, has_authors: bool) -> str:
+    """Judul cadangan bila GROBID tidak menemukannya; '' bila pola tidak dikenali.
+
+    Gaya yang dikenali: judul di antara tanda kutip (Harvard Indonesia); APA "Penulis. (2020). Judul. Sumber." dan
+    APA tanpa penulis "Judul. (2020). Sumber.". `has_authors`: GROBID menemukan penulis (judul ada SETELAH tahun).
+    """
+    text = _MARKER_RE.sub("", _IDENTIFIER_NOISE_RE.sub(" ", "" if raw is None else str(raw))).strip()
+    quoted = _QUOTED_TITLE_RE.search(text)
+    if quoted:
+        return quoted.group(1).strip(" ,.")
+    match = _PAREN_YEAR_RE.search(text)
+    if not match:
+        return ""
+    before = text[:match.start()].strip(" .")
+    if not has_authors and len(before.split()) >= 4 and not _AUTHOR_START_RE.match(before):
+        return before
+    after = text[match.end():].lstrip(" .")
+    return re.split(r"(?<=[^\s.])\.\s|\.$", after, maxsplit=1)[0].strip()
 
 
 _TAIL_REPLACEMENTS = ((re.compile(r"\bTersedia pada\s*:?", re.IGNORECASE), "Available at:"),
@@ -197,6 +262,64 @@ def author_overlap(reference_authors: Sequence[tuple[str, str]], record_authors:
         return None
     hits = sum(any(_same_person(g, f, tokens) for tokens in people) for g, f in wanted)
     return hits / len(wanted)
+
+
+def _name_status(given: str, family: str, tokens: list[str]) -> Optional[str]:
+    """Hubungan satu penulis referensi (given, family) dengan satu nama rekaman (token, urutan "Depan Belakang").
+
+    "ok"         : nama belakangnya benar (token terakhir) dan inisialnya cocok; atau nama tengah + inisial cocok
+                   (mis. nama belakang pertama orang Spanyol: "Pérez, J." untuk José Pérez García)
+    "terbalik"   : nama DEPAN rekaman ditulis sebagai nama belakang ("Walter, W." / "Listia, S. R." untuk Listia Sari)
+    "nama_depan" : hanya nama depan/tengah yang ditulis, nama belakangnya hilang ("Panita" untuk Singgih Panita Budiman)
+    None         : bukan orang ini
+    """
+    parts = [p for p in family.split() if len(p) >= 2] or family.split()
+    positions = {i for i, tok in enumerate(tokens) if any(_token_equal(p, tok) for p in parts)}
+    if not positions:
+        return None
+    if len(tokens) > 1 and len(tokens) - 1 not in positions:
+        if not given:
+            return "nama_depan"
+        if positions == {0}:
+            return "terbalik"
+    return "ok" if _same_person(given, family, tokens) else None
+
+
+def compare_authors(reference_authors: Sequence[tuple[str, str]], record_authors: Iterable[str],
+                    raw: str = "") -> tuple[Optional[bool], Optional[str]]:
+    """(cocok?, kolom bermasalah) penulis referensi vs rekaman asli. (None, None) = rekaman tanpa penulis.
+
+    Kolom bermasalah: "tanpa penulis" (referensi tidak mencantumkan penulis sama sekali) | "penulis" (sebagian besar
+    tidak cocok) | "susunan nama" (nama depan ditulis sebagai nama belakang) | "nama penulis" (hanya nama depan yang
+    ditulis) | "jumlah penulis" (ada penulis asli yang dihilangkan tanpa "et al."/"dkk.").
+    """
+    people = [tokens for tokens in (full_name_tokens(a) for a in record_authors) if tokens]
+    wanted = [(norm_key(g), norm_key(f)) for g, f in reference_authors if norm_key(f)]
+    if not people:
+        return None, None
+    if not wanted:
+        return False, "tanpa penulis"
+    statuses, covered, order = [], set(), []  # status per penulis referensi; orang rekaman tercakup; urutannya
+    for given, family in wanted:
+        found = {i: s for i, s in ((i, _name_status(given, family, tokens)) for i, tokens in enumerate(people)) if s}
+        covered |= found.keys()
+        kinds = set(found.values())
+        statuses.append("ok" if "ok" in kinds else kinds.pop() if kinds else "hilang")
+        if "ok" in kinds:
+            order.append(min(i for i, s in found.items() if s == "ok"))
+    if statuses.count("hilang") > len(wanted) / 2:
+        return False, "penulis"
+    if statuses.count("terbalik") and statuses.count("terbalik") >= len(wanted) / 2:
+        return False, "susunan nama"
+    if "nama_depan" in statuses:
+        return False, "nama penulis"
+    # Daftar dipersingkat secara wajar: >= 2 penulis PERTAMA, berurutan, tanpa lompatan (banyak gaya selain APA begitu).
+    truncated = len(order) == len(wanted) >= 2 and order == list(range(len(order)))
+    # Selain itu, penulis asli yang tidak tercakup = dihilangkan (mis. tinggal satu nama, ada yang dilompati, atau dua
+    # nama referensi menunjuk orang yang sama).
+    if len(covered) < min(len(people), 20) and not truncated and not _ET_AL_RE.search(raw or ""):
+        return False, "jumlah penulis"
+    return True, None
 
 
 # --------------------------------------------------------------------------------------

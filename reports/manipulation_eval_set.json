@@ -1,0 +1,1402 @@
+[
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Sidik, & Nikhlis, N. N. N. (2021). Sistem Informasi  Persediaan Dengan Metode Period Order Quantity Berbasis Multiuser Pada PT Terboyo. Jurnal Ilmiah. https://doi.org/10.51903/teknik.v1i2.100",
+  "meta": {
+   "source_id": 537,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "APLIKASI PENJADWALAN MATA KULIAH JURUSAN TEKNIK INFORMATIKA FAKULTAS TEKNIK UNIVERSITAS PALANGKA RAYA DENGAN ALGORITMA GENETIKA. (2018). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5836,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Bitrayoga, M., & Ubaidillah, U. (2025). Prediktif Gangguan Artificial Awal Perancangan Model untuk pada Intelligence Remaja Mental Identifikasi. Jurnal Ilmiah. https://doi.org/10.56869/klik.v6i2.744",
+  "meta": {
+   "source_id": 3134,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Meiqin, Y. (2023). Blockchain-powered distributed data auditing scheme for cloud-edge healthcare system. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2839,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Nafisah, Z., & Nugraha, A. S. (2025). Representasi Perjuangan Novel Ayah Sepatu Ibu Karya JS Khairen. Jurnal Ilmiah. https://doi.org/10.33752/jipsara.v2i1.9043",
+  "meta": {
+   "source_id": 4006,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Qezelbash-Chamak, J., Badamchizadeh, S., Eshghi, K., & Yasaman (2022). A survey of machine learning in kidney disease diagnosis. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2494,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Cahjadi, P. (2026). Uang terbitan swasta adalah utang swasta. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4831,
+   "scope": "non_cs",
+   "bidang": "Economics, Econometrics and Finance"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Anggara, R., Khoiriyah, N., Masruroh, S., Ainuttaqiyyah, G., & Nasikhin, N. (2023). MENGANALISIS PEMIKIRAN FRANCIS BACON(PEMIKIRAN EMPIRISME). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2529,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Gastineau, N., Abdou, W., Mbarek, N., & Togni, O. (2020). Election And Local Identifiers For 3D Programmable Matter. arXiv preprint.",
+  "meta": {
+   "source_id": 838,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Adrianne, B. (1996). Cyber stamps. Jurnal Ilmiah. https://doi.org/10.1016/s1353-4858(97)81225-1",
+  "meta": {
+   "source_id": 1930,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Lasarudin, A., & Hasyim, W. (2021). GORONTALO TERHADAP MASYARAKAT LAYANAN ANALISIS RRI KEPUASAN C4.5 ALGORITMA MENGGUNAKAN SIARAN. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3394,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "PENERAPAN ALGORITMA C4.5 UNTUK PREDIKSI PENGGUNAAN JENIS KONTRASEPSI BERBASIS WEB. (2017). Jurnal Ilmiah. https://doi.org/10.20527/klik.v4i2.98",
+  "meta": {
+   "source_id": 5240,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Resiasa, U., Komputer, M. F. M., Unik, F. M., Komputer, M. I. U., Riau, R., & Ilmu (2021). INOVASI EDUKASI: AUGMENTED REALITY UNTUK TATALAKSANA JENAZAH DALAM KONTEKS ISLAM. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4559,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Yusuf, R. (2015). AGGREGATOR OTOMATIS PENCARI DENGAN MELALUI SUREL MENGGUNAKAN FUNGSI cURL. Jurnal Ilmiah. https://doi.org/10.15408/jti.v8i1.1936",
+  "meta": {
+   "source_id": 1052,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Sarfika (2025). Rancang Bangun Sistem Informasi Pengelolaan Data Kependudukan di Kelurahan Cilallang Berbasis Website. Jurnal Ilmiah. https://doi.org/10.30605/peripheral.v1i2.6586",
+  "meta": {
+   "source_id": 1208,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Roach, A., Aagaard, K., & Carsey, F. (1993). Coupled variability in the Greenland. Jurnal Ilmiah. https://doi.org/10.1080/07055900.1993.9649474",
+  "meta": {
+   "source_id": 4144,
+   "scope": "non_cs",
+   "bidang": "Earth and Planetary Sciences"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Badriyah, J., Rachman, A. F., Oktavia, R., Mustafida, Aulia, I. F., & Muliawan, A. (2026). Analisis Kesiapan SMP-IT Al Irsyad Al Islamiyah menuju Smart School  Menggunakan Metode Weighted Mean. Jurnal Ilmiah. https://doi.org/10.55123/storage.v5i2.7705",
+  "meta": {
+   "source_id": 4138,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Klimstra, D. S., Conlon, K. C., & Adsay, V. N. (2001). Lymphoplasmacytic Sclerosing Pancreatitis With Pseudotumor Formation. Jurnal Ilmiah. https://doi.org/10.1097/00132583-200105000-00003",
+  "meta": {
+   "source_id": 2641,
+   "scope": "non_cs",
+   "bidang": "Medicine"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Acenowr, C. P., & Coles, M. E. (2021). OCD during COVID-19: Understanding clinical and non-clinical anxiety in the community. Jurnal Ilmiah. https://doi.org/10.1016/j.psychres.2021.113910",
+  "meta": {
+   "source_id": 2076,
+   "scope": "non_cs",
+   "bidang": "Psychology"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Ferreira, D. J. (2013). Fostering the Creative Development of Computer Science Students in Programming and Interaction Design. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 447,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Hariadi, B., & Meilina, S. (2022). RUMAH PADANG PRIMA TENTARA PASIEN PENGGUNA PENYELENGGARA JAMINAN DR. (BPJS) SOSIAL REKSODIWIRYO PELAYANAN RAWAT DI SAKIT UNIT BADAN INAP PADA (RST). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 528,
+   "scope": "non_cs",
+   "bidang": "Health Professions"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Torres, P. B., Santiago, J. M., Lucena, J. E. C., Gonzaga, I. V. F., Melo, D. Â. D. S., Lima, G. S., Silva, A. C. D., & Macedo, A. V. M. (2022). Biometric alterations in thoracic limbs of vaquejada horses. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3014,
+   "scope": "non_cs",
+   "bidang": "Veterinary"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Burnay, N., Lopes, A., & Vasconcelos, V. T. (2020). Consumers REST Statically Checking API SafeRESTScript:. arXiv preprint.",
+  "meta": {
+   "source_id": 684,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Yudhakesuma, M. I., & Irmanda, H. N. (2022). Analisis User Experience dan Redesign Antarmuka Website Portal Berita Online dengan Metode User Centered Design (UCD) (Studi Kasus: Cakrawala.co). Jurnal Ilmiah. https://doi.org/10.52958/iftk.v17i4.4154",
+  "meta": {
+   "source_id": 2770,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Bowes, W. B. (2026). Reuse in John’s Gospel in Light of Rewritten Scripture. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4386,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Dewi, I. G. A. T., Agustini, K., & Mertayasa, I. N. E. (2025). GAGNÉ MATA BERBASIS INFORMATIKA PELAJARAN PRINSIP INTERAKTIF PENGEMBANGAN PEMBELAJARAN PADA MEDIA. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3549,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Kania, D. D. (2013). Barat dalam Nilai Peradaban Konsep. Jurnal Ilmiah. https://doi.org/10.21111/tsaqafah.v9i2.52",
+  "meta": {
+   "source_id": 3005,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Sopacuaperu, E. J. (2020). Misi Rekonsiliasi dalam Konteks Kemajemukan Agama di Indonesia: Analisis Naratif Yohanes 20:19-23 dan Implikasi Misiologisnya. Jurnal Ilmiah. https://doi.org/10.37196/kenosis.v6i1.85",
+  "meta": {
+   "source_id": 4523,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Widyastuti, & Listia, S. R. P. (2020). Pengembangan Media Pembelajaran Berbasis Game Edukasi Pada MatPel  IPA  Tematik Kebersihan Lingkungan. Jurnal Ilmiah. https://doi.org/10.31294/p.v22i1.7084",
+  "meta": {
+   "source_id": 1686,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Ben-David, S., & Reyzin, L. (2014). closer stability Data clustering: A in look. Jurnal Ilmiah. https://doi.org/10.1016/j.tcs.2014.09.025",
+  "meta": {
+   "source_id": 422,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Suciati, A., Sari, D. K., Yunus, A. P., & Amaliah, N. R. (2025). of Detection in Detection Vulgarity Transformer Implementation Character: of Anime. Jurnal Ilmiah. https://doi.org/10.15408/jti.v18i1.46064",
+  "meta": {
+   "source_id": 3236,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Li, W., Guo, S., Guo, H., Xiao, Y., Lin, M., Jia, L., Li, D., Zhang, L., & Li, H. (2026). for V Maleic Oxidation 4+ /V Efficient 4 Balances VOPO Anhydride n‑Butane to Modification Sites Moderate 5+ Redox. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3026,
+   "scope": "non_cs",
+   "bidang": "Chemical Engineering"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Hananto, B., Raafi’udin, R., & Widiyanto, D. (2025). Analisis Nilai Sensor untuk Penilaian Kualitas Aroma Kopi Kolombia. Jurnal Ilmiah. https://doi.org/10.24176/simet.v16i1.13989",
+  "meta": {
+   "source_id": 4364,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Mahankali, A. V., & Woodruff, D. P. (2020). Optimal $\\ell_1$ Column Subset Selection and a Fast PTAS for Low Rank Approximation. arXiv preprint.",
+  "meta": {
+   "source_id": 675,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Pamungkas, I. G., & Mulyono, S. (2021). Penggunaan Telenursing dalam Peningkatan Kualitas Hidup Pasien dengan Gagal Jantung. Jurnal Ilmiah. https://doi.org/10.56338/pjkm.v11i2.2061",
+  "meta": {
+   "source_id": 5585,
+   "scope": "non_cs",
+   "bidang": "Medicine"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Kellett, S. E. (2015). and War Memorial love: Australian the of windows Truth the. Jurnal Ilmiah. https://doi.org/10.1080/14443058.2015.1021366",
+  "meta": {
+   "source_id": 201,
+   "scope": "non_cs",
+   "bidang": "Psychology"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Coded Caching for Heterogeneous Wireless Networks. (2020). arXiv preprint.",
+  "meta": {
+   "source_id": 943,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Herawati, E. R. N., Ariani, D., Miftakhussolikhah, N., Laila, F., & Pranoto, Y. (2018). KARAKTERISTIK SOHUN PATI AREN – KENTANG HITAM DENGAN PENAMBAHAN EKSTRAK UMBI BIT, DAUN SUJI, DAN KUNYIT. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1510,
+   "scope": "non_cs",
+   "bidang": "Nursing"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Oktavian, D., & Putra, B. (2026). MULTIMODAL TEKS-NUMERIK: TINJAUAN SISTEMATIS TENTANG TEKNIK FUSI, KOMPATIBILITAS ENCODER, DAN KINERJA MODEL. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5982,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Zulkifli, A. (2018). EFISIENSI EFISIENSI SISTEM INVENTORI PADA PERUSAHAAN PERKEBUNAN KELAPA SAWIT PT AGRO ABADI. Jurnal Ilmiah. https://doi.org/10.33060/jik/2018/vol7.iss1.81",
+  "meta": {
+   "source_id": 4735,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Fahmi, M. A. F., Nur, F., & Saenab, S. (2021). Selatan Sungai Makassar, Sulawesi mangrove di tanaman Identifikasi Tallo,. Jurnal Ilmiah. https://doi.org/10.24252/filogeni.v1i1.20551",
+  "meta": {
+   "source_id": 3313,
+   "scope": "non_cs",
+   "bidang": "Environmental Science"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Hidayat, A., & Aliya (2025). Pembuatan Dashboard website Penjualan Properti Di Kota Manhattan. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2972,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Pevný, Heim, & Niklas, V. T. Š. (2020). Neural Power Units. arXiv preprint.",
+  "meta": {
+   "source_id": 5196,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "-, S. (2022). ANALISIS SEMARANG TANKER KEGAGALAN WATER KAPAL SHAFT EMAS DI PUMP TANJUNG COOLING DI PELABUHAN ATAS. Jurnal Ilmiah. https://doi.org/10.24176/simet.v13i1.6197",
+  "meta": {
+   "source_id": 3229,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Biţă, A., Mogoşanu, G. D., Bejenaru, L. E., Oancea, C. N., Bejenaru, C., Croitoru, O., Rău, G., Neamţu, J., Scorei, I. D., Scorei, I. R., Scorei, I. R., Scorei, I. R., Hunter, J., Evers, B., Nemzer, B. V., Anghelina, F., & Rogoveanu, O. (2017). Simultaneous Quantitation of Boric Acid and Calcium Fructoborate in Dietary Supplements by HPTLC-Densitometry. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1729,
+   "scope": "non_cs",
+   "bidang": "Chemistry"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Nesiba, Sorenson, & Reynold, D. S. K. F. (2012). Who Is Foreclosing on Whom? Home Mortgage Lending and Foreclosures In Sioux Falls, South Dakota, 2004-2010. Jurnal Ilmiah. https://doi.org/10.2753/jei0021-3624460207",
+  "meta": {
+   "source_id": 4947,
+   "scope": "non_cs",
+   "bidang": "Economics, Econometrics and Finance"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Arini, A. (2011). Peluang dan Tantangan Aplikasi (Mobile Implementasi Learning) M-Learning. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 431,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Widya, M. A. A., & Syafa'ah, A. F. (2025). Sistem Informasi Manajemen Absensi Terintegrasi Aplikasi Absensi Face Recognition Berbasis Web. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 363,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Rosmawati, R., & Rizqa, N. N. (2018). Tanggung Jawab Maskapai Penerbangan Terhadap Penumpang Pesawat Udara Akibat Hijacking Menurut Hukum Internasional. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 853,
+   "scope": "non_cs",
+   "bidang": "Social Sciences"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Reproductive performance, disease occurrence, and mortality of goats under smallholder conditions in Dodoma, a semi-arid region of Tanzania. (2026). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3306,
+   "scope": "non_cs",
+   "bidang": "Agricultural and Biological Sciences"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Boni, B. (2001). and Counter. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4103,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Implementasi Dbscan Untuk Pengendalian Karhutla Di Provinsi Riau. (2025). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5387,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Perbenihan, B. P. T., Syamsuwida, D., Aminah, A., & Perbenihan, B. P. T. (2010). Metode Penyimpanan Semai Bakau (Rhizopora apiculata) dengan berbagai kondisi tempat dan Media simpan serat bahan penghambat pertumbuhan. Jurnal Ilmiah. https://doi.org/10.20886/jpth.2010.4.3.125-136",
+  "meta": {
+   "source_id": 5111,
+   "scope": "non_cs",
+   "bidang": "Environmental Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "IMPLEMENTASI E-COMMERCE MENGGUNAKAN CONTENT MANAGEMENT SYSTEM PADA TOKO BUCKETBALBAL. (2024). Jurnal Ilmiah. https://doi.org/10.24127/ilmukomputer.v5i2.7250",
+  "meta": {
+   "source_id": 669,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Giri, P. R. K. (2017). Hubungan antara ketepatan pengisian saluran akar dengan keberhasilan perawatan saluran akar. Jurnal Ilmiah. https://doi.org/10.15562/medicina.v48i1.18",
+  "meta": {
+   "source_id": 4084,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Darabi, F., Felegary, F., & Reza, M. (2016). Inflation via logarithmic entropy-corrected holographic dark energy model. Jurnal Ilmiah. https://doi.org/10.1140/epjc/s10052-016-4556-0",
+  "meta": {
+   "source_id": 5838,
+   "scope": "non_cs",
+   "bidang": "Physics and Astronomy"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Jang, S. J., Kim, M. Y. G. H., Oh, K. W. Y., Kwon, C. H. K., & Park (2017). Effect of Fluoropolymer Assisted Transfer on Graphene Doping. Jurnal Ilmiah. https://doi.org/10.1166/sam.2017.3020",
+  "meta": {
+   "source_id": 1541,
+   "scope": "non_cs",
+   "bidang": "Materials Science"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Taha, M. F. (2025). Gambaran Komitmen Organisasi Pada Member Yamaha Riders Federation Indonesia Wilayah Makassar. Jurnal Ilmiah. https://doi.org/10.56326/jpk.v5i1.5495",
+  "meta": {
+   "source_id": 5729,
+   "scope": "non_cs",
+   "bidang": "Social Sciences"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Tracking Context Changes through Meta-Learning. (1997). Jurnal Ilmiah. https://doi.org/10.1023/a:1007365809034",
+  "meta": {
+   "source_id": 3123,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Hepworth‐Warren, Kinsella, M. R. L. M. L. E. E., Cianciolo, H. S. B. K., Schroeder, Linn, M., Brenseke, C. V. D., Diaz-Campos, E., & Schreeg (2023). Ingesta-associated choledocholithiasis in horses: 2 cases and literature review. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5139,
+   "scope": "non_cs",
+   "bidang": "Veterinary"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Chinchay, L., Song, K., Stark, J. L., Ward, N. L., & McInnes, I. B. (2025). Opportunities in Psoriatic Disease: An Integrated View of the Future. Jurnal Ilmiah. https://doi.org/10.3899/jrheum.2025-0264",
+  "meta": {
+   "source_id": 4309,
+   "scope": "non_cs",
+   "bidang": "Immunology and Microbiology"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Rancang Bangun Kotak Penyimpanan Uang Berbasis Mikrokontroller. (2024). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3862,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "McCalla, W. J. (1987). Circuit Computer-Aided of Simulation Fundamentals. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 15,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Pemberdayaan Orang Hidup dengan HIV melalui Peningkatan Pengetahuan dan Keterampilan Kerajinan Tangan. (2020). Jurnal Ilmiah. https://doi.org/10.24198/mkk.v3i2.28619",
+  "meta": {
+   "source_id": 5238,
+   "scope": "non_cs",
+   "bidang": "Medicine"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Yuliyani, E. A., Aryani, G. A. T., Haq, A. D., Ilawanda, Z. M., & Sanggita, V. E. T. (2024). Abstrak: Karakteristik pasien yang menjalani pemeriksaan Otoacoustic Emission (OAE) dan Evoked Response Audiometry (BERA) di RSUD Provinsi NTB. Jurnal Ilmiah. https://doi.org/10.33024/jikk.v11i6.14760",
+  "meta": {
+   "source_id": 944,
+   "scope": "non_cs",
+   "bidang": "Neuroscience"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Nandlal, S., Kumar, & Srilatha, D. K. K. B. P. P. (2015). Evaluation of the Load-bearing Capacity of Fractured Incisal Edge of Maxillary Permanent Central Incisors restored with a Glass Fiber-reinforced Nanocomposite: An in vitro Study. Jurnal Ilmiah. https://doi.org/10.5005/jp-journals-10005-1278",
+  "meta": {
+   "source_id": 5027,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Colin, A., Schmidt, C., Pokrovski, G. S., Wilke, M., Borisova, A. Y., & Toplis, M. J. (2020). In determination sulfur speciation and partitioning in aqueous fluid-silicate melt systems. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3874,
+   "scope": "non_cs",
+   "bidang": "Earth and Planetary Sciences"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Panita (2024). Peran Komprehensif Bimbingan Konseling dalam Menangani Dampak Tekanan Akademik terhadap Kesehatan Mental. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5680,
+   "scope": "non_cs",
+   "bidang": "Psychology"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Craven, S. M. S. (2001). Relational Learning with Statistical Predicate Invention: Better Models for Hypertext. Jurnal Ilmiah. https://doi.org/10.1023/a:1007676901476",
+  "meta": {
+   "source_id": 1620,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Prayudha, S. A. E., Chrismawaty, B. E., Agustina, D., & Subagyo, G. (2012). Kandisiasis Mulut sebagai Indikator Penyakit Sistemik. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 518,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Cunningham, D., & Keen (2001). Stalking the Sociological Imagination: J. Edgar Hoover's FBI Surveillance of American Sociology. Jurnal Ilmiah. https://doi.org/10.2307/3089367",
+  "meta": {
+   "source_id": 2361,
+   "scope": "non_cs",
+   "bidang": "Social Sciences"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Indonesia, U., & Soeharto, D. N. (2021). dan Tenaga Internalisasi Sertifikasi Tenaga Kerja Pariwisata di Indonesia. Jurnal Ilmiah. https://doi.org/10.21776/ub.jtg.008.01.2",
+  "meta": {
+   "source_id": 968,
+   "scope": "non_cs",
+   "bidang": "Business, Management and Accounting"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Ayu, S. O. I. S. (2024). Analisis Keberlanjutan Tempat Pemrosesan Akhir (TPA) Ijobalit, Lombok Timur. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4933,
+   "scope": "non_cs",
+   "bidang": "Environmental Science"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Rudjiono, D., Sasmoko, D., & Syahputra, H. A. (2025). PROTOTYPE PERANCANGAN ALAT PENDETEKSI KETINGGIAN TANDON AIR DI RSUD DR. GUNAWAN MANGUNKUSUMO BERBASIS ARDUINO UNO. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5847,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Pratiwi, D., Santoso, G. B., & Saputri, F. H. (2017). THE APPLICATION OF GRAPHOLOGY AND ENNEAGRAM TECHNIQUES IN DETERMINING PERSONALITY TYPE BASED ON HANDWRITING FEATURES. Jurnal Ilmiah. https://doi.org/10.21609/jiki.v10i1.372",
+  "meta": {
+   "source_id": 2940,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Suputra, P. H. (2012). Intisari Kerangka Sistem Berbasis Aturan Menggunakan Certainty Factor Dengan Runut Maju Dan Runut Mundur. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5300,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Fadillah, Khairani, N. R. B., & Dewi, F. N. (2020). MOBILE BANKING SYSTEM DEVELOPMENT USING NEAR FIELD COMMUNICATION TECHNOLOGY WITH ANDROID-BASED OPERATING SYSTEM. Jurnal Ilmiah. https://doi.org/10.15408/jti.v13i1.15731",
+  "meta": {
+   "source_id": 4935,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Hendrajaya, G. L. (2023). Evaluasi PT Penyimpanan LB3 3 di di (LB3) Tempat Limbah Regional Office (TPS Beracun dan Berbahaya Sementara Pengelolaan Bahan Z (RO3) LB3). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3244,
+   "scope": "non_cs",
+   "bidang": "Chemical Engineering"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "DESAIN DAN PEMBUATAN PERALATAN ANGKAT SEMI-OTOMATIS YANG ERGONOMIS UNTUK APLIKASI DI BENGKEL DAN INDUSTRI. (2025). Jurnal Ilmiah. https://doi.org/10.55123/storage.v4i4.6728",
+  "meta": {
+   "source_id": 2753,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Ceron, W., de-Lima-Santos, M., & Quiles, M. G. (2020). Fake news agenda in the era of COVID-19: Identifying trends through fact-checking content. arXiv preprint.",
+  "meta": {
+   "source_id": 1718,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Rademaker, M. (2016). Assessing Cyber Security 2015. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 558,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Ponorogo, S., & Junaidi, A. (2017). Menuju Ke Arah Pengembangan Ilmu Falak. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3776,
+   "scope": "non_cs",
+   "bidang": "Physics and Astronomy"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Azizah, R. N., & Suyadi, S. (2022). Model Pembelajaran Kooperatif Berbasis Neurosains dalam Pembelajaran Pendidikan Agama Islam. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4674,
+   "scope": "non_cs",
+   "bidang": "Neuroscience"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Perlmutter, S. I. (2017). Reaching again: a glimpse of the future with neuroprosthetics. Jurnal Ilmiah. https://doi.org/10.1016/s0140-6736(17)30562-7",
+  "meta": {
+   "source_id": 3567,
+   "scope": "non_cs",
+   "bidang": "Neuroscience"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Yc, B., Brahmantiyo, H. R., & L., P. (2014). Performans Kelinci Flemish Giant Cross (FZ-3) Generasi Kedua. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5127,
+   "scope": "non_cs",
+   "bidang": "Biochemistry, Genetics and Molecular Biology"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Muniroh, Y. T. F. (2026). IMPLEMENTASI SISTEM ABSENSI KARYAWAN MENGGUNAKAN BARCODE DAN GPS BERBASIS WEBSITE PADA PT INSCIENPRO INSTRUMENT INDONESIA. Jurnal Ilmiah. https://doi.org/10.51903/informatika.v6i1.1649",
+  "meta": {
+   "source_id": 1929,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Yuda, A., & Muludi, K. (2021). APLIKASI PERPUSTAKAAN DIGITAL BERBASIS ANDROID PADA PERPUSTAKAN JURUSAN ILMU KOMPUTER UNIVERSITAS LAMPUNG. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 282,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Translation of Mongolian Literature. (2013). Jurnal Ilmiah. https://doi.org/10.22353/mjflc2013118",
+  "meta": {
+   "source_id": 2784,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Lê, S. Q. K. (2008). Vietnamese-born health professionals: negotiating work and life in rural Australia. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2069,
+   "scope": "non_cs",
+   "bidang": "Health Professions"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Fadhlulloh, M. A., Rahman, T., Nandiyanto, A. B., & Mudzakir, A. (2014). REVIEW TENTANG SINTESIS SiO2 NANOPARTIKEL. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5279,
+   "scope": "non_cs",
+   "bidang": "Materials Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Pengamanan Elektronik Arsip (E-Arsip) pada Kantor Desa Buntu Bedimbar Menggunakan Algoritma Rivest Shamir Adleman (RSA). (2025). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5320,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Faruk, A., Faraby, M. A. M. M. M. M., Fedous, M. R., Azad, & Kishor, H. (2020). Image to Bengali Caption Generation Using Deep CNN and Bidirectional Gated Recurrent Unit. arXiv preprint.",
+  "meta": {
+   "source_id": 4758,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Setianingrum, A. H. (2014). BERBASIS CLUSTERING FUZZY KUALIFIKASI EVALUASI METODE PEMETAAN LULUSAN C_MEANS MODEL PENILAIAN. Jurnal Ilmiah. https://doi.org/10.15408/jti.v7i2.1940",
+  "meta": {
+   "source_id": 3351,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "THE AUTHOR RESPONDS. (2007). Jurnal Ilmiah. https://doi.org/10.1111/j.1748-5827.2007.00455.x",
+  "meta": {
+   "source_id": 3354,
+   "scope": "non_cs",
+   "bidang": "Veterinary"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Wagey, I. N., Ijong, F. G., & Palenewen, J. C. (2013). Tingkat Kontaminasi Vibrio cholerae Resisten Merkuri Dari Ikan Kuwe sexfasciatus). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1262,
+   "scope": "non_cs",
+   "bidang": "Biochemistry, Genetics and Molecular Biology"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Changes in Dental Hygiene Condition According to the Degree Of Motiviation In A Dental Management Program. (2017). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 751,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Muzdalifah, M. S. B. P. S., Saputra, Utami, N. D. B. P., Mafriana, & Purboningsih, J. R. A. (2023). Program Pemberdayaan Masyarakat Berbasis Eco-Green kepada Kelompok Pengajian Perempuan di Kelurahan Landasan Ulin Tengah Kota Banjarbaru. Jurnal Ilmiah. https://doi.org/10.20527/btjpm.v5i1.6463",
+  "meta": {
+   "source_id": 5097,
+   "scope": "non_cs",
+   "bidang": "Environmental Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Ruiz‐Velasco, A., Jouve, C., Deshayes, L., & Hulot, J. (2026). The HCM-associated mutation MYH7 R663H leads to impaired and metabolism adaptability stress. Jurnal Ilmiah. https://doi.org/10.1016/j.jmccpl.2025.100656",
+  "meta": {
+   "source_id": 942,
+   "scope": "non_cs",
+   "bidang": "Biochemistry, Genetics and Molecular Biology"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Lukito, & Handaya, W. B. T. (2025). Website Phishing Teknik Learning. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 854,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Song-Kyoo, & Kim (2020). Toward Compact Data from Big Data. arXiv preprint.",
+  "meta": {
+   "source_id": 1928,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Nugroho, A., & Sachro, S. S. (2024). Analisis Regresi Untuk Penentuan Faktor Koreksi Data Hujan Satelit (Studi Kasus Daerah Tangkapan Air Bendungan Way Apu). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5828,
+   "scope": "non_cs",
+   "bidang": "Earth and Planetary Sciences"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Hani, R. A. S., Astuty, & Sari, E. N. (2022). PENGARUH KEPUTUSAN KEUANGAN TERHADAP NILAI PERUSAHAAN DIMEDIASI OLEH RETURN ON ASSET. Jurnal Ilmiah. https://doi.org/10.37932/ja.v11i2.580",
+  "meta": {
+   "source_id": 2880,
+   "scope": "non_cs",
+   "bidang": "Business, Management and Accounting"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Agustiningsih, K., & Alsyaibani, E. M. A. (2022). Sentiment Analysis of COVID-19 Vaccines in Indonesia on Twitter Using Pre-Trained and Self-Training Word Embeddings. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5600,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "ANALISIS FAKTOR YANG BERHUBUNGAN DENGAN KESEHATAN GIGI DAN MULUT PADA PASIEN SKIZOFRENIA. (2024). Jurnal Ilmiah. https://doi.org/10.33475/jikmh.v13i1.353",
+  "meta": {
+   "source_id": 1501,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Ben-David, A., & Mandel, J. (1995). Classification Accuracy: Machine Learning vs. Explicit Knowledge Acquisition. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 2591,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Tania, Andayani, C., Simanjuntak, H. C., Nurfajriyah, I., Zannah, R. A., Triyani, R., & S.Kep., N. S. N. (2024). Edukasi Leaflet terhadap tingkat Pengetahuan Mahasiswa tentang Makanan Sehat dan Bergizi. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1080,
+   "scope": "non_cs",
+   "bidang": "Nursing"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Heffernan, O. (2018). In dust we trust. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 552,
+   "scope": "non_cs",
+   "bidang": "Environmental Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Ferber-Viart, C., Ferber-Viart, Banssillon, D. M. V., Preckel, R., & C. (1998). Effect of anesthesia on transient evoked otoacoustic emissions in humans: a comparison between propofol and isoflurane. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 4858,
+   "scope": "non_cs",
+   "bidang": "Neuroscience"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Kurniati, T., Atikah, & Sulistyarti, H. (2013). Polimer Ion Rodamina Elektroda Bermembran Carrier Dop Dengan Selektif Kitosan (Esi) B Sebagai Campuran Pvc Karakterisasi –. Jurnal Ilmiah. https://doi.org/10.5281/zenodo.494994",
+  "meta": {
+   "source_id": 3397,
+   "scope": "non_cs",
+   "bidang": "Chemical Engineering"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Lidya, L. (2017). PERANCANGAN SISTEM INFORMASI PERPUSTAKAAN BERBASIS WEB PADA SMP SUMBANGSIH. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3169,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Coward, S., Visse-Martindale, E., & Ramesh, C. (2020). Clustering: Learning a Context. arXiv preprint.",
+  "meta": {
+   "source_id": 1410,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Puget, J. (1994). Explicit Representation Negation. Jurnal Ilmiah. https://doi.org/10.1023/a:1022630301359",
+  "meta": {
+   "source_id": 3854,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Shubham, S., Mehta, D. A., & Malhotra, M. V. (2025). Exploring Security Strategies: Safeguarding Networks From Cyber Attacks With Advanced Cyber Security Techniques. Jurnal Ilmiah. https://doi.org/10.64252/zfh2tk92",
+  "meta": {
+   "source_id": 704,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Sanders, D. (1991). Writing Activities Improve Learning in Computer Science Courses. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1426,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Schloss, B., & Konam, S. (2020). Towards an Automated SOAP Note: Classifying Utterances from Medical Conversations. arXiv preprint.",
+  "meta": {
+   "source_id": 3359,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "D-WAVE CHECKERBOARD BOSE CONDENSATE OF MOBILE BIPOLARONS. (2007). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3848,
+   "scope": "non_cs",
+   "bidang": "Physics and Astronomy"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Tomasz (2018). Cartographic presentation – from simple to complex map. Jurnal Ilmiah. https://doi.org/10.2478/mgrsd-2018-0023",
+  "meta": {
+   "source_id": 2633,
+   "scope": "non_cs",
+   "bidang": "Social Sciences"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Shiroza, T., Shinozaki, N., Ikemi, T. T., Fukushima, K., & Y (1998). Rapid isolation of chromosomal DNA from oral streptococci and polymerase chain reaction‐oriented restriction fragment‐length polymorphism analysis for genetic heterogeneity. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5518,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Ajiwerdhi, A. A. G., Kesiman, M. W. A., & Wirawan, I. M. A. (2012). Pengembangan Sistem Pendukung Keputusan Berbasis Mobile Untuk Pengisian Kartu Rencana Studi Dengan Fuzzy Multi-Attribute Decision Making (FMADM) Metode Simple Additive Weighting (SAW) Di Jurusan Pendidikan Teknik Informatika Universitas Pendidikan Ganesha Singaraja. Jurnal Ilmiah. https://doi.org/10.23887/janapati.v1i2.9850",
+  "meta": {
+   "source_id": 5481,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Teni, F. S., Surur, A. S., Asrie, A. B., Wondimsigegn, D., Gelayee, D. A., Shewamene, Z., Wubishet, B. L., & Birru, E. M. (2017). Gondar Ethiopia medicine town, of A storage practices household survey northwestern in. Jurnal Ilmiah. https://doi.org/10.1186/s12889-017-4152-8",
+  "meta": {
+   "source_id": 3434,
+   "scope": "non_cs",
+   "bidang": "Pharmacology, Toxicology and Pharmaceutics"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "HUBUNGAN PUASA SUNAH DENGAN KADAR GULA DARAH PADA PENDERITA DIABETES MELITUS. (2025). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 3614,
+   "scope": "non_cs",
+   "bidang": "Medicine"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Afrilia, G. (2021). ZnO Terdoping Alumunium (ZnO:Al) dan ZnO Terdoping Oksida Grafena Tereduksi (ZnO:rGO) sebagai Fotokatalis untuk Sistem Penjernihan Air, Review. Jurnal Ilmiah. https://doi.org/10.24198/jmei.v10i01.29844",
+  "meta": {
+   "source_id": 2464,
+   "scope": "non_cs",
+   "bidang": "Energy"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Zhang, L., Li, W., Yu, L., Sun, X. L., Ning, Xu, J., & Qin, H. (2020). GmFace: A Mathematical Model for Face Image Representation Using Multi-Gaussian. arXiv preprint.",
+  "meta": {
+   "source_id": 5781,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "EDUKASI PENGGUNAAN PIGMEN TANAMAN SEBAGAI INDIKATOR UNTUK PENINGKATAN PEMAHAMAN PELAJAR SMA TERHADAP MATERI TITRASI ASAM BASA DI DESA BABAKAN KAB.CIREBON. (2023). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5903,
+   "scope": "non_cs",
+   "bidang": "Chemistry"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Lee, M. F. F. S., & Isputrawan (2022). Peningkatan Kualitas Layanan Warga Kelurahan Duri Kepa dengan Aplikasi LINGKOE. Jurnal Ilmiah. https://doi.org/10.31294/inf.v9i1.11538",
+  "meta": {
+   "source_id": 4910,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Akhlaghi, F., Azizi, S., Malek, B., Mahboubi, F., Shams, S., & Karimizadeh, M. (2020). Anxiety of Decreasing Anesthesia in on Surgery. Oral Effect Maxillofacial Preoperative Consultation Patients and Undergoing. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 278,
+   "scope": "non_cs",
+   "bidang": "Dentistry"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Villacampa, N. J. I., Ubieto, T., Romeo, E., Royo, C., Borgna, A., & Monzón, A. (2008). Development of Ni–Al Catalysts for Hydrogen and Carbon Nanofibre Production by Catalytic Decomposition of Methane. Effect of MgO Addition. Jurnal Ilmiah. https://doi.org/10.1007/s11244-008-9124-x",
+  "meta": {
+   "source_id": 2273,
+   "scope": "non_cs",
+   "bidang": "Chemical Engineering"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Fasya, Nugraha, R. A. S., Imamudin, Y. N., Ni’mah, P., Amalia, & Dewi, G. M. (2018). Optimasi Produksi Gelatin Halal dari Tulang Ayam Broiler (Gallus Domesticus) dengan Variasi Lama Perendaman dan Konsentrasi Asam Klorida (HCl). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 5181,
+   "scope": "non_cs",
+   "bidang": "Materials Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Oner, M. U., Kye-Jet, J. M. S., Lee, H. K., & Sung, W. (2020). Studying The Effect of MIL Pooling Filters on MIL Tasks. arXiv preprint.",
+  "meta": {
+   "source_id": 3484,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_non_cs",
+  "expected": "valid",
+  "text": "Utami, S. F., Gusti, A., & Widoyo, R. (2026). Determinan Kejadian ISPA pada Balita di Provinsi Sumatera Barat, Riau dan Jambi: Analisis Data SKI 2023. Jurnal Ilmiah. https://doi.org/10.25077/jk3l.7.2.177-187.2026",
+  "meta": {
+   "source_id": 3871,
+   "scope": "non_cs",
+   "bidang": "Health Professions"
+  }
+ },
+ {
+  "group": "penulis_tidak_lengkap",
+  "expected": "halu",
+  "text": "Kurniadi, D. (2021). Rancang Bangun Sistem Informasi E-Office pada Tata Usaha Fakultas Teknik Universitas Negeri Padang. Jurnal Ilmiah. https://doi.org/10.24036/voteteknika.v9i1.111285",
+  "meta": {
+   "source_id": 5727,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Priyadi, A., Zainudin, A., & Rustanto, E. (2022). Game Edukasi Matematika Geometri Untuk Kelas Sekolah Dasar Kristen Ngampin. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 759,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "nama_dibalik",
+  "expected": "halu",
+  "text": "Takeda, & Tanaka, K. K. (2020). Dark Reciprocal-Rank: Boosting Graph-Convolutional Self-Localization Network via Teacher-to-student Knowledge Transfer. arXiv preprint.",
+  "meta": {
+   "source_id": 1782,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Arista, T., & Murdani, M. (2020). Perancangan Pengamanan Pesan Menggunakan Algoritma Elgamal Android. Jurnal Ilmiah. https://doi.org/10.54367/kakifikom.v2i1.667",
+  "meta": {
+   "source_id": 4244,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "The Stock Exchange Prediction using Machine Learning Techniques: A Comprehensive and Systematic Literature Review. (2021). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 1585,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Ishchuk, M. (2023). Assessing Ukraine's Shadow Economy: Methods Key. Jurnal Ilmiah. https://doi.org/10.54929/2786-5738-2023-9-03-06",
+  "meta": {
+   "source_id": 888,
+   "scope": "non_cs",
+   "bidang": "Economics, Econometrics and Finance"
+  }
+ },
+ {
+  "group": "tanpa_penulis",
+  "expected": "halu",
+  "text": "Women in Pastoral Office: The Story of Santa Prassede, Rome by Mary M. Schaefer (review). (2015). Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 737,
+   "scope": "non_cs",
+   "bidang": "Arts and Humanities"
+  }
+ },
+ {
+  "group": "judul_kata_dihapus",
+  "expected": "halu",
+  "text": "Damaschke, P. (2000). Adaptive Versus Learning. Jurnal Ilmiah.",
+  "meta": {
+   "source_id": 808,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "asli_cs",
+  "expected": "valid",
+  "text": "Wang, J., Song, G., Wu, Y., & Wang, L. (2020). Streaming Graph Neural Networks via Continual Learning. arXiv preprint.",
+  "meta": {
+   "source_id": 725,
+   "scope": "cs",
+   "bidang": "Computer Science"
+  }
+ },
+ {
+  "group": "judul_diacak",
+  "expected": "halu",
+  "text": "Armstrong-Moore, R., Benson, M., & White, M. (2026). Secondary Does and on Interviews Supermarket Qualitative Diet Is and of Retailers Shape Management Supermarket Analysis Category With Health? and Influence Shelves How What Suppliers. Jurnal Ilmiah. https://doi.org/10.34172/ijhpm.8932",
+  "meta": {
+   "source_id": 3222,
+   "scope": "non_cs",
+   "bidang": "Business, Management and Accounting"
+  }
+ }
+]

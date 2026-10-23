@@ -10,6 +10,7 @@ Jalankan (dari folder proyek):  streamlit run frontend/app.py
 from __future__ import annotations
 
 import html
+import math
 import os
 import sys
 from pathlib import Path
@@ -121,11 +122,14 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .st-key-btn_recheck button:hover{background:#d7eee0 !important;border-color:var(--green) !important}
 .civa-pctbox{background:var(--bg);border-radius:14px;padding:16px 20px 14px}
 .civa-pctbox .t{font-size:15.5px;font-weight:600;color:#666;margin-bottom:13px}
-.civa-donut{width:200px;height:200px;border-radius:50%;margin:0 auto;position:relative;display:grid;place-items:center}
-.civa-donut::after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--bg)}
-.civa-donut b{position:relative;z-index:1;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif !important;
-  font-size:34px;font-weight:700;color:var(--donut-green)}
-.civa-legend{display:flex;justify-content:space-between;gap:8px;margin-top:17px;font-size:13.4px;font-weight:700}
+.civa-pie{display:block;width:220px;height:220px;margin:0 auto}
+.civa-pie text{text-anchor:middle;fill:var(--ink)}
+.civa-pie .n{font-size:12.5px;font-weight:600}
+.civa-pie .p{font-size:16px;font-weight:700}
+.civa-legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:16px;font-size:13px;font-weight:600;color:var(--ink2)}
+.civa-legend span{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.civa-legend i{flex:none;width:11px;height:11px;border-radius:3px}
+.civa-legend-note{margin-top:10px;font-size:11.8px;line-height:1.45;color:var(--ink3)}
 .civa-right{margin:-4.5px 0 0 6px}
 .civa-h2{font-size:20px;font-weight:700;color:var(--ink);margin:0 0 14px;padding:0}
 .civa-h2.sp{margin-top:34px}
@@ -134,6 +138,8 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   box-shadow:0 1px 3px rgba(15,23,42,.05)}
 .civa-stat .l{font-size:15.8px;color:var(--ink2)}
 .civa-stat .v{font-size:40px;line-height:1;font-weight:800;margin-top:8px}
+.civa-stat .s{font-size:12.8px;font-weight:600;color:var(--ink3);margin-top:8px;white-space:nowrap}
+.civa-stat .s b{font-weight:700}
 .civa-results{display:flex;flex-direction:column;gap:16px}
 .civa-result{background:#fff;border:1px solid rgba(16,185,129,.125);border-radius:14px;padding:20px 20px 24px;
   box-shadow:0 1px 3px rgba(15,23,42,.05)}
@@ -146,6 +152,12 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   text-transform:uppercase;white-space:nowrap;line-height:1.2}
 .civa-result .why{display:flex;align-items:center;gap:9px;margin-top:9px;padding-top:14px;border-top:1px solid var(--line);
   font-size:13.4px;color:var(--ink3);line-height:1.4}
+.civa-result .badges{display:flex;align-items:center;gap:8px;flex:none}
+.civa-chip{font-size:13px;font-weight:700;padding:5px 10px;border-radius:7px;border:1.5px solid currentColor;
+  white-space:nowrap;line-height:1.2;background:#fff}
+.civa-result .warn{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:10px 12px;border-radius:9px;
+  background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:12.8px;line-height:1.45}
+.civa-result .warn svg{flex:none;width:16px;height:16px;margin-top:1px;color:var(--amber)}
 .civa-result .why svg{flex:none;width:16px;height:16px}
 .civa-result .why .odot{flex:none;width:16px;height:16px;border-radius:50%}
 @media (max-width:900px){.civa-steps{grid-template-columns:repeat(2,1fr)}.civa-header{padding:0 16px}
@@ -160,6 +172,7 @@ ICON = {
     "cpu": '<svg class="i" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>',
     "filter": '<svg class="i" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
     "check": '<svg class="i" viewBox="0 0 24 24" style="color:#10b981"><path d="M20 6 9 17l-5-5"/></svg>',
+    "warn": '<svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
     "alert": '<svg class="i" viewBox="0 0 24 24" style="color:#ef4444"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>',
 }
 
@@ -174,8 +187,8 @@ STEPS = [
      "Mengevaluasi hasil ekstraksi fitur referensi menggunakan model klasifikasi terbaik yang dioptimasi dari hasil "
      "pengujian komparatif antara algoritma Random Forest, XGBoost, dan Logistic Regression."),
     ("filter", "4. Filter Domain Otomatis",
-     "Menerapkan metode Semantic Thresholding untuk mendeteksi dan mengisolasi literatur di luar disiplin Ilmu "
-     "Komputer guna mencegah kesalahan deteksi (False Positive) pada referensi lintas ilmu."),
+     "Menerapkan metode Semantic Thresholding untuk mendeteksi literatur di luar disiplin Ilmu Komputer. Referensi "
+     "lintas ilmu tetap dinilai valid/tidak valid, lalu diberi peringatan agar dicek ulang."),
 ]
 
 STATUS_COLOR = {"valid": "#10b981", "halu": "#ef4444", "out_of_scope": "#f59e0b", "unparsed": "#94a3b8"}
@@ -251,29 +264,68 @@ def stats_html(summary: dict) -> str:
              ("Halusinasi", summary["halu"], "var(--red)"), ("Di Luar Scope", summary["out_of_scope"], "var(--amber)")]
     if summary.get("unparsed"):
         cards.append(("Tidak Terbaca", summary["unparsed"], "var(--grey)"))
-    body = "".join(f'<div class="civa-stat"><div class="l">{label}</div><div class="v" style="color:{color}">{value}</div></div>'
-                   for label, value, color in cards)
+    sub = {}
+    if summary["out_of_scope"]:  # rincian penilaian referensi di luar scope
+        sub["Di Luar Scope"] = (f'<div class="s"><b style="color:var(--green)">{summary.get("out_of_scope_valid", 0)}</b> valid · '
+                                f'<b style="color:var(--red)">{summary.get("out_of_scope_halu", 0)}</b> tidak valid</div>')
+    body = "".join(f'<div class="civa-stat"><div class="l">{label}</div><div class="v" style="color:{color}">{value}</div>'
+                   f'{sub.get(label, "")}</div>' for label, value, color in cards)
     return f'<div class="civa-stats" style="grid-template-columns:repeat({len(cards)},1fr)">{body}</div>'
 
 
-def donut_html(summary: dict) -> str:
-    total = max(summary["total"], 1)
-    parts = [("#21b873", summary["valid"]), ("#ef4444", summary["halu"]), ("#f59e0b", summary["out_of_scope"]),
-             ("#cbd5e1", summary.get("unparsed", 0))]
-    stops, acc = [], 0
-    for color, count in parts:
-        if count:
-            stops.append(f"{color} {acc / total * 360:.2f}deg {(acc + count) / total * 360:.2f}deg")
-            acc += count
-    gradient = ", ".join(stops) or "#e2e8f0 0deg 360deg"
-    legend = [("#10b981", f'{summary["valid"]} Valid'), ("#ef4444", f'{summary["halu"]} Halu'),
-              ("#f59e0b", f'{summary["out_of_scope"]} Di Luar Scope')]
-    if summary.get("unparsed"):
-        legend.append(("#94a3b8", f'{summary["unparsed"]} Tidak Terbaca'))
-    items = "".join(f'<span style="color:{color}">{label}</span>' for color, label in legend)
-    return (f'<div class="civa-pctbox"><div class="t">Persentase Valid</div>'
-            f'<div class="civa-donut" style="background:conic-gradient(from 0deg,{gradient})">'
-            f'<b>{summary["valid_percent"]:.0f}%</b></div><div class="civa-legend">{items}</div></div>')
+PIE_SLICES = (("valid", "Valid", "#21b873"), ("halu", "Halu", "#ef4444"), ("out_of_scope", "Luar Scope", "#f59e0b"),
+              ("unparsed", "Tidak Terbaca", "#cbd5e1"))
+
+
+def whole_percentages(counts: list[int]) -> list[int]:
+    """Persen bulat yang jumlahnya tepat 100 (metode sisa terbesar), mis. [1, 1, 1] -> [34, 33, 33]."""
+    raw = [100 * c / sum(counts) for c in counts]
+    out = [int(r) for r in raw]
+    for i in sorted(range(len(raw)), key=lambda i: raw[i] - out[i], reverse=True)[: 100 - sum(out)]:
+        out[i] += 1
+    return out
+
+
+def _pie_point(center: float, radius: float, degrees: float) -> tuple[float, float]:
+    """Titik pada lingkaran; 0 derajat = arah jam 12, searah jarum jam."""
+    rad = math.radians(degrees)
+    return center + radius * math.sin(rad), center - radius * math.cos(rad)
+
+
+def pie_html(summary: dict) -> str:
+    """Pie chart penuh: Valid / Halu / Luar Scope (/ Tidak Terbaca), label + persen di dalam irisan."""
+    slices = [(label, color, summary.get(key, 0)) for key, label, color in PIE_SLICES if summary.get(key, 0)]
+    c, r = 110, 106
+    shapes, texts = [], []
+    if not slices:
+        shapes.append(f'<circle cx="{c}" cy="{c}" r="{r}" fill="#e2e8f0"/>')
+    else:
+        total, start = sum(n for *_, n in slices), 0.0
+        for (label, color, n), pct in zip(slices, whole_percentages([n for *_, n in slices])):
+            sweep = 360 * n / total
+            if len(slices) == 1:
+                shapes.append(f'<circle cx="{c}" cy="{c}" r="{r}" fill="{color}"/>')
+            else:
+                (x0, y0), (x1, y1) = _pie_point(c, r, start), _pie_point(c, r, start + sweep)
+                shapes.append(f'<path d="M{c} {c}L{x0:.2f} {y0:.2f}A{r} {r} 0 {int(sweep > 180)} 1 {x1:.2f} {y1:.2f}Z" '
+                              f'fill="{color}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>')
+            if pct >= 15:  # nama + persen di dalam irisan
+                x, y = _pie_point(c, 0 if len(slices) == 1 else r * 0.6, start + sweep / 2)
+                texts.append(f'<text class="n" x="{x:.1f}" y="{y - 3:.1f}">{label}</text>'
+                             f'<text class="p" x="{x:.1f}" y="{y + 15:.1f}">{pct}%</text>')
+            elif pct >= 5:  # irisan sempit: persen saja, namanya di legenda
+                x, y = _pie_point(c, r * 0.68, start + sweep / 2)
+                texts.append(f'<text class="p" x="{x:.1f}" y="{y + 6:.1f}">{pct}%</text>')
+            start += sweep
+    legend = "".join(f'<span><i style="background:{color}"></i>{label} ({summary.get(key, 0)})</span>'
+                     for key, label, color in PIE_SLICES if key != "unparsed" or summary.get(key, 0))
+    note = ""
+    if summary["out_of_scope"]:
+        note = (f'<div class="civa-legend-note">Luar scope: {summary.get("out_of_scope_valid", 0)} valid · '
+                f'{summary.get("out_of_scope_halu", 0)} tidak valid (perlu dicek ulang).</div>')
+    return (f'<div class="civa-pctbox"><div class="t">Persentase Keseluruhan</div>'
+            f'<svg class="civa-pie" viewBox="0 0 220 220" role="img">{"".join(shapes)}{"".join(texts)}</svg>'
+            f'<div class="civa-legend">{legend}</div>{note}</div>')
 
 
 def result_card_html(item: dict) -> str:
@@ -291,11 +343,21 @@ def result_card_html(item: dict) -> str:
         icon = ICON["alert"]
     else:
         icon = f'<span class="odot" style="background:{STATUS_COLOR[status]}"></span>'
-    return (f'<div class="civa-result{"" if status == "valid" else " bad"}"><div class="top"><div>'
+    chip = ""
+    if status == "out_of_scope" and item.get("scope_verdict"):  # di luar scope tetap dinilai: valid / tidak valid + % halu
+        valid = item["scope_verdict"] == "valid"
+        chip = (f'<span class="civa-chip" style="color:{STATUS_COLOR["valid" if valid else "halu"]}" '
+                f'title="Di luar scope: perlu dicek ulang">{"VALID" if valid else "TIDAK VALID"} · '
+                f'{round(item["halu_probability"] * 100)}% halu</span>')
+    warning = ""
+    if item.get("warning"):
+        warning = f'<div class="warn">{ICON["warn"]}<span>{esc(item["warning"])}</span></div>'
+    looks_valid = status == "valid" or item.get("scope_verdict") == "valid"
+    return (f'<div class="civa-result{"" if looks_valid else " bad"}"><div class="top"><div>'
             f'<div class="ttl">{esc(title)}</div>'
             f'<div class="meta"><span>{esc(item.get("authors_display", ""))}{esc(year)}</span>{pill}</div></div>'
-            f'<span class="civa-badge" style="background:{STATUS_COLOR[status]}">{esc(badge)}</span></div>'
-            f'<div class="why">{icon}<span>{esc(item["reason"])}</span></div></div>')
+            f'<div class="badges">{chip}<span class="civa-badge" style="background:{STATUS_COLOR[status]}">{esc(badge)}</span></div></div>'
+            f'<div class="why">{icon}<span>{esc(item["reason"])}</span></div>{warning}</div>')
 
 
 # --------------------------------------------------------------------------------------
@@ -349,7 +411,7 @@ def result_page() -> None:
                 if st.button("Periksa Ulang Teks", key="btn_recheck", use_container_width=True):
                     st.session_state.update(view="home", refs_text=st.session_state.get("saved_text", ""), error=None)
                     st.rerun()
-                st.markdown(donut_html(summary), unsafe_allow_html=True)
+                st.markdown(pie_html(summary), unsafe_allow_html=True)
         with right:
             cards = "".join(result_card_html(item) for item in data["results"])
             st.markdown('<div class="civa-right"><div class="civa-h2">Rekapitulasi Deteksi</div>' + stats_html(summary)

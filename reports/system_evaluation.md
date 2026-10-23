@@ -1,23 +1,33 @@
 # Evaluasi sistem CIVA (end-to-end)
 
-196 referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, filter domain) dalam 4.9 menit.
+196 referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, filter domain) dalam 4.0 menit.
 
 | Kelompok | n | Benar | ML saja benar | VALID | HALU | DI LUAR SCOPE | TIDAK TERBACA |
 |---|---|---|---|---|---|---|---|
-| Palsu: DOI karangan | 24 | 96% | 54% | 0 | 23 | 1 | 0 |
-| Palsu: karangan penuh | 24 | 83% | 92% | 0 | 20 | 4 | 0 |
-| Palsu: judul nyata + penulis salah | 24 | 96% | 38% | 0 | 23 | 1 | 0 |
-| Palsu: tahun digeser >= 3 | 24 | 96% | 33% | 1 | 23 | 0 | 0 |
-| Nyata, ada di dataset (lokal) | 20 | 100% | 60% | 20 | 0 | 0 | 0 |
-| Nyata, tidak ada di dataset (API eksternal) | 80 | 82% | 56% | 66 | 1 | 11 | 2 |
+| Palsu: DOI karangan | 24 | 100% | 21% | 0 | 22 | 2 | 0 |
+| Palsu: karangan penuh | 24 | 100% | 17% | 0 | 21 | 3 | 0 |
+| Palsu: judul nyata + penulis salah | 24 | 100% | 29% | 0 | 22 | 2 | 0 |
+| Palsu: tahun digeser >= 3 | 24 | 100% | 17% | 0 | 24 | 0 | 0 |
+| Nyata, ada di dataset (lokal) | 20 | 95% | 60% | 19 | 1 | 0 | 0 |
+| Nyata, tidak ada di dataset (API eksternal) | 80 | 90% | 75% | 61 | 8 | 11 | 0 |
 
 ## Deteksi halusinasi (positif = referensi palsu)
 
-- Recall: **93%** (89 dari 96 referensi palsu terdeteksi)
-- Precision: **99%** (1 referensi nyata salah dituduh halu)
-- F1: **0.96** | akurasi keseluruhan: 96%
-- Referensi nyata: salah dituduh HALU 1%, salah dinyatakan DI LUAR SCOPE 11%, tidak terbaca 2%
-- Pembanding, model ML saja (tanpa bukti pangkalan data): recall 54%, alarm palsu 41%
+- Recall: **100%** (96 dari 96 referensi palsu terdeteksi)
+- Precision: **91%** (9 referensi nyata salah dituduh halu)
+- F1: **0.96** | akurasi keseluruhan: 95%
+- Referensi nyata: salah dituduh HALU 9%, dinyatakan DI LUAR SCOPE 11%, tidak terbaca 0%
+- Referensi DI LUAR SCOPE tetap dinilai valid/halu (dengan peringatan); kolom Benar dan angka deteksi memakai penilaian itu.
+- Pembanding, model ML saja (tanpa bukti pangkalan data): recall 21%, alarm palsu 28%
+
+## Pola yang ditemukan Tahap 2 (kolom mismatch) per kelompok
+
+- Palsu: DOI karangan: DOI (24)
+- Palsu: karangan penuh: DOI (11)
+- Palsu: judul nyata + penulis salah: penulis (22)
+- Palsu: tahun digeser >= 3: tahun (24), jumlah penulis (1)
+- Nyata, ada di dataset (lokal): jumlah penulis (1)
+- Nyata, tidak ada di dataset (API eksternal): jumlah penulis (5), DOI (2)
 
 ## Catatan metodologi
 

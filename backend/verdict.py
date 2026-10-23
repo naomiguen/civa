@@ -1,14 +1,15 @@
 """
 Keputusan akhir per referensi.
 
-Urutan prioritas:
-  1. Filter domain  : di luar Ilmu Komputer            -> DI LUAR SCOPE (tidak divonis valid/halu)
-  2. Probabilitas ML (MURNI teks) digeser oleh bukti pangkalan data pada skala logit:
+Urutan:
+  1. Probabilitas ML (MURNI teks) digeser oleh bukti pangkalan data pada skala logit:
         verified  -> +evidence_weight   (judul ada & penulis/tahun/DOI konsisten)
         mismatch  -> -evidence_weight   (judul ada, tetapi penulis/tahun/DOI berbeda = pola manipulasi AI)
         not_found -> not_found_weight   (sudah dicari di semua sumber & tidak ada: indikasi lemah-sedang halusinasi;
                                          0 bila sumber eksternal tidak dapat dihubungi sama sekali)
      Dengan semua bobot 0, verdict sepenuhnya berasal dari model ML. Model ML sendiri tidak pernah melihat bukti ini.
+  2. Filter domain  : di luar Ilmu Komputer -> DI LUAR SCOPE, tetapi tetap dengan penilaian valid/halu dari langkah 1
+                      (model juga dilatih dengan referensi non-CS) + peringatan untuk dicek ulang.
 """
 from __future__ import annotations
 
@@ -41,6 +42,18 @@ def fuse(p_valid: float, evidence: Evidence, threshold: float = 0.5) -> tuple[St
     return status, (final if status == "valid" else 1.0 - final), final
 
 
+OOS_WARNING = ("Di luar domain Ilmu Komputer (fokus utama CIVA): penilaian valid/halu ini kurang andal "
+               "dibanding referensi Ilmu Komputer. Mohon periksa ulang secara manual.")
+
+
+def overall_percentages(valid: int, halu: int) -> tuple[float, float]:
+    """(% valid, % halu) keseluruhan; `valid`/`halu` sudah termasuk referensi di luar scope. Jumlahnya 100."""
+    total = valid + halu
+    if total == 0:
+        return 0.0, 0.0
+    return round(100 * valid / total, 1), round(100 * halu / total, 1)
+
+
 def join_id(items: Sequence[str]) -> str:
     """['judul','penulis','tahun'] -> 'judul, penulis, dan tahun' (gaya Bahasa Indonesia)."""
     items = list(items)
@@ -49,6 +62,24 @@ def join_id(items: Sequence[str]) -> str:
     if len(items) == 2:
         return f"{items[0]} dan {items[1]}"
     return ", ".join(items[:-1]) + f", dan {items[-1]}"
+
+
+# Kolom mismatch yang berupa pola manipulasi (lihat textutil.title_word_issue / compare_authors) -> kalimatnya.
+ISSUE_TEXT = {
+    "urutan judul": "urutan kata judulnya diacak",
+    "kata judul": "ada kata judul yang dihilangkan",
+    "tanpa penulis": "nama penulis tidak dicantumkan",
+    "susunan nama": "susunan nama penulisnya terbalik",
+    "nama penulis": "nama penulis tidak lengkap (hanya nama depan)",
+    "jumlah penulis": "sebagian penulis tidak dicantumkan",
+}
+
+
+def describe_mismatch(fields: Sequence[str], verb: str = "tidak sesuai") -> str:
+    """['urutan judul','tahun'] -> 'urutan kata judulnya diacak dan tahun tidak sesuai'."""
+    plain = [f for f in fields if f not in ISSUE_TEXT]
+    parts = [ISSUE_TEXT[f] for f in fields if f in ISSUE_TEXT] + ([f"{join_id(plain)} {verb}"] if plain else [])
+    return join_id(parts)
 
 
 def build_reason(status: Status, evidence: Evidence, from_identifier: Optional[str] = None) -> str:
@@ -81,10 +112,10 @@ def build_reason(status: Status, evidence: Evidence, from_identifier: Optional[s
         return f"Alasan: Indikasi manipulasi AI. DOI yang dicantumkan mengarah ke makalah lain:{other}."
 
     if evidence.status == "mismatch":
-        fields = join_id(evidence.mismatch_fields)
         if status == "halu":
-            return f"Alasan: Indikasi manipulasi AI. Judul ditemukan, namun {fields} tidak sesuai."
-        return (f"Alasan: Judul ditemukan, namun {fields} berbeda dari pangkalan data; "
+            return f"Alasan: Indikasi manipulasi AI. Judul ditemukan, namun {describe_mismatch(evidence.mismatch_fields)}."
+        return (f"Alasan: Judul ditemukan, namun "
+                f"{describe_mismatch(evidence.mismatch_fields, 'berbeda dari pangkalan data')}; "
                 "klasifikasi ML tetap menilai pola teks valid.")
 
     if evidence.unreachable:  # not_found karena semua API eksternal tidak dapat dihubungi

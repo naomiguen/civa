@@ -14,15 +14,37 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from backend import retrieval, verdict  # noqa: E402
 from backend.grobid_client import parse_tei  # noqa: E402
 from backend.schemas import Evidence, ParsedReference, Record  # noqa: E402
-from backend.textutil import (author_overlap, extract_arxiv_id, is_identifier_only, norm_key,  # noqa: E402
-                              normalize_doi, paren_year, prepare_for_grobid, restore_title_case, split_references,
-                              title_similarity, titlecase_caps_runs)
+from backend.textutil import (author_overlap, contains_title, extract_arxiv_id, is_identifier_only,  # noqa: E402
+                              norm_key, normalize_doi, paren_year, prepare_for_grobid, restore_title_case,
+                              split_references, title_from_raw, title_similarity, title_word_issue,
+                              titlecase_caps_runs)
 from civa_core import authors_from_parts, clean_authors, clean_title, split_authors, to_initials  # noqa: E402
 
 
 class TextUtilTests(unittest.TestCase):
     def test_norm_key(self):
         self.assertEqual(norm_key("Déjà Vu: A Study!"), "deja vu a study")
+
+    def test_title_from_raw_when_grobid_finds_no_title(self):
+        self.assertEqual(title_from_raw("Implementasi Dbscan Untuk Pengendalian Karhutla Di Provinsi Riau. (2025). "
+                                        "Jurnal Ilmiah.", has_authors=False),
+                         "Implementasi Dbscan Untuk Pengendalian Karhutla Di Provinsi Riau")  # APA tanpa penulis
+        self.assertEqual(title_from_raw("Kellett, S. E. (2015). and War Memorial love: Australian the of windows "
+                                        "Truth the. Jurnal Ilmiah. https://doi.org/10.1080/14443058.2015.1021366",
+                                        has_authors=True),
+                         "and War Memorial love: Australian the of windows Truth the")
+        self.assertEqual(title_from_raw('Arifin, Z. (2020) “Sistem Pakar Diagnosa Hama,” Jurnal TI.', True),
+                         "Sistem Pakar Diagnosa Hama")
+        self.assertEqual(title_from_raw("tanpa tahun sama sekali", False), "")
+
+    def test_title_word_issue_variants(self):
+        record = "Moderate V4+/V5+ Redox Sites Modification Balances Efficient n-Butane Oxidation"
+        self.assertEqual(title_word_issue("Efficient Oxidation Balances n-Butane Redox V4+/V5+ Moderate Sites "
+                                          "Modification", record), "urutan judul")
+        self.assertIsNone(title_word_issue("Assessing Cyber Security", "Assessing Cyber Security 2015"))
+        self.assertTrue(contains_title("Rademaker, M. (2016). Assessing Cyber Security 2015. Jurnal.",
+                                       "Assessing Cyber Security 2015"))
+        self.assertFalse(contains_title("Logic. Jurnal.", "Logic"))  # judul terlalu pendek untuk dipercaya
 
     def test_title_similarity(self):
         self.assertEqual(title_similarity("Deep Learning, a Review", "deep learning a review"), 1.0)
@@ -201,7 +223,7 @@ def make_ref(**kw) -> ParsedReference:
 
 def make_record(**kw) -> Record:
     base = dict(title="Deep Learning for Natural Language Processing: A Review",
-                authors=["Yue Zhang", "Lei Chen", "Third Author"], year=2023, source="crossref")
+                authors=["Yue Zhang", "Lei Chen"], year=2023, source="crossref")
     return Record(**{**base, **kw})
 
 
@@ -247,8 +269,82 @@ class CompareTests(unittest.TestCase):
         self.assertEqual(retrieval._forgive_doi(ev2).mismatch_fields, ["tahun"])
 
     def test_missing_metadata_is_neutral(self):
-        ev = retrieval.compare(make_ref(authors=[], year=None), make_record(), "x", False)
+        ev = retrieval.compare(make_ref(year=None), make_record(authors=[]), "x", False)
         self.assertEqual((ev.status, ev.author_match, ev.year_match), ("verified", None, None))
+
+    def test_affiliation_noise_in_record_authors_is_ignored(self):
+        record = make_record(authors=["Yue Zhang", "Lei Chen", "Department of Computer Science, Universitas Indonesia"])
+        self.assertEqual(retrieval.compare(make_ref(), record, "x", False).status, "verified")
+
+    def test_manipulated_title_words(self):
+        shuffled = make_ref(title="Processing Language Natural for Learning Deep: Review A")
+        ev = retrieval.compare(shuffled, make_record(), "x", False)
+        self.assertEqual((ev.status, ev.mismatch_fields), ("mismatch", ["urutan judul"]))
+        dropped = make_ref(title="Deep Learning for Language Processing: A Review")
+        self.assertEqual(retrieval.compare(dropped, make_record(), "x", False).mismatch_fields, ["kata judul"])
+
+    def test_honest_title_variants_stay_verified(self):
+        for title in ("Deep Learning for Natural Language Processing",  # subjudul tidak ditulis
+                      "deep learning for natural language processing - a review"):
+            self.assertEqual(retrieval.compare(make_ref(title=title), make_record(), "x", False).status, "verified")
+        record = make_record(title="The Ethics & Governance of Machine Learning Systems in Healthcare")
+        ref = make_ref(title="Ethics and Governance of Machine Learning Systems in Healthcare")
+        self.assertEqual(retrieval.compare(ref, record, "x", False).status, "verified")  # kata sandang & '&'
+
+    def test_manipulated_authors(self):
+        cases = {
+            "tanpa penulis": make_ref(authors=[]),
+            "susunan nama": make_ref(authors=[("Z", "Yue"), ("C", "Lei")]),  # "Yue, Z." untuk Yue Zhang
+            "jumlah penulis": make_ref(authors=[("Y", "Zhang")]),  # satu dari dua penulis, tanpa "et al."
+        }
+        for field, ref in cases.items():
+            ev = retrieval.compare(ref, make_record(), "x", False)
+            self.assertEqual((ev.status, ev.mismatch_fields, ev.author_match), ("mismatch", [field], False), field)
+
+    def test_first_name_only_author(self):
+        ev = retrieval.compare(make_ref(authors=[("Y", "Zhang"), ("", "Lei")]), make_record(), "x", False)
+        self.assertEqual(ev.mismatch_fields, ["nama penulis"])  # "Lei" untuk Lei Chen
+        # nama tunggal yang cocok dgn nama belakang (atau nama kembar "Saliman Saliman") wajar
+        ok = retrieval.compare(make_ref(authors=[("Y", "Zhang"), ("", "Saliman")]),
+                               make_record(authors=["Yue Zhang", "Saliman Saliman"]), "x", False)
+        self.assertEqual(ok.status, "verified")
+
+    def test_author_coverage_and_name_order(self):
+        record = make_record(authors=["Reynold F. Nesiba", "David Sorenson", "Kaleb Sturm"])
+        merged = make_ref(authors=[("", "Nesiba"), ("", "Sorenson"), ("D S K F", "Reynold")])  # Sturm hilang
+        self.assertEqual(retrieval.compare(merged, record, "x", False).mismatch_fields, ["jumlah penulis"])
+        flipped = make_ref(authors=[("R", "Widyastuti"), ("S R P", "Listia")])  # "Listia, S. R. P."
+        record = make_record(authors=["Reni Widyastuti", "Listia Sari Puspita"])
+        self.assertEqual(retrieval.compare(flipped, record, "x", False).mismatch_fields, ["susunan nama"])
+        middle = make_ref(authors=[("", "Panita")])
+        record = make_record(authors=["Singgih Panita Budiman"])
+        self.assertEqual(retrieval.compare(middle, record, "x", False).mismatch_fields, ["nama penulis"])
+        # nama belakang pertama orang Spanyol + inisial yang cocok tetap wajar
+        spanish = make_ref(authors=[("J", "Pérez")])
+        self.assertEqual(retrieval.compare(spanish, make_record(authors=["José Pérez García"]), "x", False).status,
+                         "verified")
+
+    def test_grobid_truncated_title_is_not_a_manipulation(self):
+        record = make_record(title="Karakteristik Sohun Pati Aren dengan Penambahan Ekstrak Umbi Bit, Daun Suji, dan Kunyit")
+        ref = make_ref(title="Karakteristik Sohun Pati Aren dengan Penambahan Ekstrak Umbi Bit",
+                       raw="Zhang, Y., & Chen, L. (2023). KARAKTERISTIK SOHUN PATI AREN DENGAN PENAMBAHAN EKSTRAK "
+                           "UMBI BIT, DAUN SUJI, DAN KUNYIT. Jurnal Pangan.")
+        self.assertEqual(retrieval.compare(ref, record, "x", False).status, "verified")
+        ref.raw = "r"  # judul memang ditulis terpotong oleh pengguna
+        self.assertEqual(retrieval.compare(ref, record, "x", False).mismatch_fields, ["kata judul"])
+
+    def test_shortened_author_list_rules(self):
+        record = make_record(authors=["Wei Wang", "Xin Zhu", "Gang Zhou", "Kai Li", "Ming Sun", "Hao Chen"])
+        first_four = make_ref(authors=[("W", "Wang"), ("X", "Zhu"), ("G", "Zhou"), ("K", "Li")])
+        self.assertEqual(retrieval.compare(first_four, record, "x", False).status, "verified")  # dipersingkat wajar
+        skipped = make_ref(authors=[("W", "Wang"), ("G", "Zhou"), ("K", "Li")])  # Xin Zhu dilompati
+        self.assertEqual(retrieval.compare(skipped, record, "x", False).mismatch_fields, ["jumlah penulis"])
+        only_first = make_ref(authors=[("W", "Wang")])  # tinggal satu nama
+        self.assertEqual(retrieval.compare(only_first, record, "x", False).mismatch_fields, ["jumlah penulis"])
+
+    def test_et_al_allows_shortened_author_list(self):
+        ref = make_ref(authors=[("Y", "Zhang")], raw="Zhang, Y. et al. (2023). Deep Learning for NLP: A Review.")
+        self.assertEqual(retrieval.compare(ref, make_record(), "x", False).status, "verified")
 
     def test_best_of_prefers_verified(self):
         good = retrieval.compare(make_ref(), make_record(), "a", False)
@@ -295,6 +391,15 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(verdict.build_reason("out_of_scope", Evidence()),
                          "Referensi berada di luar batasan domain Ilmu Komputer (Out-of-Distribution).")
 
+    def test_manipulation_reasons(self):
+        ev = Evidence(status="mismatch", mismatch_fields=["urutan judul"])
+        self.assertEqual(verdict.build_reason("halu", ev),
+                         "Alasan: Indikasi manipulasi AI. Judul ditemukan, namun urutan kata judulnya diacak.")
+        ev.mismatch_fields = ["kata judul", "jumlah penulis", "tahun"]
+        self.assertEqual(verdict.build_reason("halu", ev),
+                         "Alasan: Indikasi manipulasi AI. Judul ditemukan, namun ada kata judul yang dihilangkan, "
+                         "sebagian penulis tidak dicantumkan, dan tahun tidak sesuai.")
+
     def test_doi_issue_reasons(self):
         missing = Evidence(status="mismatch", mismatch_fields=["DOI"], doi_issue="missing")
         self.assertIn("DOI yang dicantumkan tidak terdaftar", verdict.build_reason("halu", missing))
@@ -308,6 +413,12 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(verdict.authors_display([("", "Graff")]), "Graff")
         self.assertEqual(verdict.authors_display([]), "Penulis tidak terdeteksi")
         self.assertTrue(verdict.authors_display([("A", "A1"), ("B", "B1"), ("C", "C1"), ("D", "D1")]).endswith("dkk."))
+
+    def test_overall_percentages(self):
+        # 6 valid + 1 di luar scope yang valid ; 2 halu + 1 di luar scope yang tidak valid
+        self.assertEqual(verdict.overall_percentages(6 + 1, 2 + 1), (70.0, 30.0))
+        self.assertEqual(verdict.overall_percentages(1, 2), (33.3, 66.7))
+        self.assertEqual(verdict.overall_percentages(0, 0), (0.0, 0.0))  # semua tidak terbaca
 
     def test_join_id(self):
         self.assertEqual(verdict.join_id(["judul", "penulis", "tahun"]), "judul, penulis, dan tahun")
@@ -326,6 +437,8 @@ class CoreTextTests(unittest.TestCase):
         self.assertEqual(clean_authors("Dian Pramadhana, Program Studi Teknik Informatika, Politeknik Baja Tegal",
                                        lowercase=False), "Dian Pramadhana")
         self.assertEqual(split_authors("Eko Yulianto3, Ricki Sastra4"), ["Eko Yulianto", "Ricki Sastra"])
+        self.assertEqual(split_authors("George Dan Mogoşanu, Dan Jurafsky"), ["George Dan Mogoşanu", "Dan Jurafsky"])
+        self.assertEqual(split_authors("Budi Santoso dan Ani Lestari"), ["Budi Santoso", "Ani Lestari"])
 
     def test_same_text_for_grobid_and_dataset_formats(self):
         # GROBID memberi 'Y' tanpa titik; dataset memakai 'Y.' -> setelah dibersihkan harus identik.
@@ -334,6 +447,39 @@ class CoreTextTests(unittest.TestCase):
     def test_to_initials(self):
         self.assertEqual(to_initials("Mehdi Sari, Joao Arwidarasto"), "M. Sari, J. Arwidarasto")
         self.assertEqual(to_initials("Madonna"), "Madonna")
+
+
+class DatasetLinkTests(unittest.TestCase):
+    """Penautan referensi halu ke sumber aslinya + jenis manipulasinya (train_model.py)."""
+
+    SOURCES = [("Analisis Sentimen Berbasis Aspek pada Ulasan Hotel", "Yamka Sudirman, Dwi Simatupang"),
+               ("Complete Multilingual Neural Machine Translation", "Markus Freitag, Orhan Firat"),
+               ("Dispute Settlement in ASEAN", "Walter Woon")]
+
+    def setUp(self):
+        import train_model  # impor di sini: modul training memuat sklearn/xgboost
+        self.tm = train_model
+
+    def link(self, title, author):
+        titles, authors = zip(*self.SOURCES)
+        return int(self.tm.link_sources(titles, authors, [title], [author])[0])
+
+    def test_link_sources(self):
+        self.assertEqual(self.link("Dispute Settlement in ASEAN", "Woon Walter"), 2)  # judul sama
+        self.assertEqual(self.link("Hotel pada Analisis Ulasan Aspek Sentimen Berbasis", "Yamka Sudirman"), 0)  # diacak
+        self.assertEqual(self.link("Analisis Sentimen Aspek pada Hotel", "Yamka Sudirman, Dwi Simatupang"), 0)  # dihapus
+        self.assertEqual(self.link("Multilingual Neural", "Markus Freitag, Orhan Firat"), 1)  # sisa 2 kata: lewat penulis
+        self.assertEqual(self.link("Quantum Gravity in Loop Space", "Carlo Rovelli"), -1)
+
+    def test_perturbation_type(self):
+        title, author = self.SOURCES[0]
+        kind = self.tm.perturbation_type
+        self.assertEqual(kind(title, author, "Hotel pada Analisis Ulasan Aspek Sentimen Berbasis", author), "judul_diacak")
+        self.assertEqual(kind(title, author, "Analisis Sentimen Aspek pada Hotel", author), "judul_kata_dihapus")
+        self.assertEqual(kind(title, author, title, "Sudirman, Yamka Simatupang Dwi"), "nama_dibalik")
+        self.assertEqual(kind(title, author, title, "Yamka Dwi"), "penulis_tidak_lengkap")
+        self.assertEqual(kind(title, author, title, ""), "tanpa_penulis")
+        self.assertEqual(kind(title, author, title.upper(), author), "identik")
 
 
 if __name__ == "__main__":

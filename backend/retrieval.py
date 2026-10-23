@@ -27,8 +27,9 @@ import httpx
 from backend.config import settings
 from backend.database import KnowledgeBase
 from backend.schemas import Evidence, ParsedReference, Record
-from backend.textutil import (author_overlap, extract_arxiv_id, norm_key, normalize_doi, parse_year,
-                              title_similarity)
+from backend.textutil import (compare_authors, contains_title, extract_arxiv_id, norm_key, normalize_doi,
+                              parse_year, title_similarity, title_word_issue)
+from civa_core import split_authors
 
 log = logging.getLogger("civa.retrieval")
 
@@ -48,24 +49,28 @@ def compare(ref: ParsedReference, record: Record, source: str, cached: bool) -> 
     """Bandingkan referensi hasil ekstraksi dengan satu rekaman nyata.
 
     verified : judul cocok DAN penulis/tahun/DOI tidak bertentangan
-    mismatch : judul cocok, tetapi penulis/tahun/DOI berbeda (pola khas sitasi hasil manipulasi AI)
+    mismatch : judul cocok, tetapi ada yang dimanipulasi (pola khas sitasi halusinasi): kata judul diacak/dihilangkan,
+               penulis berbeda/tidak dicantumkan/terbalik/dikurangi, tahun, atau DOI berbeda
     not_found: judul tidak cukup mirip
     """
     similarity = title_similarity(ref.title, record.title)
     if similarity < settings.title_match_threshold:
         return Evidence(status="not_found", title_similarity=similarity)
 
-    overlap = author_overlap(ref.authors, record.authors)
-    author_ok = None if overlap is None else overlap >= 0.5
+    # Judul asli tertulis utuh di teks mentah = judulnya benar; yang terpotong hanya hasil ekstraksi GROBID.
+    title_issue = None if contains_title(ref.raw, record.title) else title_word_issue(ref.title, record.title)
+    people = [name for author in record.authors for name in split_authors(author)]  # tanpa afiliasi/noise
+    author_ok, author_issue = compare_authors(ref.authors, people, ref.raw)
     year_ok = None if ref.year is None or record.year is None else abs(ref.year - record.year) <= 1
     doi_ok = None
     if normalize_doi(ref.doi) and normalize_doi(record.doi):
         doi_ok = normalize_doi(ref.doi) == normalize_doi(record.doi)
 
-    mismatch = [name for name, ok in (("penulis", author_ok), ("tahun", year_ok), ("DOI", doi_ok)) if ok is False]
-    if mismatch and similarity < settings.mismatch_title_threshold:
+    metadata = [name for name, ok in ((author_issue, author_ok), ("tahun", year_ok), ("DOI", doi_ok)) if ok is False]
+    if metadata and not title_issue and similarity < settings.mismatch_title_threshold:
         # Judul hanya mirip & metadata berbeda: kemungkinan besar makalah lain -> bukan bukti apa pun.
         return Evidence(status="not_found", title_similarity=similarity)
+    mismatch = ([title_issue] if title_issue else []) + metadata
     return Evidence(
         status="mismatch" if mismatch else "verified", source=source, cached=cached, title_similarity=similarity,
         author_match=author_ok, year_match=year_ok, doi_match=doi_ok, mismatch_fields=mismatch, record=record,
@@ -327,6 +332,8 @@ async def search_openalex(client: httpx.AsyncClient, ref: ParsedReference) -> li
               "select": "display_name,publication_year,authorships,doi,type,primary_location,primary_topic"}
     if settings.contact_email:
         params["mailto"] = settings.contact_email
+    if settings.openalex_api_key:  # tanpa kunci, OpenAlex hanya memberi kuota harian bersama per alamat IP
+        params["api_key"] = settings.openalex_api_key
     results = (await _get(client, "https://api.openalex.org/works", params)).json().get("results", [])
     records = []
     for work in results:
@@ -431,7 +438,8 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
         try:
             records = await search(client, ref)
         except Exception as exc:  # noqa: BLE001 - satu API bermasalah tidak boleh mematikan pipeline
-            log.warning("Sumber %s gagal untuk %.60r: %s: %s", name, ref.title, type(exc).__name__, exc)
+            detail = str(exc).replace(settings.openalex_api_key, "***") if settings.openalex_api_key else exc
+            log.warning("Sumber %s gagal untuk %.60r: %s: %s", name, ref.title, type(exc).__name__, detail)
             continue
         reachable += 1
         matches = [compare(ref, rec, name, cached=False) for rec in records]

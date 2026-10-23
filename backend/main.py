@@ -6,8 +6,9 @@ Alur verifikasi per referensi
   TAHAP 2  Retrieval+Cache   database lokal -> Crossref -> arXiv -> OpenAlex -> DBLP (berurutan);
                              temuan dari API eksternal di-INSERT ke database lokal
   TAHAP 3  ML (MURNI TEKS)   embedding MultiBERT judul (384) + author (384) = 768-d -> classifier -> P(valid)
-  TAHAP 4  Filter domain     Semantic Thresholding: referensi di luar Ilmu Komputer -> DI LUAR SCOPE
-  KEPUTUSAN                  verdict.fuse(): probabilitas ML + bukti basis data -> VALID / HALU (+ alasan)
+  TAHAP 4  Filter domain     Semantic Thresholding: P(Ilmu Komputer) < ambang -> DI LUAR SCOPE
+  KEPUTUSAN                  verdict.fuse(): probabilitas ML + bukti basis data -> VALID / HALU (+ alasan);
+                             referensi di luar scope tetap dinilai valid/halu, dengan peringatan untuk dicek ulang
 
 Jalankan (dari folder proyek):  uvicorn backend.main:app --port 8000
 """
@@ -34,7 +35,7 @@ from backend.database import KnowledgeBase
 from backend.logutil import silence_connection_reset
 from backend.schemas import (DomainOut, Evidence, EvidenceOut, HealthResponse, MLOut, ParsedReference, Record,
                              RecordOut, ReferenceResult, Summary, VerifyRequest, VerifyResponse)
-from backend.textutil import is_identifier_only, split_references
+from backend.textutil import is_identifier_only, split_references, title_from_raw
 
 log = logging.getLogger("civa")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)-7s %(name)s: %(message)s")
@@ -60,8 +61,8 @@ class Engine:
     def ready(self) -> bool:
         return self.classifier is not None and self.domain is not None
 
-    def infer(self, title: str, authors: str) -> tuple[float, float, float]:
-        """TAHAP 3 + 4 untuk satu referensi -> (P(valid), knn_score, margin).
+    def infer(self, title: str, authors: str) -> tuple[float, float]:
+        """TAHAP 3 + 4 untuk satu referensi -> (P(valid), P(Ilmu Komputer)).
 
         Fitur model = 768 dimensi murni dari TEKS judul + author. Skor domain memakai paruh judul (384 dimensi
         pertama) tetapi tidak pernah masuk ke classifier.
@@ -71,15 +72,15 @@ class Engine:
             features = self.embedder.transform(frame)
             proba = self.classifier.predict_proba(features)[0]
         p_valid = float(proba[list(self.classifier.classes_).index(1)])
-        knn, margin = self.domain.analyze(features[:, : civa_core.EMB_DIM])
-        return p_valid, float(knn[0]), float(margin[0])
+        p_cs = self.domain.p_cs(features[:, : civa_core.EMB_DIM])
+        return p_valid, float(p_cs[0])
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     engine = Engine()
     engine.kb = await asyncio.to_thread(KnowledgeBase, settings.db_path)
-    await asyncio.to_thread(engine.kb.seed_if_empty, settings.seed_dataset)
+    await asyncio.to_thread(engine.kb.seed_if_needed, settings.seed_dataset)
     agent = "CIVA/1.0 (academic citation verification)"
     if settings.contact_email:
         agent += f" mailto:{settings.contact_email}"
@@ -132,10 +133,11 @@ def _identifier_missing(index: int, raw: str, parsed: ParsedReference) -> Refere
     """Teks hanya berisi DOI dan DOI itu tidak terdaftar di Crossref maupun registri DOI."""
     evidence = Evidence(status="mismatch", source="crossref", doi_match=False, mismatch_fields=["DOI"],
                         doi_issue="missing")
-    _, confidence, _ = verdict.fuse(0.5, evidence, settings.valid_threshold)  # tanpa judul, model ML tidak dipakai
+    _, confidence, p_final = verdict.fuse(0.5, evidence, settings.valid_threshold)  # tanpa judul: ML tidak dipakai
     return ReferenceResult(
         index=index, raw=raw, title=None, authors_display="DOI: " + (parsed.doi or ""), doi=parsed.doi,
         type="Lainnya", status="halu", label=verdict.STATUS_LABEL["halu"], confidence=round(confidence, 4),
+        halu_probability=round(1 - p_final, 4),
         reason=verdict.build_reason("halu", evidence) + " Periksa juga penulisan DOI-nya.",
         evidence=EvidenceOut(status="mismatch", source="crossref", doi_issue="missing", doi_match=False,
                              mismatch_fields=["DOI"]),
@@ -147,6 +149,10 @@ async def verify_reference(index: int, raw: str, engine: Engine, gate: asyncio.S
         # ---- TAHAP 1: GROBID -> judul & author ------------------------------------------------
         # Teks yang hanya berisi DOI / link arXiv tidak punya judul untuk diekstraksi: lewati GROBID.
         parsed = None if is_identifier_only(raw) else await grobid_client.parse_citation(engine.http, raw)
+        if parsed is not None and len(parsed.title.strip()) < 4:
+            # GROBID tidak menemukan judul (mis. APA tanpa penulis, atau judul yang kata-katanya diacak): ambil dari
+            # teks mentah, agar judul yang DITULIS pengguna yang diperiksa, bukan metadata DOI-nya.
+            parsed.title = title_from_raw(raw, bool(parsed.authors))
         if parsed is None or len(parsed.title.strip()) < 4:
             # Tanpa judul: bila ada DOI / link arXiv, ambil metadata dari pengenal itu (Crossref -> DataCite -> arXiv).
             state, from_id, id_record = await retrieval.resolve_identifier(engine.http, raw)
@@ -166,16 +172,17 @@ async def verify_reference(index: int, raw: str, engine: Engine, gate: asyncio.S
 
         # ---- TAHAP 3: ML murni teks   +   TAHAP 4: filter domain ---------------------------------
         author_text = civa_core.authors_from_parts(parsed.authors)
-        p_valid, knn_score, margin = await asyncio.to_thread(engine.infer, parsed.title, author_text)
-        in_scope = bool(engine.domain.in_scope(np.array([knn_score]), np.array([margin]))[0])
+        p_valid, p_cs = await asyncio.to_thread(engine.infer, parsed.title, author_text)
+        in_scope = bool(engine.domain.in_scope(np.array([p_cs]))[0])
         forced = False
         if not in_scope and evidence.cs_hint:
             in_scope, forced = True, True  # sumber menyatakan ini literatur Ilmu Komputer (seed/DBLP/arXiv cs./OpenAlex)
 
     # ---- KEPUTUSAN AKHIR ----------------------------------------------------------------------
-    status, confidence, _ = verdict.fuse(p_valid, evidence, settings.valid_threshold)
-    if not in_scope:
-        status, confidence = "out_of_scope", None
+    judged, confidence, p_final = verdict.fuse(p_valid, evidence, settings.valid_threshold)
+    status, scope_verdict, warning = judged, None, None
+    if not in_scope:  # di luar Ilmu Komputer: tetap dinilai valid/halu, tetapi ditandai + peringatan cek ulang
+        status, scope_verdict, warning = "out_of_scope", judged, verdict.OOS_WARNING
 
     record = evidence.record if evidence.status != "not_found" else None
     kind = record.kind if record else parsed.kind
@@ -184,12 +191,12 @@ async def verify_reference(index: int, raw: str, engine: Engine, gate: asyncio.S
         authors=[f"{given} {family}".strip() for given, family in parsed.authors],
         authors_display=verdict.authors_display(parsed.authors), year=parsed.year, doi=parsed.doi,
         type=verdict.KIND_LABEL.get(kind, "Lainnya"), status=status, label=verdict.STATUS_LABEL[status],
-        confidence=None if confidence is None else round(confidence, 4),
-        reason=verdict.build_reason(status, evidence, parsed.from_identifier),
+        scope_verdict=scope_verdict, confidence=round(confidence, 4), halu_probability=round(1 - p_final, 4),
+        warning=warning, reason=verdict.build_reason(judged, evidence, parsed.from_identifier),
         ml=MLOut(label="valid" if p_valid >= 0.5 else "halu", probability_valid=round(p_valid, 4),
                  probability_halu=round(1 - p_valid, 4)),
-        domain=DomainOut(knn_score=round(knn_score, 4), knn_threshold=round(engine.domain.knn_threshold, 4),
-                         margin=round(margin, 4), in_scope=in_scope, forced_by_knowledge_base=forced),
+        domain=DomainOut(p_cs=round(p_cs, 4), threshold=round(engine.domain.threshold, 4), in_scope=in_scope,
+                         forced_by_knowledge_base=forced),
         evidence=EvidenceOut(
             status=evidence.status, source=evidence.source, cached=evidence.cached, unreachable=evidence.unreachable,
             doi_issue=evidence.doi_issue,
@@ -242,10 +249,15 @@ async def verify(body: VerifyRequest, request: Request) -> VerifyResponse:
             task.cancel()  # no-op bila sudah selesai; menghentikan sisa pekerjaan bila ada yang gagal
 
     counts = Counter(r.status for r in results)
+    oos = Counter(r.scope_verdict for r in results if r.status == "out_of_scope")
+    overall_valid, overall_halu = verdict.overall_percentages(counts["valid"] + oos["valid"],
+                                                              counts["halu"] + oos["halu"])
     return VerifyResponse(
         summary=Summary(total=len(results), valid=counts["valid"], halu=counts["halu"],
-                        out_of_scope=counts["out_of_scope"], unparsed=counts["unparsed"],
-                        valid_percent=round(100 * counts["valid"] / len(results), 1)),
+                        out_of_scope=counts["out_of_scope"], out_of_scope_valid=oos["valid"],
+                        out_of_scope_halu=oos["halu"], unparsed=counts["unparsed"],
+                        valid_percent=round(100 * counts["valid"] / len(results), 1),
+                        overall_valid_percent=overall_valid, overall_halu_percent=overall_halu),
         results=list(results), elapsed_seconds=round(time.perf_counter() - started, 2),
     )
 
