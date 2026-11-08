@@ -1,15 +1,13 @@
 """
 Keputusan akhir per referensi.
 
-Urutan:
-  1. Probabilitas ML (MURNI teks) digeser oleh bukti pangkalan data pada skala logit:
+Probabilitas ML (MURNI teks) digeser oleh bukti pangkalan data pada skala logit:
         verified  -> +evidence_weight   (judul ada & penulis/tahun/DOI konsisten)
         mismatch  -> -evidence_weight   (judul ada, tetapi penulis/tahun/DOI berbeda = pola manipulasi AI)
         not_found -> not_found_weight   (sudah dicari di semua sumber & tidak ada: indikasi lemah-sedang halusinasi;
                                          0 bila sumber eksternal tidak dapat dihubungi sama sekali)
-     Dengan semua bobot 0, verdict sepenuhnya berasal dari model ML. Model ML sendiri tidak pernah melihat bukti ini.
-  2. Filter domain  : di luar Ilmu Komputer -> DI LUAR SCOPE, tetapi tetap dengan penilaian valid/halu dari langkah 1
-                      (model juga dilatih dengan referensi non-CS) + peringatan untuk dicek ulang.
+  Dengan semua bobot 0, verdict sepenuhnya berasal dari model ML. Model ML sendiri tidak pernah melihat bukti ini.
+Semua bidang ilmu diperlakukan sama.
 """
 from __future__ import annotations
 
@@ -19,10 +17,8 @@ from typing import Optional, Sequence
 from backend.config import settings
 from backend.schemas import Evidence, Status
 
-STATUS_LABEL = {"valid": "VALID", "halu": "HALU", "out_of_scope": "DI LUAR SCOPE", "unparsed": "TIDAK TERBACA"}
+STATUS_LABEL = {"valid": "VALID", "halu": "HALU", "unparsed": "TIDAK TERBACA"}
 KIND_LABEL = {"journal": "Jurnal", "book": "Buku", "proceedings": "Prosiding", "preprint": "Preprint"}
-
-OOS_REASON = "Referensi berada di luar batasan domain Ilmu Komputer (Out-of-Distribution)."
 
 
 def evidence_shift(evidence: Evidence) -> float:
@@ -42,18 +38,6 @@ def fuse(p_valid: float, evidence: Evidence, threshold: float = 0.5) -> tuple[St
     return status, (final if status == "valid" else 1.0 - final), final
 
 
-OOS_WARNING = ("Di luar domain Ilmu Komputer (fokus utama CIVA): penilaian valid/halu ini kurang andal "
-               "dibanding referensi Ilmu Komputer. Mohon periksa ulang secara manual.")
-
-
-def overall_percentages(valid: int, halu: int) -> tuple[float, float]:
-    """(% valid, % halu) keseluruhan; `valid`/`halu` sudah termasuk referensi di luar scope. Jumlahnya 100."""
-    total = valid + halu
-    if total == 0:
-        return 0.0, 0.0
-    return round(100 * valid / total, 1), round(100 * halu / total, 1)
-
-
 def join_id(items: Sequence[str]) -> str:
     """['judul','penulis','tahun'] -> 'judul, penulis, dan tahun' (gaya Bahasa Indonesia)."""
     items = list(items)
@@ -71,6 +55,7 @@ ISSUE_TEXT = {
     "tanpa penulis": "nama penulis tidak dicantumkan",
     "susunan nama": "susunan nama penulisnya terbalik",
     "nama penulis": "nama penulis tidak lengkap (hanya nama depan)",
+    "urutan penulis": "urutan penulisnya diacak",
     "jumlah penulis": "sebagian penulis tidak dicantumkan",
 }
 
@@ -87,8 +72,6 @@ def build_reason(status: Status, evidence: Evidence, from_identifier: Optional[s
 
     `from_identifier` ("doi" | "arxiv"): metadata diambil dari DOI/link yang ditempel, bukan dari teks referensi.
     """
-    if status == "out_of_scope":
-        return OOS_REASON
     if status == "unparsed":
         return "Alasan: Judul tidak dapat diekstraksi dari teks referensi ini."
     if from_identifier and status == "valid" and evidence.status == "verified":

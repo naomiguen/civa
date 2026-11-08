@@ -250,10 +250,6 @@ class CompareTests(unittest.TestCase):
         self.assertEqual(ev.status, "not_found")
         self.assertGreaterEqual(ev.title_similarity, 0.90)
 
-    def test_cs_hint_follows_record_flag(self):
-        self.assertTrue(retrieval.compare(make_ref(), make_record(cs_flag=True), "x", False).cs_hint)
-        self.assertFalse(retrieval.compare(make_ref(), make_record(), "x", False).cs_hint)
-
     def test_unrelated_title_not_found(self):
         self.assertEqual(retrieval.compare(make_ref(), make_record(title="Quantum Gravity in Loop Space"), "x", False)
                          .status, "not_found")
@@ -333,14 +329,31 @@ class CompareTests(unittest.TestCase):
         ref.raw = "r"  # judul memang ditulis terpotong oleh pengguna
         self.assertEqual(retrieval.compare(ref, record, "x", False).mismatch_fields, ["kata judul"])
 
+    def test_shuffled_author_order(self):
+        record = make_record(authors=["Sagar GC", "Churamani Khanal"])
+        shuffled = make_ref(authors=[("C", "Khanal"), ("S", "GC")])  # "Khanal, C., & GC, S."
+        self.assertEqual(retrieval.compare(shuffled, record, "x", False).mismatch_fields, ["urutan penulis"])
+        in_order = make_ref(authors=[("S", "GC"), ("C", "Khanal")])
+        self.assertEqual(retrieval.compare(in_order, record, "x", False).status, "verified")
+
     def test_shortened_author_list_rules(self):
         record = make_record(authors=["Wei Wang", "Xin Zhu", "Gang Zhou", "Kai Li", "Ming Sun", "Hao Chen"])
         first_four = make_ref(authors=[("W", "Wang"), ("X", "Zhu"), ("G", "Zhou"), ("K", "Li")])
         self.assertEqual(retrieval.compare(first_four, record, "x", False).status, "verified")  # dipersingkat wajar
-        skipped = make_ref(authors=[("W", "Wang"), ("G", "Zhou"), ("K", "Li")])  # Xin Zhu dilompati
-        self.assertEqual(retrieval.compare(skipped, record, "x", False).mismatch_fields, ["jumlah penulis"])
+        # celah di tengah daftar >= 2 nama tidak dituduh (bisa juga nama yang gagal diurai GROBID)
+        skipped = make_ref(authors=[("W", "Wang"), ("G", "Zhou"), ("K", "Li")])
+        self.assertEqual(retrieval.compare(skipped, record, "x", False).status, "verified")
         only_first = make_ref(authors=[("W", "Wang")])  # tinggal satu nama
         self.assertEqual(retrieval.compare(only_first, record, "x", False).mismatch_fields, ["jumlah penulis"])
+
+    def test_unreadable_authors_are_not_missing_authors(self):
+        # GROBID tidak bisa membaca nama non-Latin -> tidak ada penulis terurai, tetapi penulis memang ditulis
+        ref = make_ref(authors=[], raw="Сергеевна, К.Т. dkk. (2023) “Deep Learning for Natural Language Processing: "
+                                       "A Review,” Jurnal.")
+        ev = retrieval.compare(ref, make_record(), "x", False)
+        self.assertEqual((ev.status, ev.author_match), ("verified", None))
+        no_author = make_ref(authors=[], raw="Deep Learning for Natural Language Processing: A Review. (2023). Jurnal.")
+        self.assertEqual(retrieval.compare(no_author, make_record(), "x", False).mismatch_fields, ["tanpa penulis"])
 
     def test_et_al_allows_shortened_author_list(self):
         ref = make_ref(authors=[("Y", "Zhang")], raw="Zhang, Y. et al. (2023). Deep Learning for NLP: A Review.")
@@ -388,8 +401,6 @@ class VerdictTests(unittest.TestCase):
                          "Alasan: Referensi terverifikasi; judul, penulis, dan tahun sesuai pangkalan data.")
         self.assertEqual(verdict.build_reason("halu", Evidence(status="mismatch", mismatch_fields=["tahun", "penulis"])),
                          "Alasan: Indikasi manipulasi AI. Judul ditemukan, namun tahun dan penulis tidak sesuai.")
-        self.assertEqual(verdict.build_reason("out_of_scope", Evidence()),
-                         "Referensi berada di luar batasan domain Ilmu Komputer (Out-of-Distribution).")
 
     def test_manipulation_reasons(self):
         ev = Evidence(status="mismatch", mismatch_fields=["urutan judul"])
@@ -413,12 +424,6 @@ class VerdictTests(unittest.TestCase):
         self.assertEqual(verdict.authors_display([("", "Graff")]), "Graff")
         self.assertEqual(verdict.authors_display([]), "Penulis tidak terdeteksi")
         self.assertTrue(verdict.authors_display([("A", "A1"), ("B", "B1"), ("C", "C1"), ("D", "D1")]).endswith("dkk."))
-
-    def test_overall_percentages(self):
-        # 6 valid + 1 di luar scope yang valid ; 2 halu + 1 di luar scope yang tidak valid
-        self.assertEqual(verdict.overall_percentages(6 + 1, 2 + 1), (70.0, 30.0))
-        self.assertEqual(verdict.overall_percentages(1, 2), (33.3, 66.7))
-        self.assertEqual(verdict.overall_percentages(0, 0), (0.0, 0.0))  # semua tidak terbaca
 
     def test_join_id(self):
         self.assertEqual(verdict.join_id(["judul", "penulis", "tahun"]), "judul, penulis, dan tahun")
@@ -449,37 +454,28 @@ class CoreTextTests(unittest.TestCase):
         self.assertEqual(to_initials("Madonna"), "Madonna")
 
 
-class DatasetLinkTests(unittest.TestCase):
-    """Penautan referensi halu ke sumber aslinya + jenis manipulasinya (train_model.py)."""
+class DatasetLoadTests(unittest.TestCase):
+    """train_model.load_dataset membaca dataset_final.csv; penulis kosong (jenis penulis_kosong) dipertahankan."""
 
-    SOURCES = [("Analisis Sentimen Berbasis Aspek pada Ulasan Hotel", "Yamka Sudirman, Dwi Simatupang"),
-               ("Complete Multilingual Neural Machine Translation", "Markus Freitag, Orhan Firat"),
-               ("Dispute Settlement in ASEAN", "Walter Woon")]
+    def test_load_dataset(self):
+        import tempfile
 
-    def setUp(self):
         import train_model  # impor di sini: modul training memuat sklearn/xgboost
-        self.tm = train_model
-
-    def link(self, title, author):
-        titles, authors = zip(*self.SOURCES)
-        return int(self.tm.link_sources(titles, authors, [title], [author])[0])
-
-    def test_link_sources(self):
-        self.assertEqual(self.link("Dispute Settlement in ASEAN", "Woon Walter"), 2)  # judul sama
-        self.assertEqual(self.link("Hotel pada Analisis Ulasan Aspek Sentimen Berbasis", "Yamka Sudirman"), 0)  # diacak
-        self.assertEqual(self.link("Analisis Sentimen Aspek pada Hotel", "Yamka Sudirman, Dwi Simatupang"), 0)  # dihapus
-        self.assertEqual(self.link("Multilingual Neural", "Markus Freitag, Orhan Firat"), 1)  # sisa 2 kata: lewat penulis
-        self.assertEqual(self.link("Quantum Gravity in Loop Space", "Carlo Rovelli"), -1)
-
-    def test_perturbation_type(self):
-        title, author = self.SOURCES[0]
-        kind = self.tm.perturbation_type
-        self.assertEqual(kind(title, author, "Hotel pada Analisis Ulasan Aspek Sentimen Berbasis", author), "judul_diacak")
-        self.assertEqual(kind(title, author, "Analisis Sentimen Aspek pada Hotel", author), "judul_kata_dihapus")
-        self.assertEqual(kind(title, author, title, "Sudirman, Yamka Simatupang Dwi"), "nama_dibalik")
-        self.assertEqual(kind(title, author, title, "Yamka Dwi"), "penulis_tidak_lengkap")
-        self.assertEqual(kind(title, author, title, ""), "tanpa_penulis")
-        self.assertEqual(kind(title, author, title.upper(), author), "identik")
+        rows = [
+            "judul,author,status,jenis,grup_id,split,bahasa",
+            "Deep Learning for Natural Language Processing,Yue Zhang,1,asli,0,latih,en",
+            "Processing Language Natural for Learning Deep,Yue Zhang,0,acak_kata_judul,0,latih,en",
+            "Deep Learning for Natural Language Processing,,0,penulis_kosong,0,latih,en",
+            '"Sistem Informasi Akademik Berbasis Web","Program Studi Teknik Informatika",1,asli,1,uji,id',
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / train_model.DATASET_FILE).write_text("\n".join(rows), encoding="utf-8")
+            with mock.patch("builtins.print"):
+                frame = train_model.load_dataset(Path(tmp), initials_rate=0.0, seed=0)
+        # author yang isinya hanya afiliasi dibuang; penulis kosong tetap ada sebagai contoh halu
+        self.assertEqual(frame["jenis"].tolist(), ["asli", "acak_kata_judul", "penulis_kosong"])
+        self.assertEqual(frame["author"].tolist()[2], "")
+        self.assertEqual(frame["group"].tolist(), [0, 0, 0])
 
 
 if __name__ == "__main__":

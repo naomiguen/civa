@@ -285,39 +285,59 @@ def _name_status(given: str, family: str, tokens: list[str]) -> Optional[str]:
     return "ok" if _same_person(given, family, tokens) else None
 
 
+def _author_segment(raw: str, title: str) -> str:
+    """Bagian teks mentah sebelum judul / tahun pertama, yaitu tempat daftar penulis ditulis (tanpa nomor urut)."""
+    text = _MARKER_RE.sub("", raw or "")
+    ends = [m.start() for m in [_PAREN_YEAR_RE.search(text)] if m]
+    start = text.lower().find((title or "").strip().lower()[:25]) if (title or "").strip() else -1
+    if start >= 0:
+        ends.append(start)
+    return text[:min(ends)] if ends else ""
+
+
 def compare_authors(reference_authors: Sequence[tuple[str, str]], record_authors: Iterable[str],
-                    raw: str = "") -> tuple[Optional[bool], Optional[str]]:
-    """(cocok?, kolom bermasalah) penulis referensi vs rekaman asli. (None, None) = rekaman tanpa penulis.
+                    raw: str = "", title: str = "") -> tuple[Optional[bool], Optional[str]]:
+    """(cocok?, kolom bermasalah) penulis referensi vs rekaman asli. (None, None) = tidak bisa dibandingkan.
 
     Kolom bermasalah: "tanpa penulis" (referensi tidak mencantumkan penulis sama sekali) | "penulis" (sebagian besar
     tidak cocok) | "susunan nama" (nama depan ditulis sebagai nama belakang) | "nama penulis" (hanya nama depan yang
-    ditulis) | "jumlah penulis" (ada penulis asli yang dihilangkan tanpa "et al."/"dkk.").
+    ditulis) | "urutan penulis" (orangnya benar, urutannya diacak) | "jumlah penulis" (hanya satu nama padahal
+    penulis aslinya lebih banyak, atau dua nama menunjuk orang yang sama; tanpa "et al."/"dkk.").
     """
     people = [tokens for tokens in (full_name_tokens(a) for a in record_authors) if tokens]
     wanted = [(norm_key(g), norm_key(f)) for g, f in reference_authors if norm_key(f)]
     if not people:
         return None, None
     if not wanted:
+        if re.search(r"[^\W\d_]{2,}", _author_segment(raw, title)):
+            return None, None  # nama penulis tertulis tetapi tidak terbaca (mis. aksara non-Latin): tidak dinilai
         return False, "tanpa penulis"
-    statuses, covered, order = [], set(), []  # status per penulis referensi; orang rekaman tercakup; urutannya
+    statuses, covered = [], set()  # status per penulis referensi; orang rekaman yang tercakup
+    order, assigned = [], []  # orang yang ditunjuk tiap penulis referensi: yang cocok normal saja / semua
     for given, family in wanted:
         found = {i: s for i, s in ((i, _name_status(given, family, tokens)) for i, tokens in enumerate(people)) if s}
         covered |= found.keys()
         kinds = set(found.values())
         statuses.append("ok" if "ok" in kinds else kinds.pop() if kinds else "hilang")
-        if "ok" in kinds:
-            order.append(min(i for i, s in found.items() if s == "ok"))
+        ok_people = [i for i, s in found.items() if s == "ok"]
+        if ok_people:
+            order.append(min(ok_people))
+        if found:
+            assigned.append(min(ok_people) if ok_people else min(found))
     if statuses.count("hilang") > len(wanted) / 2:
         return False, "penulis"
     if statuses.count("terbalik") and statuses.count("terbalik") >= len(wanted) / 2:
         return False, "susunan nama"
     if "nama_depan" in statuses:
         return False, "nama penulis"
-    # Daftar dipersingkat secara wajar: >= 2 penulis PERTAMA, berurutan, tanpa lompatan (banyak gaya selain APA begitu).
-    truncated = len(order) == len(wanted) >= 2 and order == list(range(len(order)))
-    # Selain itu, penulis asli yang tidak tercakup = dihilangkan (mis. tinggal satu nama, ada yang dilompati, atau dua
-    # nama referensi menunjuk orang yang sama).
-    if len(covered) < min(len(people), 20) and not truncated and not _ET_AL_RE.search(raw or ""):
+    if len(order) >= 2 and len(set(order)) == len(order) and order != sorted(order):
+        return False, "urutan penulis"  # semua orangnya benar, tetapi urutannya tidak sama dengan aslinya
+    # Penulis asli dihilangkan: tinggal SATU nama, atau dua nama referensi menunjuk orang yang sama (nama digabung).
+    # Daftar >= 2 nama yang tidak lengkap tidak dituduh: lazim dipersingkat, dan nama yang gagal diurai GROBID (nama
+    # tunggal, aksara lain) juga tampak seperti "lompatan".
+    merged = len(assigned) != len(set(assigned))
+    if (len(covered) < min(len(people), 20) and (len(wanted) == 1 or merged)
+            and not _ET_AL_RE.search(raw or "")):
         return False, "jumlah penulis"
     return True, None
 

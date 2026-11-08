@@ -6,7 +6,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
-Status = Literal["valid", "halu", "out_of_scope", "unparsed"]
+Status = Literal["valid", "halu", "unparsed"]
 EvidenceStatus = Literal["verified", "mismatch", "not_found"]
 
 
@@ -42,9 +42,6 @@ class Record:
     kind: str = "journal"  # journal | book | proceedings | preprint
     source: str = "seed"  # seed | crossref | arxiv | openalex | dblp
     id: Optional[int] = None
-    # True bila sumber sendiri menyatakan ini literatur Ilmu Komputer (dataset seed, DBLP, arXiv cs.*, OpenAlex
-    # field "Computer Science"). None = tidak diketahui; filter domain semantik yang memutuskan.
-    cs_flag: Optional[bool] = None
 
 
 @dataclass
@@ -56,8 +53,6 @@ class Evidence:
     cached: bool = False  # True = diambil dari DB lokal (tanpa memanggil API)
     # True bila TIDAK ADA satu pun API eksternal yang berhasil dihubungi: "tidak ditemukan" lalu bukan bukti apa-apa.
     unreachable: bool = False
-    # True bila salah satu rekaman yang cocok berasal dari sumber/kategori Ilmu Komputer (lihat Record.cs_flag).
-    cs_hint: bool = False
     # Hasil pemeriksaan DOI langsung: "missing" = DOI tidak terdaftar; "other_paper" = DOI mengarah ke makalah lain.
     doi_issue: Optional[str] = None
     title_similarity: Optional[float] = None
@@ -108,15 +103,6 @@ class MLOut(BaseModel):
     probability_halu: float
 
 
-class DomainOut(BaseModel):
-    """Filter domain (Semantic Thresholding) - dihitung dari embedding judul, terpisah dari model ML."""
-
-    p_cs: float  # peluang judul termasuk literatur Ilmu Komputer
-    threshold: float  # di bawah ambang ini = di luar scope
-    in_scope: bool
-    forced_by_knowledge_base: bool = False  # True: ada di basis data Ilmu Komputer, otomatis in-scope
-
-
 class ReferenceResult(BaseModel):
     index: int
     raw: str
@@ -127,17 +113,11 @@ class ReferenceResult(BaseModel):
     doi: Optional[str] = None
     type: str = "Lainnya"  # Jurnal | Buku | Prosiding | Preprint | Lainnya
     status: Status
-    label: str  # teks badge: "VALID" | "HALU" | "DI LUAR SCOPE" | "TIDAK TERBACA"
-    # Referensi di luar scope tetap dinilai: "valid" | "halu" (None untuk status lain).
-    scope_verdict: Optional[Literal["valid", "halu"]] = None
-    # 0-1, keyakinan pada valid/halu (untuk out_of_scope: pada scope_verdict; None utk unparsed).
-    confidence: Optional[float] = None
-    # Perkiraan peluang halusinasi (0-1) untuk SEMUA referensi yang terbaca, termasuk "di luar scope" (None = tidak terbaca).
-    halu_probability: Optional[float] = None
-    warning: Optional[str] = None  # peringatan "perlu dicek ulang" (mis. di luar domain Ilmu Komputer)
+    label: str  # teks badge: "VALID" | "HALU" | "TIDAK TERBACA"
+    confidence: Optional[float] = None  # 0-1, keyakinan pada label akhir (None utk unparsed)
+    halu_probability: Optional[float] = None  # perkiraan peluang halusinasi 0-1 (None = tidak terbaca)
     reason: str
     ml: Optional[MLOut] = None
-    domain: Optional[DomainOut] = None
     evidence: Optional[EvidenceOut] = None
 
 
@@ -145,15 +125,8 @@ class Summary(BaseModel):
     total: int
     valid: int
     halu: int
-    out_of_scope: int
-    out_of_scope_valid: int = 0  # rincian "di luar scope" menurut scope_verdict
-    out_of_scope_halu: int = 0
     unparsed: int
     valid_percent: float  # valid / total * 100
-    # Persentase keseluruhan dari referensi yang terbaca: (valid + di luar scope yang valid) vs (halu + di luar scope
-    # yang halu), sehingga hanya ada hijau dan merah. Jumlahnya 100 (0 dan 0 bila tidak ada yang terbaca).
-    overall_valid_percent: float = 0.0
-    overall_halu_percent: float = 0.0
 
 
 class VerifyResponse(BaseModel):

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """
-CIVA - Evaluasi SISTEM end-to-end (GROBID -> retrieval -> ML -> filter domain -> keputusan).
+CIVA - Evaluasi SISTEM end-to-end (GROBID -> retrieval -> ML -> keputusan).
 
 Berbeda dari train_model.py (yang hanya mengukur model ML), skrip ini mengukur sistem utuh pada sekumpulan referensi
 yang kebenarannya diketahui:
 
   REAL (harus VALID)
-    real_eksternal  referensi nyata CS (OpenAlex, 2019-2025, Inggris + Indonesia) yang TIDAK ada di dataset seed
+    real_eksternal  referensi nyata semua bidang (OpenAlex, 2019-2025, Inggris + Indonesia), TIDAK ada di dataset
     real_dataset    referensi nyata yang ada di dataset seed (jalur database lokal)
   PALSU (harus HALU)
     palsu_karangan  judul/penulis karangan penuh (ditulis tangan, diverifikasi tidak ada di Crossref)
@@ -14,9 +14,8 @@ yang kebenarannya diketahui:
     palsu_tahun     judul & penulis nyata + tahun digeser >= 3 tahun
     palsu_doi       judul, penulis, tahun nyata + DOI karangan
 
-Set kedua (--set manipulasi): uji manipulasi dataset - referensi ASLI dari dataset_scope_6000.csv (CS & non-CS) dan
-manipulasinya dari dataset_halu_6000_2kolom.csv (kata judul diacak / dihapus, susunan nama dibalik, penulis tidak
-lengkap), ditambah referensi asli yang penulisnya dihapus (tanpa_penulis), diformat APA.
+Set kedua (--set manipulasi): uji manipulasi dataset - referensi ASLI dan semua jenis perusakannya dari split UJI
+dataset_final.csv (tidak pernah dilihat model), diformat APA.
 
 Cara kerja: skrip menyalakan backend sendiri (port & database SEMENTARA, jadi data/civa.db Anda tidak tersentuh) dan
 memakai GROBID yang berjalan di CIVA_GROBID_URL (default http://localhost:8070). Butuh internet.
@@ -50,7 +49,7 @@ from backend.config import settings  # noqa: E402  (juga membaca .env lokal, mis
 from backend.textutil import norm_key, normalize_doi, title_similarity  # noqa: E402
 
 REPORTS = ROOT / "reports"
-SEED_CSV = ROOT / "dataset" / "dataset_scope_6000.csv"  # juga dataset seed basis data lokal
+DATASET_CSV = ROOT / "dataset" / "dataset_final.csv"  # juga dataset seed basis data lokal (baris asli)
 GROBID_URL = os.getenv("CIVA_GROBID_URL", "http://localhost:8070").rstrip("/")
 
 # Referensi karangan penuh (judul sangat spesifik agar hampir pasti tidak ada). (judul, [penulis], tahun, jurnal)
@@ -112,12 +111,12 @@ GROUP_TITLE = {
     "palsu_karangan": "Palsu: karangan penuh", "palsu_penulis": "Palsu: judul nyata + penulis salah",
     "palsu_tahun": "Palsu: tahun digeser >= 3", "palsu_doi": "Palsu: DOI karangan",
 }
-# Set "manipulasi" (dataset_scope_6000 + dataset_halu_6000_2kolom); nama kelompok halu = jenis di train_model.py.
+# Set "manipulasi" (split uji dataset_final.csv); nama kelompok = kolom `jenis` dataset.
 MANIPULATION_TITLE = {
-    "asli_cs": "Asli, Ilmu Komputer", "asli_non_cs": "Asli, di luar Ilmu Komputer",
-    "judul_diacak": "Halu: kata judul diacak", "judul_kata_dihapus": "Halu: kata judul dihapus",
-    "nama_dibalik": "Halu: susunan nama penulis dibalik", "penulis_tidak_lengkap": "Halu: penulis tidak lengkap / satu nama",
-    "tanpa_penulis": "Halu: tanpa nama penulis (disusun dari data asli)",
+    "asli": "Asli (semua bidang)", "acak_kata_judul": "Halu: kata judul diacak",
+    "hapus_kata_judul": "Halu: kata judul dihapus", "penulis_satu_nama": "Halu: penulis tinggal satu nama",
+    "penulis_kosong": "Halu: tanpa nama penulis", "urutan_penulis_acak": "Halu: urutan penulis diacak",
+    "nama_dibalik": "Halu: susunan nama penulis dibalik",
 }
 GROUP_TITLE.update(MANIPULATION_TITLE)
 GROUP_LABEL.update({g: "valid" if g.startswith("asli") else "halu" for g in MANIPULATION_TITLE})
@@ -131,7 +130,7 @@ def _plain(text: str) -> str:
 
 
 def fetch_openalex(client: httpx.Client, lang: str, n: int, seed: int) -> list[dict]:
-    params = {"filter": f"primary_topic.field.id:17,language:{lang},type:article,has_doi:true,publication_year:2019-2025",
+    params = {"filter": f"language:{lang},type:article,has_doi:true,publication_year:2019-2025",  # semua bidang
               "sample": n, "seed": seed, "per-page": min(n, 200),
               "select": "display_name,publication_year,authorships,doi,primary_location"}
     if settings.openalex_api_key:  # tanpa kunci: kuota harian bersama per IP
@@ -192,7 +191,8 @@ def fake_doi(real_doi: str, rng: random.Random) -> str:
 
 def build_eval_set(seed: int = 7) -> list[dict]:
     rng = random.Random(seed)
-    seed_frame = pd.read_csv(SEED_CSV, encoding="utf-8-sig")
+    seed_frame = pd.read_csv(DATASET_CSV, encoding="utf-8-sig", keep_default_na=False)
+    seed_frame = seed_frame[seed_frame["status"] == 1]  # referensi asli = isi basis data lokal
     seed_titles = {norm_key(t) for t in seed_frame["judul"].astype(str)}
     print("  mengambil sampel referensi nyata dari OpenAlex ...", flush=True)
     with httpx.Client(timeout=60, headers={"User-Agent": "CIVA-evaluation/1.0"}) as client:
@@ -241,54 +241,35 @@ def build_eval_set(seed: int = 7) -> list[dict]:
     for it in f_doi:
         add("palsu_doi", format_reference(it, rng, fake_doi(it["doi"], rng)), it)
 
-    kb = seed_frame[seed_frame["scope"] == "cs"].sample(20, random_state=seed)
+    kb = seed_frame.sample(20, random_state=seed)
     from civa_core import split_authors  # noqa: E402  (impor lambat: membawa sklearn)
     for row in kb.itertuples(index=False):
-        names = split_authors("" if pd.isna(row.author) else row.author)[:4]  # 4 penulis pertama apa adanya
+        names = split_authors(row.author)[:4]  # 4 penulis pertama apa adanya
         if not names:
             continue
-        link = "" if pd.isna(row.link_referensi) else str(row.link_referensi)
-        item = {"title": str(row.judul).strip(), "authors": names, "year": int(row.tahun),
-                "venue": "arXiv preprint" if str(row.sumber_api).lower() == "arxiv" else "Jurnal Ilmu Komputer"}
-        add("real_dataset", format_reference(item, rng, normalize_doi(link) if rng.random() < .5 else None), item)
+        item = {"title": str(row.judul).strip(), "authors": names, "year": int(row.tahun), "venue": "Jurnal Ilmiah"}
+        add("real_dataset", format_reference(item, rng, None), item)
     rng.shuffle(items)
     return items
 
 
 def build_manipulation_set(per_group: int = 20, seed: int = 7) -> list[dict]:
-    """Referensi asli (dataset_scope) dan manipulasinya (dataset_halu), separuh CS separuh non-CS per kelompok, APA."""
-    import train_model  # noqa: E402  (impor lambat: membawa sklearn/xgboost)
+    """Split UJI dataset_final.csv: `2 x per_group` referensi asli + `per_group` per jenis perusakan, format APA."""
     rng = random.Random(seed)
-    real = pd.read_csv(ROOT / "dataset" / train_model.VALID_FILE, encoding="utf-8-sig").fillna("")
-    fake = pd.read_csv(ROOT / "dataset" / train_model.HALU_FILE, encoding="utf-8-sig").fillna("")
-    source = train_model.link_sources(real["judul"].tolist(), real["author"].tolist(), fake["judul"].tolist(),
-                                      fake["author"].tolist())
-    pools = defaultdict(list)  # kelompok -> [(indeks sumber asli, judul, author)]
-    for i, row in real.iterrows():
-        if row["author"].strip():
-            pools["asli_" + row["scope"]].append((i, row["judul"], row["author"]))
-            pools["tanpa_penulis"].append((i, row["judul"], ""))
-    for j, i in enumerate(source):
-        if i >= 0:
-            kind = train_model.perturbation_type(real["judul"][i], real["author"][i], fake["judul"][j], fake["author"][j])
-            pools[kind].append((i, fake["judul"][j], fake["author"][j]))
-
+    frame = pd.read_csv(DATASET_CSV, encoding="utf-8-sig", keep_default_na=False)
+    frame = frame[frame["split"] == "uji"]
     items: list[dict] = []
     for group in MANIPULATION_TITLE:
-        picked = []
-        for scope in ("cs", "non_cs"):
-            pool = [p for p in pools[group] if real["scope"][p[0]] == scope]
-            picked += rng.sample(pool, min(len(pool), per_group if group.startswith("asli") else per_group // 2))
-        for i, title, author in picked:
-            src = real.iloc[i]
-            names = [n.strip() for n in author.split(",") if n.strip()]
-            title, year = str(title).strip().rstrip("."), int(src["tahun"])
-            venue = "arXiv preprint" if src["sumber_api"].lower() == "arxiv" else "Jurnal Ilmiah"
-            text = f"{authors_apa(names)} ({year}). {title}. {venue}." if names else f"{title}. ({year}). {venue}."
-            doi = normalize_doi(src["link_referensi"]) if rng.random() < 0.5 else None
-            items.append({"group": group, "expected": GROUP_LABEL[group],
-                          "text": text + (f" https://doi.org/{doi}" if doi else ""),
-                          "meta": {"source_id": int(src["id"]), "scope": src["scope"], "bidang": src["bidang"]}})
+        pool = frame[frame["jenis"] == group]
+        picked = pool.sample(min(len(pool), 2 * per_group if group == "asli" else per_group),
+                             random_state=rng.randrange(2**31))
+        for row in picked.itertuples(index=False):
+            names = [n.strip() for n in str(row.author).split(",") if n.strip()]
+            title, year = str(row.judul).strip().rstrip("."), int(row.tahun)
+            text = f"{authors_apa(names)} ({year}). {title}. Jurnal Ilmiah." if names else \
+                f"{title}. ({year}). Jurnal Ilmiah."
+            items.append({"group": group, "expected": GROUP_LABEL[group], "text": text,
+                          "meta": {"grup_id": int(row.grup_id), "bidang": row.bidang}})
     rng.shuffle(items)
     return items
 
@@ -343,15 +324,12 @@ def evaluate(api: str, items: list[dict]) -> list[dict]:
             for it, res in zip(chunk, results):
                 rows.append({
                     "group": it["group"], "expected": it["expected"], "predicted": res["status"],
-                    # di luar scope tetap dinilai valid/halu: itulah penilaian yang dibandingkan dengan kebenaran
-                    "verdict": res.get("scope_verdict") or res["status"],
                     "confidence": res.get("confidence"), "ml_label": (res.get("ml") or {}).get("label"),
                     "ml_p_valid": (res.get("ml") or {}).get("probability_valid"),
                     "evidence": (res.get("evidence") or {}).get("status"),
                     "evidence_source": (res.get("evidence") or {}).get("source"),
                     "doi_issue": (res.get("evidence") or {}).get("doi_issue"),
                     "mismatch_fields": ", ".join((res.get("evidence") or {}).get("mismatch_fields") or []),
-                    "in_scope": (res.get("domain") or {}).get("in_scope"),
                     "reason": res["reason"], "text": it["text"], "parsed_title": res.get("title"),
                 })
             print(f"  {min(start + 10, len(items))}/{len(items)} referensi diperiksa", flush=True)
@@ -363,7 +341,7 @@ def summarize(rows: list[dict]) -> dict:
     groups = {}
     for group, g in df.groupby("group"):
         expected = g["expected"].iloc[0]
-        correct = (g["verdict"] == expected).mean()
+        correct = (g["predicted"] == expected).mean()
         ml_correct = (g["ml_label"] == expected).mean()
         groups[group] = {
             "n": int(len(g)), "benar": float(correct), "ml_saja_benar": float(ml_correct),
@@ -371,7 +349,7 @@ def summarize(rows: list[dict]) -> dict:
             "bukti": {str(k): int(v) for k, v in g["evidence"].value_counts(dropna=False).items()},
             "pola": {k: int(v) for k, v in g["mismatch_fields"].str.split(", ").explode().value_counts().items() if k},
         }
-    truth_fake, pred_fake = df["expected"] == "halu", df["verdict"] == "halu"
+    truth_fake, pred_fake = df["expected"] == "halu", df["predicted"] == "halu"
     tp, fp = int((truth_fake & pred_fake).sum()), int((~truth_fake & pred_fake).sum())
     fn, tn = int((truth_fake & ~pred_fake).sum()), int((~truth_fake & ~pred_fake).sum())
     precision = tp / (tp + fp) if tp + fp else 0.0
@@ -385,8 +363,7 @@ def summarize(rows: list[dict]) -> dict:
                            "f1": 2 * precision * recall / (precision + recall) if precision + recall else 0.0,
                            "accuracy": (tp + tn) / len(df)},
         "ml_saja": {"recall": ml_tp / max(int(truth_fake.sum()), 1), "false_alarm": ml_fp / max(len(real), 1)},
-        "real_false_alarm": float((real["verdict"] == "halu").mean()),
-        "real_out_of_scope": float((real["predicted"] == "out_of_scope").mean()),
+        "real_false_alarm": float((real["predicted"] == "halu").mean()),
         "real_unparsed": float((real["predicted"] == "unparsed").mean()),
         "fake_unparsed": float((df[truth_fake]["predicted"] == "unparsed").mean()),
     }
@@ -405,11 +382,8 @@ NOTES = {
         "- Referensi yang tidak berDOI atau tidak terindeks (buku, skripsi, jurnal lokal) kurang terwakili.",
     ],
     "manipulasi": [
-        "- Referensi asli dari dataset_scope_6000.csv; referensi halu dari dataset_halu_6000_2kolom.csv, masing-masing "
-        "ditautkan ke referensi asli sumbernya (tahun & DOI diambil dari sumber; 50% diberi DOI). Diformat APA.",
-        "- 'Tanpa nama penulis' disusun dari referensi asli yang penulisnya dihapus, karena dataset halu praktis tidak "
-        "memuat kasus ini.",
-        "- Model ML final dilatih pada SELURUH dataset, termasuk baris-baris ini: kolom 'ML saja benar' optimistis.",
+        "- Semua referensi diambil dari split UJI dataset_final.csv (asli + perusakannya), diformat APA tanpa DOI.",
+        "- Model ML final dilatih HANYA pada split latih, jadi kolom 'ML saja benar' jujur (data belum pernah dilihat).",
         "- Semua referensi halu di sini adalah manipulasi makalah NYATA, sehingga makalah aslinya bisa ditemukan di "
         "basis data lokal/API; yang diuji adalah pemeriksaan kecocokan Tahap 2 terhadap rekaman asli tersebut.",
     ],
@@ -423,21 +397,19 @@ def write_reports(rows: list[dict], summary: dict, seconds: float, which: str = 
     (REPORTS / f"{prefix}_evaluation.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     d, m = summary["halu_detection"], summary["ml_saja"]
     lines = [f"# {title}", "",
-             f"{summary['total']} referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML, "
-             f"filter domain) dalam {seconds / 60:.1f} menit.", "",
-             "| Kelompok | n | Benar | ML saja benar | VALID | HALU | DI LUAR SCOPE | TIDAK TERBACA |", "|---|---|---|---|---|---|---|---|"]
+             f"{summary['total']} referensi berlabel, diperiksa pipeline lengkap (GROBID asli, API eksternal, model ML) "
+             f"dalam {seconds / 60:.1f} menit.", "",
+             "| Kelompok | n | Benar | ML saja benar | VALID | HALU | TIDAK TERBACA |", "|---|---|---|---|---|---|---|"]
     for group, info in summary["groups"].items():
         s = info["status"]
         lines.append(f"| {GROUP_TITLE[group]} | {info['n']} | {info['benar']:.0%} | {info['ml_saja_benar']:.0%} | "
-                     f"{s.get('valid', 0)} | {s.get('halu', 0)} | {s.get('out_of_scope', 0)} | {s.get('unparsed', 0)} |")
+                     f"{s.get('valid', 0)} | {s.get('halu', 0)} | {s.get('unparsed', 0)} |")
     lines += ["", "## Deteksi halusinasi (positif = referensi palsu)", "",
               f"- Recall: **{d['recall']:.0%}** ({d['tp']} dari {d['tp'] + d['fn']} referensi palsu terdeteksi)",
               f"- Precision: **{d['precision']:.0%}** ({d['fp']} referensi nyata salah dituduh halu)",
               f"- F1: **{d['f1']:.2f}** | akurasi keseluruhan: {d['accuracy']:.0%}",
               f"- Referensi nyata: salah dituduh HALU {summary['real_false_alarm']:.0%}, "
-              f"dinyatakan DI LUAR SCOPE {summary['real_out_of_scope']:.0%}, tidak terbaca {summary['real_unparsed']:.0%}",
-              "- Referensi DI LUAR SCOPE tetap dinilai valid/halu (dengan peringatan); kolom Benar dan angka deteksi "
-              "memakai penilaian itu.",
+              f"tidak terbaca {summary['real_unparsed']:.0%}",
               f"- Pembanding, model ML saja (tanpa bukti pangkalan data): recall {m['recall']:.0%}, "
               f"alarm palsu {m['false_alarm']:.0%}", "",
               "## Pola yang ditemukan Tahap 2 (kolom mismatch) per kelompok", ""]
@@ -457,7 +429,7 @@ def main() -> None:
     parser.add_argument("--rebuild", action="store_true", help="susun ulang set evaluasi")
     parser.add_argument("--api", help="pakai backend yang sudah berjalan (default: nyalakan backend terisolasi)")
     parser.add_argument("--set", choices=list(SETS), default="sistem", dest="which",
-                        help="sistem: set evaluasi umum | manipulasi: uji manipulasi dataset_scope/dataset_halu")
+                        help="sistem: set evaluasi umum | manipulasi: uji manipulasi split uji dataset_final")
     parser.add_argument("--per-group", type=int, default=20, help="--set manipulasi: referensi per kelompok")
     args = parser.parse_args()
 

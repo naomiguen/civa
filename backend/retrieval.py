@@ -60,7 +60,7 @@ def compare(ref: ParsedReference, record: Record, source: str, cached: bool) -> 
     # Judul asli tertulis utuh di teks mentah = judulnya benar; yang terpotong hanya hasil ekstraksi GROBID.
     title_issue = None if contains_title(ref.raw, record.title) else title_word_issue(ref.title, record.title)
     people = [name for author in record.authors for name in split_authors(author)]  # tanpa afiliasi/noise
-    author_ok, author_issue = compare_authors(ref.authors, people, ref.raw)
+    author_ok, author_issue = compare_authors(ref.authors, people, ref.raw, ref.title)
     year_ok = None if ref.year is None or record.year is None else abs(ref.year - record.year) <= 1
     doi_ok = None
     if normalize_doi(ref.doi) and normalize_doi(record.doi):
@@ -74,13 +74,12 @@ def compare(ref: ParsedReference, record: Record, source: str, cached: bool) -> 
     return Evidence(
         status="mismatch" if mismatch else "verified", source=source, cached=cached, title_similarity=similarity,
         author_match=author_ok, year_match=year_ok, doi_match=doi_ok, mismatch_fields=mismatch, record=record,
-        cs_hint=bool(record.cs_flag),
     )
 
 
-def _score(evidence: Evidence) -> tuple[int, float, bool]:
-    """Urutan prioritas deterministik: status, kemiripan judul, lalu sumber yang menyatakan Ilmu Komputer."""
-    return _RANK[evidence.status], evidence.title_similarity or 0.0, bool(evidence.record and evidence.record.cs_flag)
+def _score(evidence: Evidence) -> tuple[int, float]:
+    """Urutan prioritas deterministik: status, lalu kemiripan judul."""
+    return _RANK[evidence.status], evidence.title_similarity or 0.0
 
 
 def _forgive_doi(evidence: Evidence) -> Evidence:
@@ -238,13 +237,10 @@ def _parse_arxiv_atom(content: bytes) -> list[Record]:
         title = _plain(entry.findtext("a:title", "", ns))
         if not title or title.lower() == "error":  # arXiv membalas entri "Error" untuk id yang tidak ada
             continue
-        category = entry.find("x:primary_category", ns)
-        term = category.get("term", "") if category is not None else ""
         records.append(Record(
             title=title, authors=[_plain(a.findtext("a:name", "", ns)) for a in entry.findall("a:author", ns)],
             year=parse_year(entry.findtext("a:published", "", ns)), doi=normalize_doi(entry.findtext("x:doi", "", ns)),
             url=entry.findtext("a:id", "", ns), venue="arXiv", kind="preprint", source="arxiv",
-            cs_flag=True if term.startswith("cs.") else None,
         ))
     return records
 
@@ -329,7 +325,7 @@ async def resolve_identifier(client: httpx.AsyncClient, raw: str) -> tuple[str, 
 
 async def search_openalex(client: httpx.AsyncClient, ref: ParsedReference) -> list[Record]:
     params = {"search": ref.title, "per-page": 5,
-              "select": "display_name,publication_year,authorships,doi,type,primary_location,primary_topic"}
+              "select": "display_name,publication_year,authorships,doi,type,primary_location"}
     if settings.contact_email:
         params["mailto"] = settings.contact_email
     if settings.openalex_api_key:  # tanpa kunci, OpenAlex hanya memberi kuota harian bersama per alamat IP
@@ -346,8 +342,6 @@ async def search_openalex(client: httpx.AsyncClient, ref: ParsedReference) -> li
             year=work.get("publication_year"), doi=normalize_doi(work.get("doi")),
             url=location.get("landing_page_url"), venue=_plain((location.get("source") or {}).get("display_name")),
             kind=_OPENALEX_KIND.get(work.get("type", ""), "journal"), source="openalex",
-            cs_flag=True if (((work.get("primary_topic") or {}).get("field") or {}).get("display_name")
-                             == "Computer Science") else None,
         ))
     return records
 
@@ -369,7 +363,6 @@ async def search_dblp(client: httpx.AsyncClient, ref: ParsedReference) -> list[R
             year=parse_year(info.get("year")), doi=normalize_doi(info.get("doi")), url=info.get("ee") or info.get("url"),
             venue=_plain(info.get("venue", "")) if isinstance(info.get("venue"), str) else "",
             kind=_DBLP_KIND.get(info.get("type", ""), "journal"), source="dblp",
-            cs_flag=True,  # DBLP = bibliografi Ilmu Komputer
         ))
     return [r for r in records if r.title]
 
@@ -394,9 +387,7 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
     local = [compare(ref, rec, "local", cached=True)
              for rec in await asyncio.to_thread(kb.find, ref.title, doi)]
     best = best_of(local)
-    cs_hint = any(c.cs_hint for c in local)  # salah satu rekaman cocok berasal dari sumber Ilmu Komputer
     if best and best.status == "verified":
-        best.cs_hint = cs_hint
         return best
 
     # 2a'. Periksa DOI itu sendiri (bukti terkuat bila pengguna mencantumkannya)
@@ -407,30 +398,24 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
             on_doi = compare(ref, doi_record, "crossref", cached=False)
             if on_doi.status != "not_found":  # DOI mengarah ke makalah dengan judul yang sama
                 await asyncio.to_thread(kb.insert, doi_record)
-                on_doi.cs_hint = on_doi.cs_hint or cs_hint
                 return on_doi
             if (on_doi.title_similarity or 0.0) < settings.doi_conflict_title_threshold:
                 return Evidence(status="mismatch", source="crossref", title_similarity=on_doi.title_similarity,
-                                doi_match=False, mismatch_fields=["DOI"], record=doi_record, doi_issue="other_paper",
-                                cs_hint=cs_hint)
+                                doi_match=False, mismatch_fields=["DOI"], record=doi_record, doi_issue="other_paper")
             doi_valid = True  # judul mirip tetapi belum meyakinkan: lanjut pencarian judul
         elif state == "missing":
             return Evidence(status="mismatch", source="crossref", doi_match=False, mismatch_fields=["DOI"],
-                            doi_issue="missing", cs_hint=cs_hint)
+                            doi_issue="missing")
         elif state in ("found", "elsewhere"):
             doi_valid = True
     if doi_valid and best:
         best = _forgive_doi(best)
         if best.status == "verified":
-            best.cs_hint = cs_hint
             return best
 
     # Sudah dicari di SEMUA sumber dalam beberapa jam terakhir dan tidak terverifikasi: jangan hujani API lagi.
     if await asyncio.to_thread(kb.recently_missed, ref.title, settings.negative_cache_hours):
-        if best:
-            best.cs_hint = cs_hint
-            return best
-        return Evidence(status="not_found")
+        return best or Evidence(status="not_found")
 
     # 2b. API eksternal, berurutan; berhenti pada sumber pertama yang memverifikasi
     reachable = 0  # jumlah API yang berhasil dihubungi (apa pun hasilnya)
@@ -446,12 +431,10 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
         found = best_of(matches)
         if found is None:
             continue
-        cs_hint = cs_hint or any(m.cs_hint for m in matches)
         if doi_valid:
             found = _forgive_doi(found)
         await asyncio.to_thread(kb.insert, found.record)  # cache: rekaman nyata disimpan agar berikutnya cukup dari lokal
         if found.status == "verified":
-            found.cs_hint = cs_hint
             return found
         if best is None or _score(found) > _score(best):
             best = found
@@ -459,7 +442,4 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
     if reachable == 0 and best is None:  # semua API gagal: bukan bukti apa pun, jangan dicatat sebagai "sudah dicari"
         return Evidence(status="not_found", unreachable=True)
     await asyncio.to_thread(kb.remember_miss, ref.title)
-    if best is None:
-        return Evidence(status="not_found")
-    best.cs_hint = cs_hint
-    return best
+    return best or Evidence(status="not_found")

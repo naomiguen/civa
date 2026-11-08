@@ -43,7 +43,7 @@ class Settings:
 
     # --- Tahap 2: Database lokal + API eksternal ----------------------------------------
     db_path: Path = Path(os.getenv("CIVA_DB_PATH", ROOT / "data" / "civa.db"))
-    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset" / "dataset_scope_6000.csv"))
+    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset" / "dataset_final.csv"))
     external_timeout: float = _env_float("CIVA_EXTERNAL_TIMEOUT", 12.0)
     # Email kontak OPSIONAL untuk "polite pool" Crossref/OpenAlex (lebih cepat & stabil).
     # Tidak diisi otomatis; isi sendiri bila mau: set CIVA_CONTACT_EMAIL=email.anda@contoh.com
@@ -66,7 +66,7 @@ class Settings:
     #   verified: +evidence_weight | mismatch: -evidence_weight | tidak ditemukan di mana pun: not_found_weight
     # Atur ketiganya ke 0 bila ingin verdict MURNI dari model ML.
     evidence_weight: float = _env_float("CIVA_EVIDENCE_WEIGHT", 4.0)
-    not_found_weight: float = _env_float("CIVA_NOT_FOUND_WEIGHT", -1.5)
+    not_found_weight: float = _env_float("CIVA_NOT_FOUND_WEIGHT", -2.0)
     valid_threshold: float = _env_float("CIVA_VALID_THRESHOLD", 0.5)
 
     # --- API ----------------------------------------------------------------------------

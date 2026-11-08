@@ -129,7 +129,6 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .civa-legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:16px;font-size:13px;font-weight:600;color:var(--ink2)}
 .civa-legend span{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .civa-legend i{flex:none;width:11px;height:11px;border-radius:3px}
-.civa-legend-note{margin-top:10px;font-size:11.8px;line-height:1.45;color:var(--ink3)}
 .civa-right{margin:-4.5px 0 0 6px}
 .civa-h2{font-size:20px;font-weight:700;color:var(--ink);margin:0 0 14px;padding:0}
 .civa-h2.sp{margin-top:34px}
@@ -138,8 +137,6 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   box-shadow:0 1px 3px rgba(15,23,42,.05)}
 .civa-stat .l{font-size:15.8px;color:var(--ink2)}
 .civa-stat .v{font-size:40px;line-height:1;font-weight:800;margin-top:8px}
-.civa-stat .s{font-size:12.8px;font-weight:600;color:var(--ink3);margin-top:8px;white-space:nowrap}
-.civa-stat .s b{font-weight:700}
 .civa-results{display:flex;flex-direction:column;gap:16px}
 .civa-result{background:#fff;border:1px solid rgba(16,185,129,.125);border-radius:14px;padding:20px 20px 24px;
   box-shadow:0 1px 3px rgba(15,23,42,.05)}
@@ -152,12 +149,6 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   text-transform:uppercase;white-space:nowrap;line-height:1.2}
 .civa-result .why{display:flex;align-items:center;gap:9px;margin-top:9px;padding-top:14px;border-top:1px solid var(--line);
   font-size:13.4px;color:var(--ink3);line-height:1.4}
-.civa-result .badges{display:flex;align-items:center;gap:8px;flex:none}
-.civa-chip{font-size:13px;font-weight:700;padding:5px 10px;border-radius:7px;border:1.5px solid currentColor;
-  white-space:nowrap;line-height:1.2;background:#fff}
-.civa-result .warn{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:10px 12px;border-radius:9px;
-  background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:12.8px;line-height:1.45}
-.civa-result .warn svg{flex:none;width:16px;height:16px;margin-top:1px;color:var(--amber)}
 .civa-result .why svg{flex:none;width:16px;height:16px}
 .civa-result .why .odot{flex:none;width:16px;height:16px;border-radius:50%}
 @media (max-width:900px){.civa-steps{grid-template-columns:repeat(2,1fr)}.civa-header{padding:0 16px}
@@ -170,9 +161,8 @@ ICON = {
     "file": '<svg class="i" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
     "shield": '<svg class="i" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>',
     "cpu": '<svg class="i" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>',
-    "filter": '<svg class="i" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+    "scale": '<svg class="i" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>',
     "check": '<svg class="i" viewBox="0 0 24 24" style="color:#10b981"><path d="M20 6 9 17l-5-5"/></svg>',
-    "warn": '<svg class="i" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
     "alert": '<svg class="i" viewBox="0 0 24 24" style="color:#ef4444"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>',
 }
 
@@ -181,17 +171,17 @@ STEPS = [
      "Sistem mengurai teks input daftar pustaka secara otomatis menggunakan model berbasis Machine Learning untuk "
      "mengekstrak entitas metadata penting seperti judul, penulis, dan tahun publikasi."),
     ("shield", "2. Cek DOI &amp; Metadata",
-     "Mencocokkan data referensi dengan pangkalan data rujukan internal (Closed-Domain Knowledge Base) yang secara "
-     "spesifik dibangun dari sumber dataset akademik terverifikasi seperti Crossref dan arXiv."),
+     "Mencocokkan data referensi dengan pangkalan data rujukan lokal dan sumber akademik terverifikasi (Crossref, "
+     "arXiv, OpenAlex, DBLP): judul, penulis, tahun, dan DOI diperiksa terhadap rekaman aslinya."),
     ("cpu", "3. Klasifikasi Machine Learning",
      "Mengevaluasi hasil ekstraksi fitur referensi menggunakan model klasifikasi terbaik yang dioptimasi dari hasil "
      "pengujian komparatif antara algoritma Random Forest, XGBoost, dan Logistic Regression."),
-    ("filter", "4. Filter Domain Otomatis",
-     "Menerapkan metode Semantic Thresholding untuk mendeteksi literatur di luar disiplin Ilmu Komputer. Referensi "
-     "lintas ilmu tetap dinilai valid/tidak valid, lalu diberi peringatan agar dicek ulang."),
+    ("scale", "4. Keputusan &amp; Alasan",
+     "Menggabungkan probabilitas model dengan bukti pangkalan data untuk menetapkan status VALID atau HALU beserta "
+     "alasannya, untuk referensi dari bidang ilmu apa pun."),
 ]
 
-STATUS_COLOR = {"valid": "#10b981", "halu": "#ef4444", "out_of_scope": "#f59e0b", "unparsed": "#94a3b8"}
+STATUS_COLOR = {"valid": "#10b981", "halu": "#ef4444", "unparsed": "#94a3b8"}
 
 
 # --------------------------------------------------------------------------------------
@@ -261,20 +251,15 @@ def steps_html() -> str:
 
 def stats_html(summary: dict) -> str:
     cards = [("Total Referensi", summary["total"], "var(--ink)"), ("Valid", summary["valid"], "var(--green)"),
-             ("Halusinasi", summary["halu"], "var(--red)"), ("Di Luar Scope", summary["out_of_scope"], "var(--amber)")]
+             ("Halusinasi", summary["halu"], "var(--red)")]
     if summary.get("unparsed"):
         cards.append(("Tidak Terbaca", summary["unparsed"], "var(--grey)"))
-    sub = {}
-    if summary["out_of_scope"]:  # rincian penilaian referensi di luar scope
-        sub["Di Luar Scope"] = (f'<div class="s"><b style="color:var(--green)">{summary.get("out_of_scope_valid", 0)}</b> valid · '
-                                f'<b style="color:var(--red)">{summary.get("out_of_scope_halu", 0)}</b> tidak valid</div>')
-    body = "".join(f'<div class="civa-stat"><div class="l">{label}</div><div class="v" style="color:{color}">{value}</div>'
-                   f'{sub.get(label, "")}</div>' for label, value, color in cards)
+    body = "".join(f'<div class="civa-stat"><div class="l">{label}</div><div class="v" style="color:{color}">{value}</div></div>'
+                   for label, value, color in cards)
     return f'<div class="civa-stats" style="grid-template-columns:repeat({len(cards)},1fr)">{body}</div>'
 
 
-PIE_SLICES = (("valid", "Valid", "#21b873"), ("halu", "Halu", "#ef4444"), ("out_of_scope", "Luar Scope", "#f59e0b"),
-              ("unparsed", "Tidak Terbaca", "#cbd5e1"))
+PIE_SLICES = (("valid", "Valid", "#21b873"), ("halu", "Halu", "#ef4444"), ("unparsed", "Tidak Terbaca", "#cbd5e1"))
 
 
 def whole_percentages(counts: list[int]) -> list[int]:
@@ -293,7 +278,7 @@ def _pie_point(center: float, radius: float, degrees: float) -> tuple[float, flo
 
 
 def pie_html(summary: dict) -> str:
-    """Pie chart penuh: Valid / Halu / Luar Scope (/ Tidak Terbaca), label + persen di dalam irisan."""
+    """Pie chart penuh: Valid / Halu (/ Tidak Terbaca), label + persen di dalam irisan."""
     slices = [(label, color, summary.get(key, 0)) for key, label, color in PIE_SLICES if summary.get(key, 0)]
     c, r = 110, 106
     shapes, texts = [], []
@@ -319,13 +304,9 @@ def pie_html(summary: dict) -> str:
             start += sweep
     legend = "".join(f'<span><i style="background:{color}"></i>{label} ({summary.get(key, 0)})</span>'
                      for key, label, color in PIE_SLICES if key != "unparsed" or summary.get(key, 0))
-    note = ""
-    if summary["out_of_scope"]:
-        note = (f'<div class="civa-legend-note">Luar scope: {summary.get("out_of_scope_valid", 0)} valid · '
-                f'{summary.get("out_of_scope_halu", 0)} tidak valid (perlu dicek ulang).</div>')
     return (f'<div class="civa-pctbox"><div class="t">Persentase Keseluruhan</div>'
             f'<svg class="civa-pie" viewBox="0 0 220 220" role="img">{"".join(shapes)}{"".join(texts)}</svg>'
-            f'<div class="civa-legend">{legend}</div>{note}</div>')
+            f'<div class="civa-legend">{legend}</div></div>')
 
 
 def result_card_html(item: dict) -> str:
@@ -343,21 +324,11 @@ def result_card_html(item: dict) -> str:
         icon = ICON["alert"]
     else:
         icon = f'<span class="odot" style="background:{STATUS_COLOR[status]}"></span>'
-    chip = ""
-    if status == "out_of_scope" and item.get("scope_verdict"):  # di luar scope tetap dinilai: valid / tidak valid + % halu
-        valid = item["scope_verdict"] == "valid"
-        chip = (f'<span class="civa-chip" style="color:{STATUS_COLOR["valid" if valid else "halu"]}" '
-                f'title="Di luar scope: perlu dicek ulang">{"VALID" if valid else "TIDAK VALID"} · '
-                f'{round(item["halu_probability"] * 100)}% halu</span>')
-    warning = ""
-    if item.get("warning"):
-        warning = f'<div class="warn">{ICON["warn"]}<span>{esc(item["warning"])}</span></div>'
-    looks_valid = status == "valid" or item.get("scope_verdict") == "valid"
-    return (f'<div class="civa-result{"" if looks_valid else " bad"}"><div class="top"><div>'
+    return (f'<div class="civa-result{"" if status == "valid" else " bad"}"><div class="top"><div>'
             f'<div class="ttl">{esc(title)}</div>'
             f'<div class="meta"><span>{esc(item.get("authors_display", ""))}{esc(year)}</span>{pill}</div></div>'
-            f'<div class="badges">{chip}<span class="civa-badge" style="background:{STATUS_COLOR[status]}">{esc(badge)}</span></div></div>'
-            f'<div class="why">{icon}<span>{esc(item["reason"])}</span></div>{warning}</div>')
+            f'<span class="civa-badge" style="background:{STATUS_COLOR[status]}">{esc(badge)}</span></div>'
+            f'<div class="why">{icon}<span>{esc(item["reason"])}</span></div></div>')
 
 
 # --------------------------------------------------------------------------------------
@@ -382,7 +353,7 @@ def home_page() -> None:
     with st.container(key="home"):
         st.markdown('<div class="civa-hero"><div class="h">Verifikasi Keaslian Daftar Pustaka Anda</div>'
                     '<p>Sistem validasi referensi format-agnostic berbasis Machine Learning untuk mendeteksi '
-                    'halusinasi sitasi pada literatur Ilmu Komputer.</p></div>', unsafe_allow_html=True)
+                    'halusinasi sitasi pada literatur ilmiah dari berbagai bidang ilmu.</p></div>', unsafe_allow_html=True)
         with st.container(key="input_card"):
             text = st.text_area("Daftar pustaka", key="refs_text", label_visibility="collapsed",
                                 placeholder=PLACEHOLDER, height=268)

@@ -1,8 +1,7 @@
 """
-Database lokal (SQLite) = Closed-Domain Knowledge Base CIVA.
+Database lokal (SQLite) = Knowledge Base CIVA.
 
-* Terisi otomatis dari dataset/dataset_scope_6000.csv (referensi nyata Crossref/arXiv/OpenAlex: Ilmu Komputer dan
-  bidang lain, kolom `scope`) saat pertama kali jalan.
+* Terisi otomatis dari referensi ASLI di dataset/dataset_final.csv (26 bidang ilmu) saat pertama kali jalan.
 * Setiap referensi yang ditemukan lewat API eksternal di-INSERT ke sini, sehingga pencarian berikutnya
   cukup dari database lokal (tanpa memanggil API lagi).
 * Pencarian "tidak ditemukan" di-cache sementara (lookup_misses) agar API tidak dipanggil berulang untuk
@@ -40,8 +39,7 @@ CREATE TABLE IF NOT EXISTS kb_references (
     kind        TEXT NOT NULL DEFAULT 'journal',   -- journal | book | proceedings | preprint
     source      TEXT NOT NULL,                     -- crossref | arxiv | openalex | dblp
     origin      TEXT NOT NULL DEFAULT 'cache',     -- seed (dataset) | cache (hasil API eksternal)
-    created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    in_cs       INTEGER                            -- 1 = sumber menyatakan Ilmu Komputer ; NULL = tidak diketahui
+    created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ux_kb_title_year ON kb_references(title_norm, COALESCE(year, 0));
 CREATE INDEX IF NOT EXISTS ix_kb_doi ON kb_references(doi);
@@ -52,8 +50,8 @@ CREATE TABLE IF NOT EXISTS lookup_misses (
 """
 
 _INSERT_SQL = (
-    "INSERT OR IGNORE INTO kb_references (title, title_norm, authors, year, doi, url, venue, kind, source, origin, in_cs) "
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    "INSERT OR IGNORE INTO kb_references (title, title_norm, authors, year, doi, url, venue, kind, source, origin) "
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 )
 
 
@@ -67,10 +65,6 @@ class KnowledgeBase:
         with self._session() as con:
             con.execute("PRAGMA journal_mode=WAL")
             con.executescript(_SCHEMA)
-            columns = {row["name"] for row in con.execute("PRAGMA table_info(kb_references)")}
-            if "in_cs" not in columns:  # migrasi dari versi database sebelumnya
-                con.execute("ALTER TABLE kb_references ADD COLUMN in_cs INTEGER")
-            con.execute("UPDATE kb_references SET in_cs = 1 WHERE origin = 'seed' AND in_cs IS NULL")
         self._reload_index()
 
     # -- infrastruktur ---------------------------------------------------------------------
@@ -99,7 +93,6 @@ class KnowledgeBase:
         return Record(
             id=row["id"], title=row["title"], authors=json.loads(row["authors"] or "[]"), year=row["year"],
             doi=row["doi"], url=row["url"], venue=row["venue"], kind=row["kind"], source=row["source"],
-            cs_flag=True if row["in_cs"] == 1 else None,
         )
 
     # -- baca ------------------------------------------------------------------------------
@@ -145,7 +138,6 @@ class KnowledgeBase:
         row = (
             record.title.strip(), key, json.dumps(record.authors, ensure_ascii=False), record.year,
             normalize_doi(record.doi), record.url, record.venue or "", record.kind or "journal", record.source, origin,
-            1 if record.cs_flag else None,
         )
         with self._lock, self._session() as con:
             cur = con.execute(_INSERT_SQL, row)
@@ -182,21 +174,22 @@ class KnowledgeBase:
             return "" if pd.isna(value) else str(value).strip()
 
         frame = pd.read_csv(csv_path, encoding="utf-8-sig")
+        if "status" in frame.columns:  # dataset berlabel: hanya referensi ASLI yang masuk KB
+            frame = frame[frame["status"] == 1]
         rows = []
         for item in frame.itertuples(index=False):
             title = text(item.judul)
             key = norm_key(title)
             if not key:
                 continue
-            link = text(item.link_referensi)  # DOI-URL (Crossref), URL arXiv, atau ISBN (buku)
+            link = text(getattr(item, "link_referensi", ""))  # bila ada: DOI-URL, URL arXiv, atau ISBN (buku)
             names = split_authors(text(item.author))
             rows.append((
                 title, key, json.dumps(names, ensure_ascii=False),
                 None if pd.isna(item.tahun) else int(item.tahun),
                 normalize_doi(link), link if link.startswith("http") and "doi.org" not in link else None,
-                "", "book" if text(item.jenis_referensi).lower() == "book" else "journal",
-                text(item.sumber_api).lower(),  # "crossref" | "arxiv" | "openalex"
-                "seed", 1 if text(item.scope) == "cs" else 0,  # in_cs: 1 = Ilmu Komputer, 0 = bidang lain
+                "", "book" if text(getattr(item, "jenis_referensi", "")).lower() == "book" else "journal",
+                text(getattr(item, "sumber_api", "")).lower() or "dataset", "seed",
             ))
         with self._lock, self._session() as con:
             before = con.execute("SELECT COUNT(*) FROM kb_references").fetchone()[0]

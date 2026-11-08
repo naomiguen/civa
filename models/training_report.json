@@ -1,315 +1,219 @@
 {
-  "trained_at": "2026-10-23T12:20:27+00:00",
+  "trained_at": "2026-10-24T11:26:20+00:00",
   "best_model": "LogisticRegression",
   "best_params": {
-    "clf__C": 0.1
+    "clf__C": 0.03
   },
   "encoder": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
   "feature_dim": 768,
   "features": "judul(384) + author(384), murni teks",
   "dataset": {
-    "files": [
-      "dataset_scope_6000.csv",
-      "dataset_halu_6000_2kolom.csv"
-    ],
-    "rows": 11534,
-    "valid": 5995,
-    "halu": 5539,
+    "file": "dataset_final.csv",
+    "rows": 11972,
+    "valid": 5999,
+    "halu": 5973,
     "per_jenis": {
-      "asli": 5995,
-      "judul_diacak": 1489,
-      "judul_kata_dihapus": 1486,
-      "nama_dibalik": 1342,
-      "penulis_tidak_lengkap": 1220,
-      "penulis_diubah": 1,
-      "tidak_tertaut": 1
+      "asli": 5999,
+      "hapus_kata_judul": 2000,
+      "acak_kata_judul": 1999,
+      "penulis_satu_nama": 496,
+      "penulis_kosong": 496,
+      "urutan_penulis_acak": 494,
+      "nama_dibalik": 488
     },
-    "per_scope": {
-      "cs|halu": 2706,
-      "cs|valid": 2999,
-      "non_cs|halu": 2832,
-      "non_cs|valid": 2996
+    "split": {
+      "latih": 9575,
+      "uji": 2397
     },
-    "initials_augmentation_rate": 0.35,
-    "test_size": 0.2,
-    "split": "StratifiedGroupKFold (referensi asli + turunan halunya satu grup)"
+    "initials_augmentation_rate": 0.35
   },
   "cv_folds": 5,
   "model_comparison": [
     {
       "model": "LogisticRegression",
-      "best_params": "{\"clf__C\": 0.1}",
-      "cv_roc_auc": 0.6177315002059678,
-      "cv_roc_auc_std": 0.007603395083665795,
-      "cv_f1_macro": 0.5839909829054841,
-      "cv_ap_halu": 0.6020192926608605,
-      "test_roc_auc": 0.6290676826872561,
-      "test_ap_halu": 0.6180228855284068,
-      "test_f1_halu": 0.577953447518665,
-      "test_f1_macro": 0.5833712466519299,
-      "fit_seconds": 26.2
+      "best_params": "{\"clf__C\": 0.03}",
+      "cv_roc_auc": 0.728518288663167,
+      "cv_roc_auc_std": 0.007606469443795355,
+      "cv_f1_macro": 0.665144428886925,
+      "cv_ap_halu": 0.7467580766740114,
+      "test_roc_auc": 0.7208939014202171,
+      "test_ap_halu": 0.7372327333095353,
+      "test_f1_halu": 0.6442432082794308,
+      "test_f1_macro": 0.6554549374730487,
+      "fit_seconds": 13.8
     },
     {
       "model": "RandomForest",
       "best_params": "{\"min_samples_leaf\": 5}",
-      "cv_roc_auc": 0.5485924592284388,
-      "cv_roc_auc_std": 0.00712720956056546,
-      "cv_f1_macro": 0.52127494630752,
-      "cv_ap_halu": 0.52548036216897,
-      "test_roc_auc": 0.548286820083367,
-      "test_ap_halu": 0.5243783349589235,
-      "test_f1_halu": 0.4354753053637812,
-      "test_f1_macro": 0.5231202964021395,
-      "fit_seconds": 391.2
+      "cv_roc_auc": 0.6359767190340805,
+      "cv_roc_auc_std": 0.005165307107335451,
+      "cv_f1_macro": 0.5845052551985808,
+      "cv_ap_halu": 0.6603128006615313,
+      "test_roc_auc": 0.6354427736006683,
+      "test_ap_halu": 0.6611474698700388,
+      "test_f1_halu": 0.5265188042430087,
+      "test_f1_macro": 0.5827446962391514,
+      "fit_seconds": 97.9
     },
     {
       "model": "XGBoost",
-      "best_params": "{\"max_depth\": 3, \"n_estimators\": 600}",
-      "cv_roc_auc": 0.5697731811610082,
-      "cv_roc_auc_std": 0.0123994997964122,
-      "cv_f1_macro": 0.547709215315181,
-      "cv_ap_halu": 0.5452082299682185,
-      "test_roc_auc": 0.5723071665881367,
-      "test_ap_halu": 0.5405001847647103,
-      "test_f1_halu": 0.540811673506612,
-      "test_f1_macro": 0.562433924320427,
-      "fit_seconds": 579.6
+      "best_params": "{\"max_depth\": 5, \"n_estimators\": 600}",
+      "cv_roc_auc": 0.6782283823108315,
+      "cv_roc_auc_std": 0.007687144403763444,
+      "cv_f1_macro": 0.6261577722472002,
+      "cv_ap_halu": 0.6991485512965298,
+      "test_roc_auc": 0.6782852965747703,
+      "test_ap_halu": 0.6949169474066307,
+      "test_f1_halu": 0.589941096511101,
+      "test_f1_macro": 0.6200575215837298,
+      "fit_seconds": 373.2
     }
   ],
   "holdout_calibrated": {
-    "roc_auc": 0.6290676826872561,
-    "ap_halu": 0.6180228855284068,
-    "accuracy": 0.5834416991764196,
-    "balanced_accuracy": 0.5839763748116413,
-    "mcc": 0.1678655911370084,
-    "precision_halu": 0.5628183361629882,
-    "recall_halu": 0.5978358881875564,
-    "f1_halu": 0.579798863139484,
-    "precision_valid": 0.6049601417183348,
-    "recall_valid": 0.5701168614357263,
-    "f1_valid": 0.5870219166308551,
-    "f1_macro": 0.5834103898851696,
+    "roc_auc": 0.7208939014202171,
+    "ap_halu": 0.7372327333095353,
+    "accuracy": 0.6554025865665415,
+    "balanced_accuracy": 0.6553540100250627,
+    "mcc": 0.31165763152096515,
+    "precision_halu": 0.6678733031674208,
+    "recall_halu": 0.6165413533834586,
+    "f1_halu": 0.6411815812337098,
+    "precision_valid": 0.6447368421052632,
+    "recall_valid": 0.6941666666666667,
+    "f1_valid": 0.6685393258426966,
+    "f1_macro": 0.6548604535382032,
     "confusion": {
-      "halu_dideteksi_halu": 663,
-      "halu_lolos_sebagai_valid": 446,
-      "valid_salah_dituduh_halu": 515,
-      "valid_dikenali_valid": 683
+      "halu_dideteksi_halu": 738,
+      "halu_lolos_sebagai_valid": 459,
+      "valid_salah_dituduh_halu": 367,
+      "valid_dikenali_valid": 833
     },
-    "mean_p_valid_pada_valid": 0.5174128906430638,
-    "mean_p_valid_pada_halu": 0.4712770642213449
+    "mean_p_valid_pada_valid": 0.5780939940251484,
+    "mean_p_valid_pada_halu": 0.4187977783415067
   },
   "holdout_uncalibrated": {
-    "roc_auc": 0.6290676826872561,
-    "ap_halu": 0.6180228855284068,
-    "accuracy": 0.5834416991764196,
-    "balanced_accuracy": 0.5838089030259329,
-    "mcc": 0.1675062632929156,
-    "precision_halu": 0.5633561643835616,
-    "recall_halu": 0.5933273219116321,
-    "f1_halu": 0.577953447518665,
-    "precision_valid": 0.6040386303775241,
-    "recall_valid": 0.5742904841402338,
-    "f1_valid": 0.5887890457851946,
-    "f1_macro": 0.5833712466519299,
+    "roc_auc": 0.7208939014202171,
+    "ap_halu": 0.7372327333095353,
+    "accuracy": 0.655819774718398,
+    "balanced_accuracy": 0.6557800751879699,
+    "mcc": 0.3121965375509205,
+    "precision_halu": 0.6657754010695187,
+    "recall_halu": 0.6240601503759399,
+    "f1_halu": 0.6442432082794308,
+    "precision_valid": 0.6470588235294118,
+    "recall_valid": 0.6875,
+    "f1_valid": 0.6666666666666666,
+    "f1_macro": 0.6554549374730487,
     "confusion": {
-      "halu_dideteksi_halu": 658,
-      "halu_lolos_sebagai_valid": 451,
-      "valid_salah_dituduh_halu": 510,
-      "valid_dikenali_valid": 688
+      "halu_dideteksi_halu": 747,
+      "halu_lolos_sebagai_valid": 450,
+      "valid_salah_dituduh_halu": 375,
+      "valid_dikenali_valid": 825
     },
-    "mean_p_valid_pada_valid": 0.5275255441665649,
-    "mean_p_valid_pada_halu": 0.45761722326278687
+    "mean_p_valid_pada_valid": 0.585949182510376,
+    "mean_p_valid_pada_halu": 0.40990930795669556
   },
   "holdout_per_jenis": {
-    "asli|semua": {
-      "n": 1198,
-      "rate": 0.4298831385642738
+    "acak_kata_judul": {
+      "n": 402,
+      "rate": 0.6791044776119403
     },
-    "asli|cs": {
-      "n": 576,
-      "rate": 0.40625
+    "asli": {
+      "n": 1200,
+      "rate": 0.30583333333333335
     },
-    "asli|non_cs": {
-      "n": 622,
-      "rate": 0.4517684887459807
+    "hapus_kata_judul": {
+      "n": 431,
+      "rate": 0.5962877030162413
     },
-    "judul_diacak|semua": {
-      "n": 294,
-      "rate": 0.7414965986394558
+    "nama_dibalik": {
+      "n": 78,
+      "rate": 0.5128205128205128
     },
-    "judul_diacak|cs": {
-      "n": 153,
-      "rate": 0.6797385620915033
+    "penulis_kosong": {
+      "n": 91,
+      "rate": 1.0
     },
-    "judul_diacak|non_cs": {
-      "n": 141,
-      "rate": 0.8085106382978723
+    "penulis_satu_nama": {
+      "n": 95,
+      "rate": 0.5789473684210527
     },
-    "judul_kata_dihapus|semua": {
-      "n": 289,
-      "rate": 0.5536332179930796
-    },
-    "judul_kata_dihapus|cs": {
-      "n": 141,
-      "rate": 0.5602836879432624
-    },
-    "judul_kata_dihapus|non_cs": {
-      "n": 148,
-      "rate": 0.5472972972972973
-    },
-    "nama_dibalik|semua": {
-      "n": 262,
-      "rate": 0.5992366412213741
-    },
-    "nama_dibalik|cs": {
-      "n": 114,
-      "rate": 0.5526315789473685
-    },
-    "nama_dibalik|non_cs": {
-      "n": 148,
-      "rate": 0.6351351351351351
-    },
-    "penulis_tidak_lengkap|semua": {
-      "n": 264,
-      "rate": 0.48484848484848486
-    },
-    "penulis_tidak_lengkap|cs": {
-      "n": 119,
-      "rate": 0.44537815126050423
-    },
-    "penulis_tidak_lengkap|non_cs": {
-      "n": 145,
-      "rate": 0.5172413793103449
+    "urutan_penulis_acak": {
+      "n": 100,
+      "rate": 0.22
     }
   },
-  "holdout_per_scope": {
-    "cs": {
-      "roc_auc": 0.6356044433902592,
-      "ap_halu": 0.6158632317987276,
-      "accuracy": 0.5811423390752494,
-      "balanced_accuracy": 0.5805562144212524,
-      "mcc": 0.16104400476952901,
-      "precision_halu": 0.5609756097560976,
-      "recall_halu": 0.5673624288425048,
-      "f1_halu": 0.5641509433962264,
-      "precision_valid": 0.6,
-      "recall_valid": 0.59375,
-      "f1_valid": 0.5968586387434555,
-      "f1_macro": 0.5805047910698409,
-      "confusion": {
-        "halu_dideteksi_halu": 299,
-        "halu_lolos_sebagai_valid": 228,
-        "valid_salah_dituduh_halu": 234,
-        "valid_dikenali_valid": 342
-      },
-      "mean_p_valid_pada_valid": 0.5232800107626381,
-      "mean_p_valid_pada_halu": 0.4744314874742299
-    },
-    "non_cs": {
-      "roc_auc": 0.6242610578888632,
-      "ap_halu": 0.6215314294832872,
-      "accuracy": 0.5855481727574751,
-      "balanced_accuracy": 0.586830532259312,
-      "mcc": 0.17400966954613464,
-      "precision_halu": 0.5643410852713179,
-      "recall_halu": 0.6254295532646048,
-      "f1_halu": 0.5933170334148329,
-      "precision_valid": 0.6100178890876565,
-      "recall_valid": 0.5482315112540193,
-      "f1_valid": 0.5774767146486028,
-      "f1_macro": 0.5853968740317179,
-      "confusion": {
-        "halu_dideteksi_halu": 364,
-        "halu_lolos_sebagai_valid": 218,
-        "valid_salah_dituduh_halu": 281,
-        "valid_dikenali_valid": 341
-      },
-      "mean_p_valid_pada_valid": 0.511979673297606,
-      "mean_p_valid_pada_halu": 0.4684207393858286
-    }
+  "holdout_auc_per_bahasa": {
+    "en": 0.726871903507024,
+    "id": 0.7070633502817095
   },
   "ablation_holdout": {
     "judul_saja": {
-      "roc_auc": 0.6084694057273092,
-      "ap_halu": 0.6041595455045471,
-      "accuracy": 0.5782401387082792,
-      "balanced_accuracy": 0.5783986234948238,
-      "mcc": 0.15668089237917485,
-      "precision_halu": 0.5588235294117647,
-      "recall_halu": 0.5825067628494139,
-      "f1_halu": 0.5704194260485651,
-      "precision_valid": 0.5977410947002606,
-      "recall_valid": 0.5742904841402338,
-      "f1_valid": 0.5857811834823329,
-      "f1_macro": 0.5781003047654489,
+      "roc_auc": 0.6899993038150932,
+      "ap_halu": 0.6993592803449888,
+      "accuracy": 0.6316228619107217,
+      "balanced_accuracy": 0.6316332497911445,
+      "mcc": 0.26330114674958816,
+      "precision_halu": 0.6288998357963875,
+      "recall_halu": 0.6399331662489557,
+      "f1_halu": 0.6343685300207039,
+      "precision_valid": 0.6344359626802375,
+      "recall_valid": 0.6233333333333333,
+      "f1_valid": 0.6288356452290879,
+      "f1_macro": 0.6316020876248959,
       "confusion": {
-        "halu_dideteksi_halu": 646,
-        "halu_lolos_sebagai_valid": 463,
-        "valid_salah_dituduh_halu": 510,
-        "valid_dikenali_valid": 688
+        "halu_dideteksi_halu": 766,
+        "halu_lolos_sebagai_valid": 431,
+        "valid_salah_dituduh_halu": 452,
+        "valid_dikenali_valid": 748
       },
-      "mean_p_valid_pada_valid": 0.5159092545509338,
-      "mean_p_valid_pada_halu": 0.4710491895675659
+      "mean_p_valid_pada_valid": 0.548814594745636,
+      "mean_p_valid_pada_halu": 0.43609777092933655
     },
     "author_saja": {
-      "roc_auc": 0.5648578710233918,
-      "ap_halu": 0.5453620445279095,
-      "accuracy": 0.5513654096228868,
-      "balanced_accuracy": 0.5507804561555101,
-      "mcc": 0.10154486306738557,
-      "precision_halu": 0.533213644524237,
-      "recall_halu": 0.5356176735798016,
-      "f1_halu": 0.5344129554655871,
-      "precision_valid": 0.5683151718357083,
-      "recall_valid": 0.5659432387312187,
-      "f1_valid": 0.5671267252195734,
-      "f1_macro": 0.5507698403425803,
+      "roc_auc": 0.5703004037872459,
+      "ap_halu": 0.6135010828421221,
+      "accuracy": 0.5456821026282853,
+      "balanced_accuracy": 0.5454960317460318,
+      "mcc": 0.09530594013115429,
+      "precision_halu": 0.5641330166270784,
+      "recall_halu": 0.3968253968253968,
+      "f1_halu": 0.4659146640510054,
+      "precision_valid": 0.5356913183279742,
+      "recall_valid": 0.6941666666666667,
+      "f1_valid": 0.6047186932849364,
+      "f1_macro": 0.535316678667971,
       "confusion": {
-        "halu_dideteksi_halu": 594,
-        "halu_lolos_sebagai_valid": 515,
-        "valid_salah_dituduh_halu": 520,
-        "valid_dikenali_valid": 678
+        "halu_dideteksi_halu": 475,
+        "halu_lolos_sebagai_valid": 722,
+        "valid_salah_dituduh_halu": 367,
+        "valid_dikenali_valid": 833
       },
-      "mean_p_valid_pada_valid": 0.5093090534210205,
-      "mean_p_valid_pada_halu": 0.4897633194923401
+      "mean_p_valid_pada_valid": 0.5269085764884949,
+      "mean_p_valid_pada_halu": 0.4782775044441223
     },
     "judul+author": {
-      "roc_auc": 0.6290676826872561,
-      "ap_halu": 0.6180228855284068,
-      "accuracy": 0.5834416991764196,
-      "balanced_accuracy": 0.5838089030259329,
-      "mcc": 0.1675062632929156,
-      "precision_halu": 0.5633561643835616,
-      "recall_halu": 0.5933273219116321,
-      "f1_halu": 0.577953447518665,
-      "precision_valid": 0.6040386303775241,
-      "recall_valid": 0.5742904841402338,
-      "f1_valid": 0.5887890457851946,
-      "f1_macro": 0.5833712466519299,
+      "roc_auc": 0.7208939014202171,
+      "ap_halu": 0.7372327333095353,
+      "accuracy": 0.655819774718398,
+      "balanced_accuracy": 0.6557800751879699,
+      "mcc": 0.3121965375509205,
+      "precision_halu": 0.6657754010695187,
+      "recall_halu": 0.6240601503759399,
+      "f1_halu": 0.6442432082794308,
+      "precision_valid": 0.6470588235294118,
+      "recall_valid": 0.6875,
+      "f1_valid": 0.6666666666666666,
+      "f1_macro": 0.6554549374730487,
       "confusion": {
-        "halu_dideteksi_halu": 658,
-        "halu_lolos_sebagai_valid": 451,
-        "valid_salah_dituduh_halu": 510,
-        "valid_dikenali_valid": 688
+        "halu_dideteksi_halu": 747,
+        "halu_lolos_sebagai_valid": 450,
+        "valid_salah_dituduh_halu": 375,
+        "valid_dikenali_valid": 825
       },
-      "mean_p_valid_pada_valid": 0.5275255441665649,
-      "mean_p_valid_pada_halu": 0.45761722326278687
+      "mean_p_valid_pada_valid": 0.585949182510376,
+      "mean_p_valid_pada_halu": 0.40990930795669556
     }
-  },
-  "domain_filter": {
-    "trained_on": 11533,
-    "C": 0.01,
-    "max_false_out_of_scope": 0.05,
-    "holdout": {
-      "roc_auc": 0.9889428709981536,
-      "cs_salah_diisolasi": 0.03626473254759746,
-      "non_cs_terisolasi": 0.925249169435216,
-      "non_cs_terisolasi_asli": 0.9292604501607717,
-      "non_cs_terisolasi_halu": 0.9209621993127147
-    },
-    "sanity_non_cs_flagged": 1.0,
-    "sanity_cs_flagged": 0.0,
-    "threshold": 0.4306173026561737
   },
   "versions": {
     "python": "3.13.5",
@@ -322,8 +226,9 @@
   "quick": false,
   "catatan": [
     "Probabilitas dikalibrasi (Platt, bobot kelas seimbang): P(valid)=0.5 adalah batas keputusan prior seimbang.",
-    "Dataset halusinasi bersifat sintetis (manipulasi data asli); skor holdout mengukur kemampuan membedakan dataset ini, bukan halusinasi LLM di dunia nyata. Model tidak dapat memeriksa keberadaan sebuah makalah - itu tugas Tahap 2.",
+    "Model final dilatih hanya pada split latih; split uji tidak pernah dilihat model yang dipakai backend.",
+    "Dataset halusinasi bersifat sintetis (perusakan data asli); skor uji mengukur kemampuan membedakan dataset ini, bukan halusinasi LLM di dunia nyata. Model tidak dapat memeriksa keberadaan sebuah makalah - itu tugas Tahap 2.",
     "holdout_per_jenis: rate = persentase halu yang terdeteksi; untuk 'asli' = persentase yang salah dituduh halu."
   ],
-  "elapsed_seconds": 1548.4
+  "elapsed_seconds": 572.4
 }

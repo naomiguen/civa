@@ -6,10 +6,7 @@ inference identik (tidak ada train/serve skew):
 
   1. clean_title() / clean_authors()  -> normalisasi teks mentah
   2. MultiBERTEmbedder                -> judul (384-d) + author (384-d) = 768-d, MURNI dari teks
-  3. DomainFilter                     -> "Semantic Thresholding" untuk deteksi referensi di luar
-                                         disiplin Ilmu Komputer: P(Ilmu Komputer) dari embedding judul,
-                                         dilatih dengan judul CS dan non-CS. Filter terpisah dan TIDAK
-                                         pernah menjadi fitur untuk model klasifikasi.
+  3. BalancedPlattClassifier          -> classifier + kalibrasi probabilitas
 """
 from __future__ import annotations
 
@@ -32,7 +29,6 @@ ROOT = Path(__file__).resolve().parent
 MODELS_DIR = ROOT / "models"
 PIPELINE_PATH = MODELS_DIR / "civa_pipeline.joblib"
 TOKENIZER_PATH = MODELS_DIR / "multibert_tokenizer.joblib"
-DOMAIN_PATH = MODELS_DIR / "domain_filter.joblib"
 REPORT_PATH = MODELS_DIR / "training_report.json"
 
 # Multilingual (termasuk Bahasa Indonesia) MiniLM berbasis BERT, keluaran 384 dimensi.
@@ -252,39 +248,10 @@ class BalancedPlattClassifier(BaseEstimator, ClassifierMixin):
         return (self.predict_proba(X)[:, 1] >= 0.5).astype(int)
 
 
-# --------------------------------------------------------------------------------------
-# Filter domain: Semantic Thresholding (terpisah dari model klasifikasi)
-# --------------------------------------------------------------------------------------
-class DomainFilter:
-    """Semantic Thresholding: P(Ilmu Komputer) dari embedding JUDUL, lalu dibandingkan dengan ambang.
-
-      DI LUAR SCOPE  <=>  P(CS) < threshold
-
-    `model` adalah classifier (mis. Logistic Regression) yang dilatih dengan judul Ilmu Komputer DAN judul dari
-    disiplin lain (dataset_scope: kedokteran, hukum, kimia, ekonomi, ... dalam bahasa Inggris & Indonesia), sehingga
-    filter benar-benar mengenal konteks di luar Ilmu Komputer. Ambang dipilih konservatif agar referensi Ilmu
-    Komputer jarang salah diisolasi. Filter ini terpisah dari model halu dan tidak pernah menjadi fiturnya.
-    """
-
-    def __init__(self, model, threshold: float = 0.5, meta: dict | None = None):
-        self.model = model
-        self.threshold = float(threshold)
-        self.meta = meta or {}
-
-    def p_cs(self, title_embeddings: np.ndarray) -> np.ndarray:
-        """Peluang setiap judul termasuk literatur Ilmu Komputer (0-1)."""
-        proba = self.model.predict_proba(np.asarray(title_embeddings, dtype=np.float32))
-        return proba[:, list(self.model.classes_).index(1)]
-
-    def in_scope(self, p_cs: np.ndarray) -> np.ndarray:
-        return np.asarray(p_cs) >= self.threshold
-
-
 def load_artifacts():
-    """Muat (pipeline, domain_filter) hasil train_model.py. Raise FileNotFoundError bila belum dilatih."""
-    missing = [p.name for p in (PIPELINE_PATH, DOMAIN_PATH) if not p.exists()]
-    if missing:
+    """Muat pipeline hasil train_model.py. Raise FileNotFoundError bila belum dilatih."""
+    if not PIPELINE_PATH.exists():
         raise FileNotFoundError(
-            f"Artefak model belum ada ({', '.join(missing)}). Jalankan dulu:  python train_model.py"
+            f"Artefak model belum ada ({PIPELINE_PATH.name}). Jalankan dulu:  python train_model.py"
         )
-    return joblib.load(PIPELINE_PATH), joblib.load(DOMAIN_PATH)
+    return joblib.load(PIPELINE_PATH)

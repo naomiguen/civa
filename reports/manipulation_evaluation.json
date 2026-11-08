@@ -1,141 +1,136 @@
 {
-  "total": 140,
+  "total": 160,
   "groups": {
-    "asli_cs": {
+    "acak_kata_judul": {
       "n": 20,
       "benar": 1.0,
-      "ml_saja_benar": 0.65,
+      "ml_saja_benar": 0.55,
       "status": {
-        "valid": 20
+        "halu": 20
       },
       "bukti": {
-        "verified": 20
-      },
-      "pola": {}
-    },
-    "asli_non_cs": {
-      "n": 20,
-      "benar": 1.0,
-      "ml_saja_benar": 0.5,
-      "status": {
-        "out_of_scope": 17,
-        "valid": 3
-      },
-      "bukti": {
-        "verified": 20
-      },
-      "pola": {}
-    },
-    "judul_diacak": {
-      "n": 20,
-      "benar": 1.0,
-      "ml_saja_benar": 0.95,
-      "status": {
-        "halu": 10,
-        "out_of_scope": 10
-      },
-      "bukti": {
-        "mismatch": 20
+        "mismatch": 19,
+        "not_found": 1
       },
       "pola": {
-        "urutan judul": 20,
-        "tahun": 1,
-        "tanpa penulis": 1,
-        "jumlah penulis": 1
+        "urutan judul": 17,
+        "kata judul": 2
       }
     },
-    "judul_kata_dihapus": {
+    "asli": {
+      "n": 40,
+      "benar": 1.0,
+      "ml_saja_benar": 0.575,
+      "status": {
+        "valid": 40
+      },
+      "bukti": {
+        "verified": 40
+      },
+      "pola": {}
+    },
+    "hapus_kata_judul": {
       "n": 20,
       "benar": 1.0,
       "ml_saja_benar": 0.65,
       "status": {
-        "out_of_scope": 10,
-        "halu": 10
+        "halu": 20
       },
       "bukti": {
-        "not_found": 14,
-        "mismatch": 6
+        "not_found": 17,
+        "mismatch": 3
       },
       "pola": {
-        "kata judul": 6,
-        "jumlah penulis": 1
+        "kata judul": 3,
+        "penulis": 1,
+        "tahun": 1
       }
     },
     "nama_dibalik": {
       "n": 20,
       "benar": 0.9,
-      "ml_saja_benar": 0.7,
+      "ml_saja_benar": 0.5,
       "status": {
-        "out_of_scope": 10,
-        "halu": 9,
-        "valid": 1
+        "halu": 18,
+        "valid": 2
       },
       "bukti": {
-        "mismatch": 17,
-        "verified": 2,
-        "not_found": 1
+        "mismatch": 18,
+        "verified": 2
       },
       "pola": {
-        "penulis": 9,
-        "jumlah penulis": 5,
-        "susunan nama": 3
+        "susunan nama": 16,
+        "tanpa penulis": 2
       }
     },
-    "penulis_tidak_lengkap": {
+    "penulis_kosong": {
       "n": 20,
-      "benar": 0.65,
-      "ml_saja_benar": 0.4,
+      "benar": 1.0,
+      "ml_saja_benar": 0.95,
       "status": {
-        "halu": 8,
-        "out_of_scope": 8,
-        "valid": 4
-      },
-      "bukti": {
-        "mismatch": 13,
-        "verified": 7
-      },
-      "pola": {
-        "jumlah penulis": 8,
-        "nama penulis": 4,
-        "susunan nama": 1
-      }
-    },
-    "tanpa_penulis": {
-      "n": 20,
-      "benar": 0.95,
-      "ml_saja_benar": 1.0,
-      "status": {
-        "out_of_scope": 10,
-        "halu": 9,
-        "valid": 1
+        "halu": 20
       },
       "bukti": {
         "mismatch": 16,
-        "not_found": 3,
+        "not_found": 2,
+        "verified": 2
+      },
+      "pola": {
+        "tanpa penulis": 15,
+        "tahun": 1
+      }
+    },
+    "penulis_satu_nama": {
+      "n": 20,
+      "benar": 0.95,
+      "ml_saja_benar": 0.6,
+      "status": {
+        "halu": 19,
+        "valid": 1
+      },
+      "bukti": {
+        "mismatch": 18,
+        "verified": 1,
+        "not_found": 1
+      },
+      "pola": {
+        "jumlah penulis": 17,
+        "penulis": 1
+      }
+    },
+    "urutan_penulis_acak": {
+      "n": 20,
+      "benar": 0.95,
+      "ml_saja_benar": 0.1,
+      "status": {
+        "halu": 19,
+        "valid": 1
+      },
+      "bukti": {
+        "mismatch": 19,
         "verified": 1
       },
       "pola": {
-        "tanpa penulis": 16,
-        "kata judul": 1
+        "urutan penulis": 18,
+        "penulis": 1
       }
     }
   },
   "halu_detection": {
-    "tp": 90,
+    "tp": 116,
     "fp": 0,
-    "fn": 10,
+    "fn": 4,
     "tn": 40,
     "precision": 1.0,
-    "recall": 0.9,
-    "f1": 0.9473684210526316,
-    "accuracy": 0.9285714285714286
+    "recall": 0.9666666666666667,
+    "f1": 0.983050847457627,
+    "accuracy": 0.975
   },
   "ml_saja": {
-    "recall": 0.74,
+    "recall": 0.5583333333333333,
     "false_alarm": 0.425
   },
   "real_false_alarm": 0.0,
-  "real_out_of_scope": 0.425,
   "real_unparsed": 0.0,
   "fake_unparsed": 0.0
 }

@@ -4,54 +4,7 @@
     "palsu_doi": {
       "n": 24,
       "benar": 1.0,
-      "ml_saja_benar": 0.20833333333333334,
-      "status": {
-        "halu": 22,
-        "out_of_scope": 2
-      },
-      "bukti": {
-        "mismatch": 24
-      },
-      "pola": {
-        "DOI": 24
-      }
-    },
-    "palsu_karangan": {
-      "n": 24,
-      "benar": 1.0,
-      "ml_saja_benar": 0.16666666666666666,
-      "status": {
-        "halu": 21,
-        "out_of_scope": 3
-      },
-      "bukti": {
-        "not_found": 13,
-        "mismatch": 11
-      },
-      "pola": {
-        "DOI": 11
-      }
-    },
-    "palsu_penulis": {
-      "n": 24,
-      "benar": 1.0,
-      "ml_saja_benar": 0.2916666666666667,
-      "status": {
-        "halu": 22,
-        "out_of_scope": 2
-      },
-      "bukti": {
-        "mismatch": 22,
-        "not_found": 2
-      },
-      "pola": {
-        "penulis": 22
-      }
-    },
-    "palsu_tahun": {
-      "n": 24,
-      "benar": 1.0,
-      "ml_saja_benar": 0.16666666666666666,
+      "ml_saja_benar": 0.375,
       "status": {
         "halu": 24
       },
@@ -59,61 +12,103 @@
         "mismatch": 24
       },
       "pola": {
-        "tahun": 24,
-        "jumlah penulis": 1
+        "DOI": 24,
+        "penulis": 1
+      }
+    },
+    "palsu_karangan": {
+      "n": 24,
+      "benar": 1.0,
+      "ml_saja_benar": 0.2916666666666667,
+      "status": {
+        "halu": 24
+      },
+      "bukti": {
+        "not_found": 14,
+        "mismatch": 10
+      },
+      "pola": {
+        "DOI": 10
+      }
+    },
+    "palsu_penulis": {
+      "n": 24,
+      "benar": 0.9583333333333334,
+      "ml_saja_benar": 0.20833333333333334,
+      "status": {
+        "halu": 23,
+        "valid": 1
+      },
+      "bukti": {
+        "mismatch": 20,
+        "not_found": 3,
+        "verified": 1
+      },
+      "pola": {
+        "penulis": 19,
+        "DOI": 1
+      }
+    },
+    "palsu_tahun": {
+      "n": 24,
+      "benar": 1.0,
+      "ml_saja_benar": 0.375,
+      "status": {
+        "halu": 24
+      },
+      "bukti": {
+        "mismatch": 21,
+        "not_found": 3
+      },
+      "pola": {
+        "tahun": 21
       }
     },
     "real_dataset": {
       "n": 20,
-      "benar": 0.95,
-      "ml_saja_benar": 0.6,
+      "benar": 1.0,
+      "ml_saja_benar": 0.75,
       "status": {
-        "valid": 19,
-        "halu": 1
+        "valid": 20
       },
       "bukti": {
-        "verified": 19,
-        "mismatch": 1
+        "verified": 20
       },
-      "pola": {
-        "jumlah penulis": 1
-      }
+      "pola": {}
     },
     "real_eksternal": {
       "n": 80,
-      "benar": 0.9375,
-      "ml_saja_benar": 0.7375,
+      "benar": 0.975,
+      "ml_saja_benar": 0.6875,
       "status": {
-        "valid": 64,
-        "out_of_scope": 11,
-        "halu": 5
+        "valid": 78,
+        "halu": 2
       },
       "bukti": {
-        "verified": 75,
-        "mismatch": 5
+        "verified": 78,
+        "not_found": 1,
+        "mismatch": 1
       },
       "pola": {
-        "jumlah penulis": 3,
-        "DOI": 2
+        "DOI": 1
       }
     }
   },
   "halu_detection": {
-    "tp": 96,
-    "fp": 6,
-    "fn": 0,
-    "tn": 94,
-    "precision": 0.9411764705882353,
-    "recall": 1.0,
-    "f1": 0.9696969696969697,
-    "accuracy": 0.9693877551020408
+    "tp": 95,
+    "fp": 2,
+    "fn": 1,
+    "tn": 98,
+    "precision": 0.979381443298969,
+    "recall": 0.9895833333333334,
+    "f1": 0.9844559585492227,
+    "accuracy": 0.9846938775510204
   },
   "ml_saja": {
-    "recall": 0.20833333333333334,
-    "false_alarm": 0.29
+    "recall": 0.3125,
+    "false_alarm": 0.3
   },
-  "real_false_alarm": 0.06,
-  "real_out_of_scope": 0.11,
+  "real_false_alarm": 0.02,
   "real_unparsed": 0.0,
   "fake_unparsed": 0.0
 }

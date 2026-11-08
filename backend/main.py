@@ -6,9 +6,8 @@ Alur verifikasi per referensi
   TAHAP 2  Retrieval+Cache   database lokal -> Crossref -> arXiv -> OpenAlex -> DBLP (berurutan);
                              temuan dari API eksternal di-INSERT ke database lokal
   TAHAP 3  ML (MURNI TEKS)   embedding MultiBERT judul (384) + author (384) = 768-d -> classifier -> P(valid)
-  TAHAP 4  Filter domain     Semantic Thresholding: P(Ilmu Komputer) < ambang -> DI LUAR SCOPE
-  KEPUTUSAN                  verdict.fuse(): probabilitas ML + bukti basis data -> VALID / HALU (+ alasan);
-                             referensi di luar scope tetap dinilai valid/halu, dengan peringatan untuk dicek ulang
+  KEPUTUSAN                  verdict.fuse(): probabilitas ML + bukti basis data -> VALID / HALU (+ alasan)
+Semua bidang ilmu diperlakukan sama (tidak ada filter domain).
 
 Jalankan (dari folder proyek):  uvicorn backend.main:app --port 8000
 """
@@ -24,7 +23,6 @@ from dataclasses import asdict
 from typing import Optional
 
 import httpx
-import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
 
@@ -33,8 +31,8 @@ from backend import grobid_client, retrieval, verdict
 from backend.config import settings
 from backend.database import KnowledgeBase
 from backend.logutil import silence_connection_reset
-from backend.schemas import (DomainOut, Evidence, EvidenceOut, HealthResponse, MLOut, ParsedReference, Record,
-                             RecordOut, ReferenceResult, Summary, VerifyRequest, VerifyResponse)
+from backend.schemas import (Evidence, EvidenceOut, HealthResponse, MLOut, ParsedReference, Record, RecordOut,
+                             ReferenceResult, Summary, VerifyRequest, VerifyResponse)
 from backend.textutil import is_identifier_only, split_references, title_from_raw
 
 log = logging.getLogger("civa")
@@ -53,27 +51,20 @@ class Engine:
         self.http: Optional[httpx.AsyncClient] = None
         self.embedder: Optional[civa_core.MultiBERTEmbedder] = None
         self.classifier = None
-        self.domain: Optional[civa_core.DomainFilter] = None
         self.report: dict = {}
         self._ml_lock = threading.Lock()  # inferensi torch cukup satu per satu (CPU-bound)
 
     @property
     def ready(self) -> bool:
-        return self.classifier is not None and self.domain is not None
+        return self.classifier is not None
 
-    def infer(self, title: str, authors: str) -> tuple[float, float]:
-        """TAHAP 3 + 4 untuk satu referensi -> (P(valid), P(Ilmu Komputer)).
-
-        Fitur model = 768 dimensi murni dari TEKS judul + author. Skor domain memakai paruh judul (384 dimensi
-        pertama) tetapi tidak pernah masuk ke classifier.
-        """
+    def infer(self, title: str, authors: str) -> float:
+        """TAHAP 3 untuk satu referensi -> P(valid). Fitur = 768 dimensi murni dari TEKS judul + author."""
         frame = pd.DataFrame({"judul": [title], "author": [authors]})
         with self._ml_lock:
             features = self.embedder.transform(frame)
             proba = self.classifier.predict_proba(features)[0]
-        p_valid = float(proba[list(self.classifier.classes_).index(1)])
-        p_cs = self.domain.p_cs(features[:, : civa_core.EMB_DIM])
-        return p_valid, float(p_cs[0])
+        return float(proba[list(self.classifier.classes_).index(1)])
 
 
 @asynccontextmanager
@@ -87,7 +78,7 @@ async def lifespan(app: FastAPI):
     engine.http = httpx.AsyncClient(headers={"User-Agent": agent}, follow_redirects=True,
                                     limits=httpx.Limits(max_connections=20))
     try:
-        pipeline, engine.domain = await asyncio.to_thread(civa_core.load_artifacts)
+        pipeline = await asyncio.to_thread(civa_core.load_artifacts)
         engine.embedder, engine.classifier = pipeline.named_steps["embed"], pipeline.named_steps["clf"]
         if civa_core.REPORT_PATH.exists():
             import json
@@ -170,20 +161,12 @@ async def verify_reference(index: int, raw: str, engine: Engine, gate: asyncio.S
         # ---- TAHAP 2: database lokal -> API eksternal berurutan (+ caching) -----------------------
         evidence = await retrieval.retrieve_evidence(engine.http, engine.kb, parsed)
 
-        # ---- TAHAP 3: ML murni teks   +   TAHAP 4: filter domain ---------------------------------
+        # ---- TAHAP 3: ML murni teks ------------------------------------------------------------
         author_text = civa_core.authors_from_parts(parsed.authors)
-        p_valid, p_cs = await asyncio.to_thread(engine.infer, parsed.title, author_text)
-        in_scope = bool(engine.domain.in_scope(np.array([p_cs]))[0])
-        forced = False
-        if not in_scope and evidence.cs_hint:
-            in_scope, forced = True, True  # sumber menyatakan ini literatur Ilmu Komputer (seed/DBLP/arXiv cs./OpenAlex)
+        p_valid = await asyncio.to_thread(engine.infer, parsed.title, author_text)
 
     # ---- KEPUTUSAN AKHIR ----------------------------------------------------------------------
-    judged, confidence, p_final = verdict.fuse(p_valid, evidence, settings.valid_threshold)
-    status, scope_verdict, warning = judged, None, None
-    if not in_scope:  # di luar Ilmu Komputer: tetap dinilai valid/halu, tetapi ditandai + peringatan cek ulang
-        status, scope_verdict, warning = "out_of_scope", judged, verdict.OOS_WARNING
-
+    status, confidence, p_final = verdict.fuse(p_valid, evidence, settings.valid_threshold)
     record = evidence.record if evidence.status != "not_found" else None
     kind = record.kind if record else parsed.kind
     return ReferenceResult(
@@ -191,12 +174,10 @@ async def verify_reference(index: int, raw: str, engine: Engine, gate: asyncio.S
         authors=[f"{given} {family}".strip() for given, family in parsed.authors],
         authors_display=verdict.authors_display(parsed.authors), year=parsed.year, doi=parsed.doi,
         type=verdict.KIND_LABEL.get(kind, "Lainnya"), status=status, label=verdict.STATUS_LABEL[status],
-        scope_verdict=scope_verdict, confidence=round(confidence, 4), halu_probability=round(1 - p_final, 4),
-        warning=warning, reason=verdict.build_reason(judged, evidence, parsed.from_identifier),
+        confidence=round(confidence, 4), halu_probability=round(1 - p_final, 4),
+        reason=verdict.build_reason(status, evidence, parsed.from_identifier),
         ml=MLOut(label="valid" if p_valid >= 0.5 else "halu", probability_valid=round(p_valid, 4),
                  probability_halu=round(1 - p_valid, 4)),
-        domain=DomainOut(p_cs=round(p_cs, 4), threshold=round(engine.domain.threshold, 4), in_scope=in_scope,
-                         forced_by_knowledge_base=forced),
         evidence=EvidenceOut(
             status=evidence.status, source=evidence.source, cached=evidence.cached, unreachable=evidence.unreachable,
             doi_issue=evidence.doi_issue,
@@ -249,15 +230,9 @@ async def verify(body: VerifyRequest, request: Request) -> VerifyResponse:
             task.cancel()  # no-op bila sudah selesai; menghentikan sisa pekerjaan bila ada yang gagal
 
     counts = Counter(r.status for r in results)
-    oos = Counter(r.scope_verdict for r in results if r.status == "out_of_scope")
-    overall_valid, overall_halu = verdict.overall_percentages(counts["valid"] + oos["valid"],
-                                                              counts["halu"] + oos["halu"])
     return VerifyResponse(
-        summary=Summary(total=len(results), valid=counts["valid"], halu=counts["halu"],
-                        out_of_scope=counts["out_of_scope"], out_of_scope_valid=oos["valid"],
-                        out_of_scope_halu=oos["halu"], unparsed=counts["unparsed"],
-                        valid_percent=round(100 * counts["valid"] / len(results), 1),
-                        overall_valid_percent=overall_valid, overall_halu_percent=overall_halu),
+        summary=Summary(total=len(results), valid=counts["valid"], halu=counts["halu"], unparsed=counts["unparsed"],
+                        valid_percent=round(100 * counts["valid"] / len(results), 1)),
         results=list(results), elapsed_seconds=round(time.perf_counter() - started, 2),
     )
 
