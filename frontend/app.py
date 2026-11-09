@@ -19,7 +19,6 @@ from pathlib import Path
 
 import httpx
 import streamlit as st
-import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # agar `backend.*` dapat diimpor
 from backend.config import settings  # noqa: E402  (batas jumlah referensi = satu sumber kebenaran dgn backend)
@@ -140,10 +139,30 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .st-key-left_copy,.st-key-left_recheck,.st-key-left_chart{width:100% !important;display:block !important;
   flex:0 0 auto !important;min-height:0 !important;overflow:visible !important}
 .st-key-left_copy iframe{width:100% !important;height:48px !important}
-.st-key-left_recheck,.st-key-left_chart{margin-top:0 !important}
-.civa-style-label{display:block;height:auto;min-height:0;line-height:1.4;font-size:14px;font-weight:700;
-  color:var(--ink);margin:0 0 12px;padding:4px 0 0;overflow:visible}
-.st-key-left_card [data-testid="stSelectbox"]{margin:0 0 16px;overflow:visible;position:static}
+.st-key-left_recheck{
+    margin-top:16px !important;
+}
+
+.st-key-left_chart{
+    margin-top:0 !important;
+}
+.civa-style-label{
+    display:block;
+    height:auto;
+    min-height:0;
+    line-height:1.4;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 20px;
+    padding:4px 0 0;
+    overflow:visible
+}
+.st-key-left_card [data-testid="stSelectbox"]{
+    margin:0 0 16px;
+    overflow:visible;
+    position:static
+}
 .st-key-left_card [data-testid="stSelectbox"] label{display:none}
 .civa-bibliography{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:8px 16px;
   flex:0 0 auto;min-height:0;overflow:visible;padding-bottom:12px;box-sizing:border-box}
@@ -584,46 +603,6 @@ def result_page() -> None:
                                      key="citation_style_select", label_visibility="collapsed")
                 st.markdown(f'<div class="civa-bibliography">{bibliography_html(data["results"], style)}</div>',
                             unsafe_allow_html=True)
-                copy_text = "\r\n".join(
-                    html.unescape(re.sub(r"<[^>]+>", "", formatted_reference_html(item, style, item.get("index", index))))
-                    for index, item in enumerate(data["results"], 1)
-                )
-                copy_payload = (json.dumps(copy_text).replace("<", "\\u003c")
-                                .replace(">", "\\u003e").replace("&", "\\u0026"))
-                with st.container(key="left_copy"):
-                    components.html(
-                        f"""<button id="civa-copy-button" type="button" style="width:100%;height:44px;
-                    border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#374151;
-                    font:700 14px Inter, sans-serif;cursor:pointer;white-space:nowrap;padding:12px 16px">
-                    Salin Daftar Pustaka</button>
-                    <script>
-                    const button = document.getElementById('civa-copy-button');
-                    const text = {copy_payload};
-                    const fallbackCopy = () => {{
-                      const area = document.createElement('textarea');
-                      area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';
-                      document.body.appendChild(area); area.select();
-                      const copied = document.execCommand('copy'); area.remove();
-                      return copied;
-                    }};
-                    button.addEventListener('click', async () => {{
-                      let copied = false;
-                      try {{
-                        if (navigator.clipboard) {{
-                          await navigator.clipboard.writeText(text);
-                          copied = true;
-                        }}
-                      }} catch (error) {{
-                        copied = false;
-                      }}
-                      if (!copied) copied = fallbackCopy();
-                      const original = 'Salin Daftar Pustaka';
-                      button.textContent = copied ? 'Tersalin ✓' : 'Gagal menyalin';
-                      window.setTimeout(() => {{ button.textContent = original; }}, 2000);
-                    }});
-                    </script>""",
-                        height=48,
-                    )
                 with st.container(key="left_recheck"):
                     if st.button("Periksa Ulang Teks", key="btn_recheck", use_container_width=True):
                         st.session_state.update(view="home", refs_text=st.session_state.get("saved_text", ""), error=None)
