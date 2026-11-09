@@ -10,13 +10,16 @@ Jalankan (dari folder proyek):  streamlit run frontend/app.py
 from __future__ import annotations
 
 import html
+import json
 import math
 import os
+import re
 import sys
 from pathlib import Path
 
 import httpx
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # agar `backend.*` dapat diimpor
 from backend.config import settings  # noqa: E402  (batas jumlah referensi = satu sumber kebenaran dgn backend)
@@ -29,9 +32,9 @@ API_URL = os.getenv("CIVA_API_URL", "http://localhost:8000").rstrip("/")
 MAX_REFS = settings.max_references
 
 PLACEHOLDER = (
-    f"Masukkan teks daftar pustaka di sini (Maks {MAX_REFS} referensi)...\n\n"
-    "Contoh:\n"
-    "1. Zhang, Y. & Chen, L. (2023). Deep Learning for Natural Language Processing: A Review. Journal of AI.\n"
+    f"Masukkan teks daftar pustaka di sini (Maks {MAX_REFS} referensi)...\r\n\r\n"
+    "Contoh:\r\n"
+    "1. Zhang, Y. & Chen, L. (2023). Deep Learning for Natural Language Processing: A Review. Journal of AI.\r\n"
     "2. Smith, J. & Patel, R. (2024). Neural Network Approaches to Citation Verification. Fake Journal of Robotics."
 )
 
@@ -48,6 +51,7 @@ CSS = """
   --line:#e2e8f0; --chip:#f1f5f9; --green:#10b981; --donut-green:#21b873; --mint:#e6f4ea; --red:#ef4444;
   --amber:#f59e0b; --grey:#94a3b8;
 }
+html{scroll-behavior:smooth}
 .stApp{background:var(--bg);font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink)}
 header[data-testid="stHeader"],[data-testid="stToolbar"],[data-testid="stDecoration"],[data-testid="stStatusWidget"],
 footer,#MainMenu{display:none !important}
@@ -109,13 +113,63 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .civa-step p{font-size:14.5px;line-height:1.55;color:var(--ink2);margin:0}
 
 /* ---------- halaman hasil ---------- */
-.st-key-result{padding:62px 44px 56px}
+.st-key-result{width:100%;max-width:1280px;margin:0 auto;padding:24px;box-sizing:border-box;overflow:visible}
 .st-key-left_card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 24px 24px;
-  box-shadow:0 1px 3px rgba(15,23,42,.05),0 8px 24px -8px rgba(15,23,42,.06)}
-.civa-cardtitle{font-size:17.7px;line-height:1.2;font-weight:700;color:var(--ink);margin:0 0 20px;padding:0}
-.civa-textbox{background:var(--bg);border-radius:14px;padding:18px;min-height:230px;max-height:340px;overflow:auto;
-  font-size:14.4px;line-height:1.55;color:var(--ink2);white-space:pre-wrap;word-break:break-word}
-.st-key-btn_recheck{margin:34px 0 18px !important}
+  box-shadow:0 1px 3px rgba(15,23,42,.05),0 8px 24px -8px rgba(15,23,42,.06);
+  display:flex;flex-direction:column;gap:16px;align-self:start;box-sizing:border-box}
+.st-key-result > div,.st-key-result [data-testid="stHorizontalBlock"],
+.st-key-left_card [data-testid="stVerticalBlock"],.st-key-left_card [data-testid="stElementContainer"]{
+  overflow:visible !important;transform:none !important}
+.st-key-result [data-testid="stHorizontalBlock"]{
+  width:100% !important;display:flex !important;flex-direction:row !important;
+  flex-wrap:nowrap !important;gap:24px !important;align-items:flex-start !important}
+.st-key-result [data-testid="stHorizontalBlock"] > [data-testid="column"],
+.st-key-result [data-testid="stHorizontalBlock"] > .stColumn{
+  min-width:0 !important;max-width:none !important;box-sizing:border-box;
+  align-self:flex-start !important}
+.st-key-result [data-testid="stHorizontalBlock"] > [data-testid="column"]:first-child,
+.st-key-result [data-testid="stHorizontalBlock"] > .stColumn:first-child{
+  flex:0 0 calc((100% - 24px) * .4) !important;width:calc((100% - 24px) * .4) !important}
+.st-key-result [data-testid="stHorizontalBlock"] > [data-testid="column"]:last-child,
+.st-key-result [data-testid="stHorizontalBlock"] > .stColumn:last-child{
+  flex:0 0 calc((100% - 24px) * .6) !important;width:calc((100% - 24px) * .6) !important}
+.st-key-left_card iframe{display:block;width:100% !important;height:48px !important;border:0;
+  position:static !important;margin:0 !important}
+.st-key-left_card [data-testid="stElementContainer"]{height:auto !important;min-height:0 !important;
+  flex:0 0 auto !important}
+.st-key-left_copy,.st-key-left_recheck,.st-key-left_chart{width:100% !important;display:block !important;
+  flex:0 0 auto !important;min-height:0 !important;overflow:visible !important}
+.st-key-left_copy iframe{width:100% !important;height:48px !important}
+.st-key-left_recheck,.st-key-left_chart{margin-top:0 !important}
+.civa-style-label{display:block;height:auto;min-height:0;line-height:1.4;font-size:14px;font-weight:700;
+  color:var(--ink);margin:0 0 12px;padding:4px 0 0;overflow:visible}
+.st-key-left_card [data-testid="stSelectbox"]{margin:0 0 16px;overflow:visible;position:static}
+.st-key-left_card [data-testid="stSelectbox"] label{display:none}
+.civa-bibliography{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:8px 16px;
+  flex:0 0 auto;min-height:0;overflow:visible;padding-bottom:12px;box-sizing:border-box}
+.civa-reference{position:relative;display:flex;align-items:flex-start;padding:14px 4px;margin:0;
+  border-bottom:1px solid #e5e7eb;font-size:14px;line-height:1.7;color:#374151;overflow-wrap:anywhere;word-break:break-word;
+  cursor:pointer;text-decoration:none}
+.civa-reference.halu{background:#fff5f5;border-left:3px solid rgba(239,68,68,.55)}
+.civa-reference:last-child{border-bottom:0}
+.civa-reference .status{position:relative;flex:0 0 24px;width:24px;align-self:flex-start;margin:0 12px 0 0;
+  font-weight:800;font-size:15px}
+.civa-reference.valid .status{color:var(--green)} .civa-reference.halu .status{color:var(--red)}
+.civa-status-icon{display:block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.civa-reference .entry{display:block;flex:1;min-width:0}
+.civa-reference .ref-jump{position:absolute;inset:0;z-index:1}
+.civa-reference .civa-doi-link{position:relative;z-index:2}
+.civa-reference.hanging .entry{text-indent:-1.5rem;padding-left:1.5rem}
+.civa-reference em{color:var(--ink);font-style:italic}
+.civa-reference a{color:#2563eb;overflow-wrap:anywhere;word-break:break-all}
+.civa-reference .civa-doi-link{display:block}
+.civa-reference,.civa-reference:visited{color:var(--ink2)}
+.civa-reference:hover{background:#f8fafc}
+.civa-reference.halu:hover{background:#ffeded}
+.civa-result:target{animation:civa-highlight 1.5s ease-out}
+@keyframes civa-highlight{0%,55%{outline:3px solid rgba(16,185,129,.55);outline-offset:3px;background:#ecfdf5}100%{outline-color:transparent}}
+.st-key-btn_recheck{margin:0 0 0 !important}
 .st-key-btn_recheck button{width:100%;height:48px;border-radius:10px !important;background:var(--mint) !important;
   border:1.5px solid var(--green) !important;color:var(--green) !important;font-weight:600}
 .st-key-btn_recheck button p{font-size:15.5px;font-weight:600;color:var(--green)}
@@ -129,7 +183,8 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
 .civa-legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:16px;font-size:13px;font-weight:600;color:var(--ink2)}
 .civa-legend span{display:flex;align-items:center;gap:7px;white-space:nowrap}
 .civa-legend i{flex:none;width:11px;height:11px;border-radius:3px}
-.civa-right{margin:-4.5px 0 0 6px}
+.civa-right{margin:0}
+.st-key-result .civa-right{width:100%;min-width:0}
 .civa-h2{font-size:20px;font-weight:700;color:var(--ink);margin:0 0 14px;padding:0}
 .civa-h2.sp{margin-top:34px}
 .civa-stats{display:grid;gap:20px}
@@ -151,8 +206,26 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   font-size:13.4px;color:var(--ink3);line-height:1.4}
 .civa-result .why svg{flex:none;width:16px;height:16px}
 .civa-result .why .odot{flex:none;width:16px;height:16px;border-radius:50%}
-@media (max-width:900px){.civa-steps{grid-template-columns:repeat(2,1fr)}.civa-header{padding:0 16px}
-  .civa-title{font-size:14px}.st-key-result{padding:20px}.st-key-left_card{min-height:0}}
+.civa-loading-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(15,23,42,.58);
+  backdrop-filter:blur(3px);padding:24px}
+.civa-loading-dialog{width:min(460px,100%);background:#fff;border-radius:18px;padding:32px;text-align:center;
+  box-shadow:0 20px 60px rgba(15,23,42,.25)}
+.civa-loading-dialog h2{margin:18px 0 10px;font-size:21px;color:var(--ink)}
+.civa-loading-dialog p{margin:0;color:var(--ink2);font-size:14px;line-height:1.5}
+.civa-spinner{width:42px;height:42px;margin:auto;border:4px solid #d1fae5;border-top-color:var(--green);
+  border-radius:50%;animation:civa-spin .8s linear infinite}
+.civa-progress{display:flex;justify-content:space-between;gap:8px;margin-top:24px;color:var(--ink3);font-size:11px}
+.civa-progress span{flex:1;padding-top:10px;border-top:2px solid #d1d5db}
+.civa-progress span.active{border-color:var(--green);color:var(--green);font-weight:700}
+@keyframes civa-spin{to{transform:rotate(360deg)}}
+.st-key-btn_check button:disabled{opacity:.55 !important;cursor:not-allowed !important;box-shadow:none !important}
+@media (max-width:700px){.civa-steps{grid-template-columns:repeat(2,1fr)}.civa-header{padding:0 16px}
+  .civa-title{font-size:14px}.st-key-result{padding:20px}.st-key-left_card{min-height:0;
+  position:static;max-height:none;overflow:visible}.st-key-result [data-testid="stHorizontalBlock"]{
+  flex-direction:column !important;gap:16px !important}.st-key-result
+  [data-testid="stHorizontalBlock"] > [data-testid="column"],.st-key-result
+  [data-testid="stHorizontalBlock"] > .stColumn{width:100% !important;flex:0 0 auto !important}.civa-right{margin:0}}
+@media (max-width:600px){.civa-steps{grid-template-columns:1fr}}
 """
 
 # Ikon (lucide) sebagai SVG inline
@@ -309,6 +382,128 @@ def pie_html(summary: dict) -> str:
             f'<div class="civa-legend">{legend}</div></div>')
 
 
+STYLE_OPTIONS = ("APA 7", "Harvard", "IEEE", "MLA", "Chicago", "Vancouver")
+
+
+def detected_style(text: str) -> str:
+    """Deteksi ringan untuk default tampilan; tidak memengaruhi proses verifikasi."""
+    if re.search(r"(^|\r\n)\s*\[\d+\]", text):
+        return "IEEE"
+    if re.search(r"\bVancouver\b", text, re.IGNORECASE):
+        return "Vancouver"
+    if re.search(r"\bIEEE\b", text, re.IGNORECASE):
+        return "IEEE"
+    return "APA 7"
+
+
+def _reference_metadata(item: dict) -> dict:
+    record = (item.get("evidence") or {}).get("record") or {}
+    return {
+        "title": item.get("title") or record.get("title") or item.get("raw", ""),
+        "authors": item.get("authors") or [],
+        "authors_display": item.get("authors_display", ""),
+        "year": item.get("year") or record.get("year"),
+        "venue": record.get("venue") or "",
+        "kind": record.get("kind") or item.get("type", ""),
+        "doi": item.get("doi") or record.get("doi"),
+        "url": record.get("url"),
+    }
+
+
+def _family_name(author: str) -> str:
+    parts = author.strip().split()
+    return re.sub(r"[^a-z]", "", (parts[-1] if parts else "").lower())
+
+
+def _author_names(item: dict, style: str) -> str:
+    names = _reference_metadata(item)["authors"]
+    display = _reference_metadata(item)["authors_display"]
+    if not names:
+        return display
+    if style in ("APA 7", "Harvard", "Chicago"):
+        formatted = []
+        for index, name in enumerate(names):
+            parts = name.strip().split()
+            if not parts:
+                continue
+            family, given = parts[-1], " ".join(parts[:-1])
+            if style == "Chicago" and index == 0:
+                formatted.append(f"{family}, {given}".strip(", "))
+            else:
+                initials = " ".join(f"{part[0]}." for part in given.split() if part)
+                formatted.append(f"{family}, {initials}".strip(", "))
+        return ", ".join(formatted[:-1]) + (", & " if style == "APA 7" and len(formatted) > 1 else " & " if len(formatted) > 1 else "") + formatted[-1] if formatted else display
+    if style == "MLA":
+        first = names[0].strip().split()
+        lead = f"{first[-1]}, {' '.join(first[:-1])}".strip(", ") if first else ""
+        rest = ", ".join(names[1:])
+        return f"{lead}, and {rest}" if rest else lead
+    return ", ".join(names)
+
+
+def _link_html(value: str | None) -> str:
+    if not value:
+        return ""
+    href = value if value.startswith(("http://", "https://")) else f"https://doi.org/{value}"
+    return f' <a class="civa-doi-link" href="{esc(href)}" target="_blank" rel="noopener noreferrer">{esc(href)}</a>'
+
+
+def formatted_reference_html(item: dict, style: str, number: int) -> str:
+    meta = _reference_metadata(item)
+    title, year, venue = esc(meta["title"]), meta["year"] or "n.d.", esc(meta["venue"])
+    authors = esc(_author_names(item, style))
+    link = _link_html(meta["doi"] or meta["url"])
+    journal = f"<em>{venue}</em>" if venue else ""
+    volume = ""
+    record = (item.get("evidence") or {}).get("record") or {}
+    if record.get("volume"):
+        volume = f", {esc(record['volume'])}"
+    if style in ("APA 7", "Harvard"):
+        entry = f"{authors} ({year}). {title}. {journal}{volume}.{link}"
+    elif style == "MLA":
+        entry = f"{authors}. “{title}.” {journal}{volume}, {year}.{link}"
+    elif style == "Chicago":
+        entry = f"{authors}. “{title}.” {journal}{volume} ({year}).{link}"
+    elif style == "IEEE":
+        entry = f"{authors}, “{title},” {journal}{volume}, {year}.{link}"
+    else:
+        entry = f"{authors}. {title}. {journal}{volume}; {year}.{link}"
+    status = item.get("status", "unparsed")
+    marker = ('<svg class="civa-status-icon" viewBox="0 0 24 24" aria-hidden="true">'
+              '<circle cx="12" cy="12" r="10"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg>'
+              if status == "valid" else
+              '<svg class="civa-status-icon" viewBox="0 0 24 24" aria-hidden="true">'
+              '<circle cx="12" cy="12" r="10"></circle><path d="M12 8v5"></path><path d="M12 16h.01"></path></svg>'
+              if status == "halu" else "•")
+    tooltip = "Valid" if status == "valid" else "Terindikasi halusinasi" if status == "halu" else "Tidak terbaca"
+    prefix = f"[{number}] " if style == "IEEE" else f"{number}. " if style == "Vancouver" else ""
+    ref_index = item.get("index", number)
+    return (f'<div class="civa-reference {esc(status)} {"hanging" if style in ("APA 7", "Harvard") else ""}" '
+            f'data-ref-index="{esc(ref_index)}" id="reference-{esc(ref_index)}">'
+            f'<a class="ref-jump" href="#detail-{esc(ref_index)}" aria-label="Lihat rincian referensi {esc(ref_index)}"></a>'
+            f'<span class="status" title="{tooltip}" aria-label="{tooltip}">{marker}</span>'
+            f'<span class="entry">{prefix}{entry}</span></div>')
+
+
+def bibliography_html(items: list[dict], style: str) -> str:
+    ordered = list(items)
+    if style in ("APA 7", "Harvard", "MLA", "Chicago"):
+        ordered.sort(key=lambda item: _family_name(_reference_metadata(item)["authors"][0])
+                     if _reference_metadata(item)["authors"] else "")
+    return "".join(formatted_reference_html(item, style, item.get("index", index))
+                   for index, item in enumerate(ordered, 1))
+
+
+def loading_modal_html() -> str:
+    return ('<div class="civa-loading-modal" role="dialog" aria-modal="true" aria-labelledby="civa-loading-title">'
+            '<div class="civa-loading-dialog" tabindex="-1" autofocus><div class="civa-spinner" aria-hidden="true"></div>'
+            '<h2 id="civa-loading-title">Sedang memeriksa daftar pustaka</h2>'
+            '<p aria-live="polite">Memverifikasi referensi (GROBID, pangkalan data, model ML)...</p>'
+            '<div class="civa-progress"><span class="active">Ekstraksi</span><span class="active">Pencocokan database</span>'
+            '<span class="active">Analisis model</span></div></div></div>'
+            '<style>body{overflow:hidden}</style>')
+
+
 def result_card_html(item: dict) -> str:
     status, confidence = item["status"], item.get("confidence")
     if status in ("valid", "halu") and confidence is not None:
@@ -324,7 +519,8 @@ def result_card_html(item: dict) -> str:
         icon = ICON["alert"]
     else:
         icon = f'<span class="odot" style="background:{STATUS_COLOR[status]}"></span>'
-    return (f'<div class="civa-result{"" if status == "valid" else " bad"}"><div class="top"><div>'
+    return (f'<div class="civa-result{"" if status == "valid" else " bad"}" id="detail-{esc(item.get("index", ""))}" '
+            f'data-ref-index="{esc(item.get("index", ""))}"><div class="top"><div>'
             f'<div class="ttl">{esc(title)}</div>'
             f'<div class="meta"><span>{esc(item.get("authors_display", ""))}{esc(year)}</span>{pill}</div></div>'
             f'<span class="civa-badge" style="background:{STATUS_COLOR[status]}">{esc(badge)}</span></div>'
@@ -337,16 +533,19 @@ def result_card_html(item: dict) -> str:
 def run_check(text: str) -> None:
     count = len(split_references(text))
     if count == 0:
-        st.session_state["error"] = "Masukkan teks daftar pustaka terlebih dahulu."
+        st.session_state.update(error="Masukkan teks daftar pustaka terlebih dahulu.", is_loading=False)
     elif count > MAX_REFS:
-        st.session_state["error"] = f"Maksimal {MAX_REFS} referensi per pemeriksaan (terdeteksi {count}). Kurangi dulu daftarnya."
+        st.session_state.update(
+            error=f"Maksimal {MAX_REFS} referensi per pemeriksaan (terdeteksi {count}). Kurangi dulu daftarnya.",
+            is_loading=False,
+        )
     else:
         try:
-            with st.spinner("Memverifikasi referensi (GROBID, pangkalan data, model ML)..."):
-                st.session_state["result"] = call_verify(text)
-            st.session_state.update(saved_text=text, view="result", error=None)
+            st.session_state["result"] = call_verify(text)
+            st.session_state.update(saved_text=text, view="result", error=None, is_loading=False,
+                                    citation_style=detected_style(text))
         except ApiError as exc:
-            st.session_state["error"] = str(exc)
+            st.session_state.update(error=str(exc), is_loading=False)
 
 
 def home_page() -> None:
@@ -363,8 +562,11 @@ def home_page() -> None:
                         f'<span{over}>{count} / {MAX_REFS} Referensi</span></div>', unsafe_allow_html=True)
         if st.session_state.get("error"):
             st.markdown(f'<div class="civa-alert">{esc(st.session_state["error"])}</div>', unsafe_allow_html=True)
-        if st.button("Periksa Daftar Pustaka", key="btn_check", type="primary"):
-            run_check(text)
+        loading = st.session_state.get("is_loading", False)
+        button_label = "Memeriksa..." if loading else "Periksa Daftar Pustaka"
+        if st.button(button_label, key="btn_check", type="primary", disabled=loading):
+            if not st.session_state.get("is_loading"):
+                st.session_state.update(is_loading=True, pending_text=text, error=None)
             st.rerun()
         st.markdown('<hr class="civa-rule">' + steps_html(), unsafe_allow_html=True)
 
@@ -373,16 +575,61 @@ def result_page() -> None:
     data = st.session_state["result"]
     summary = data["summary"]
     with st.container(key="result"):
-        left, right = st.columns([1, 1.95], gap="medium")
+        left, right = st.columns([5, 7], gap="medium")
         with left:
             with st.container(key="left_card"):
-                st.markdown('<div class="civa-cardtitle">Teks yang Diperiksa</div>'
-                            f'<div class="civa-textbox">{esc(st.session_state.get("saved_text", ""))}</div>',
+                st.markdown('<div class="civa-style-label">Style daftar pustaka</div>', unsafe_allow_html=True)
+                style = st.selectbox("Style daftar pustaka", STYLE_OPTIONS,
+                                     index=STYLE_OPTIONS.index(st.session_state.get("citation_style", "APA 7")),
+                                     key="citation_style_select", label_visibility="collapsed")
+                st.markdown(f'<div class="civa-bibliography">{bibliography_html(data["results"], style)}</div>',
                             unsafe_allow_html=True)
-                if st.button("Periksa Ulang Teks", key="btn_recheck", use_container_width=True):
-                    st.session_state.update(view="home", refs_text=st.session_state.get("saved_text", ""), error=None)
-                    st.rerun()
-                st.markdown(pie_html(summary), unsafe_allow_html=True)
+                copy_text = "\r\n".join(
+                    html.unescape(re.sub(r"<[^>]+>", "", formatted_reference_html(item, style, item.get("index", index))))
+                    for index, item in enumerate(data["results"], 1)
+                )
+                copy_payload = (json.dumps(copy_text).replace("<", "\\u003c")
+                                .replace(">", "\\u003e").replace("&", "\\u0026"))
+                with st.container(key="left_copy"):
+                    components.html(
+                        f"""<button id="civa-copy-button" type="button" style="width:100%;height:44px;
+                    border:1px solid #e5e7eb;border-radius:10px;background:#fff;color:#374151;
+                    font:700 14px Inter, sans-serif;cursor:pointer;white-space:nowrap;padding:12px 16px">
+                    Salin Daftar Pustaka</button>
+                    <script>
+                    const button = document.getElementById('civa-copy-button');
+                    const text = {copy_payload};
+                    const fallbackCopy = () => {{
+                      const area = document.createElement('textarea');
+                      area.value = text; area.style.position = 'fixed'; area.style.opacity = '0';
+                      document.body.appendChild(area); area.select();
+                      const copied = document.execCommand('copy'); area.remove();
+                      return copied;
+                    }};
+                    button.addEventListener('click', async () => {{
+                      let copied = false;
+                      try {{
+                        if (navigator.clipboard) {{
+                          await navigator.clipboard.writeText(text);
+                          copied = true;
+                        }}
+                      }} catch (error) {{
+                        copied = false;
+                      }}
+                      if (!copied) copied = fallbackCopy();
+                      const original = 'Salin Daftar Pustaka';
+                      button.textContent = copied ? 'Tersalin ✓' : 'Gagal menyalin';
+                      window.setTimeout(() => {{ button.textContent = original; }}, 2000);
+                    }});
+                    </script>""",
+                        height=48,
+                    )
+                with st.container(key="left_recheck"):
+                    if st.button("Periksa Ulang Teks", key="btn_recheck", use_container_width=True):
+                        st.session_state.update(view="home", refs_text=st.session_state.get("saved_text", ""), error=None)
+                        st.rerun()
+                with st.container(key="left_chart"):
+                    st.markdown(pie_html(summary), unsafe_allow_html=True)
         with right:
             cards = "".join(result_card_html(item) for item in data["results"])
             st.markdown('<div class="civa-right"><div class="civa-h2">Rekapitulasi Deteksi</div>' + stats_html(summary)
@@ -394,6 +641,10 @@ def result_page() -> None:
 def main() -> None:
     st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
     st.markdown(header_html(), unsafe_allow_html=True)
+    if st.session_state.get("is_loading"):
+        st.markdown(loading_modal_html(), unsafe_allow_html=True)
+        run_check(st.session_state.get("pending_text", ""))
+        st.rerun()
     if st.session_state.get("view") == "result" and st.session_state.get("result"):
         result_page()
     else:
