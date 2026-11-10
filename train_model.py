@@ -63,9 +63,13 @@ REQUIRED_COLUMNS = ("judul", "author", "status", "jenis", "grup_id", "split")
 
 # Nama jenis perusakan (kolom `jenis`) untuk laporan.
 JENIS_LABEL = {
-    "acak_kata_judul": "kata judul diacak", "hapus_kata_judul": "kata judul dihapus",
-    "penulis_satu_nama": "penulis tinggal satu nama", "penulis_kosong": "tanpa nama penulis",
-    "urutan_penulis_acak": "urutan penulis diacak", "nama_dibalik": "susunan nama penulis dibalik",
+    "acak_kata_judul": "kata judul diacak",
+    "hapus_kata_judul": "kata judul dihapus",
+    "penulis_satu_nama": "penulis tinggal satu nama",
+    "penulis_kosong": "tanpa nama penulis",
+    "urutan_penulis_acak": "urutan penulis diacak",
+    "nama_dibalik": "susunan nama penulis dibalik",
+    "mismatch_buku": "judul dan/atau penulis buku dimanipulasi",
 }
 
 
