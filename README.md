@@ -12,7 +12,8 @@ teks daftar pustaka
    ├─ TAHAP 1  GROBID  POST /api/processCitation  → <title>, <author> (+ tahun, DOI, jenis)
    ├─ TAHAP 2  Pemeriksaan DOI langsung (Crossref /works/{doi}, registri doi.org) bila DOI dicantumkan, lalu
    │            Retrieval + caching
-   │            DB lokal (SQLite) → Crossref → arXiv → OpenAlex → DBLP   (berurutan, berhenti saat terverifikasi)
+   │            DB lokal (SQLite) → Crossref → arXiv → OpenAlex → OpenLibrary (buku) → DBLP
+   │            (berurutan, berhenti saat terverifikasi)
    │            temuan dari API eksternal di-INSERT ke DB lokal (berikutnya cukup dari lokal)
    │            bila ditemukan, dicocokkan dgn rekaman asli: kata judul diacak / dihilangkan, penulis berbeda /
    │            tidak dicantumkan / susunan nama terbalik / urutan diacak / sebagian dihilangkan, tahun, DOI → "mismatch"
@@ -50,7 +51,7 @@ docker run --rm --init --ulimit core=0 -p 8070:8070 grobid/grobid:0.9.1-crf
 
 Cek: `curl http://localhost:8070/api/isalive` → `true`.
 
-**3. Latih model** (sekali; membaca `dataset\dataset_final.csv`)
+**3. Latih model** (sekali; membaca `dataset_v2\dataset_final.csv`)
 
 ```powershell
 python train_model.py            # grid penuh, ±10 menit di CPU
@@ -68,7 +69,8 @@ uvicorn backend.main:app --port 8000
 ```
 
 Saat pertama kali jalan, database lokal `data\civa.db` terisi otomatis dari referensi asli `dataset_final.csv`
-(6.000 referensi, 26 bidang ilmu).
+(±11.900 referensi: 6.000 jurnal dari 26 bidang ilmu + buku). Bila isi dataset seed berubah, baris seed diisi ulang
+otomatis saat backend start; rekaman hasil API eksternal tetap disimpan.
 Cek: `http://localhost:8000/health` · dokumentasi API: `http://localhost:8000/docs`.
 
 **5. Jalankan frontend** (terminal baru, venv aktif)
@@ -100,14 +102,15 @@ civa/
 ├─ backend/
 │  ├─ main.py            FastAPI: alur Tahap 1-3 + keputusan
 │  ├─ grobid_client.py   klien GROBID + parser TEI (abaikan namespace)
-│  ├─ retrieval.py       DB lokal → Crossref → arXiv → OpenAlex → DBLP, pencocokan metadata
+│  ├─ retrieval.py       DB lokal → Crossref → arXiv → OpenAlex → OpenLibrary → DBLP, pencocokan metadata
 │  ├─ database.py        SQLite: knowledge base + cache hasil API + cache "tidak ditemukan"
 │  ├─ verdict.py         penggabungan P(valid) + bukti, teks "Alasan"
 │  ├─ textutil.py        kemiripan judul, kecocokan penulis, pemecah referensi
 │  ├─ schemas.py · config.py
 ├─ frontend/app.py       Streamlit (mengikuti desain UI/UX) · frontend/run.py peluncurnya
 ├─ tests/test_core.py
-├─ dataset/              dataset_final.csv (latih/uji + seed DB) · dataset_halu.csv (subset halu, rujukan)
+├─ dataset_v2/           dataset_final.csv (latih/uji + seed DB, jurnal + buku) · dataset_halu.csv (subset halu)
+├─ dataset/              versi lama (tanpa buku), tidak dipakai lagi
 └─ models/ · data/       hasil pelatihan · database lokal (dibuat otomatis)
 ```
 
@@ -148,40 +151,51 @@ Set `CIVA_EVIDENCE_WEIGHT=0` dan `CIVA_NOT_FOUND_WEIGHT=0` agar verdict **sepenu
 
 ## Hasil evaluasi (apa adanya)
 
-**Data** (`dataset/dataset_final.csv`): 11.977 referensi, yaitu 6.000 **asli** dari 26 bidang ilmu (± 460 per bidang,
-termasuk Computer Science; Inggris 70%, Indonesia 30%) dan 5.977 **halu** hasil perusakan referensi asli: kata judul
-diacak 2.000, kata judul dihapus 2.000, penulis tinggal satu nama 498, tanpa nama penulis 496, urutan penulis diacak 495,
-susunan nama penulis dibalik 488. Kolom `grup_id` mengikat referensi asli dengan semua perusakannya, dan kolom `split`
-(latih 80% / uji 20%) sudah ditetapkan per grup, jadi model diuji pada makalah yang belum pernah dilihatnya.
-`dataset_halu.csv` berisi baris halu yang sama (subset), hanya sebagai rujukan. Pembersihan hanya membuang 5 baris.
+**Data** (`dataset_v2/dataset_final.csv`): 19.584 referensi.
+- 11.894 **asli**: 6.000 artikel jurnal dari 26 bidang ilmu (± 230 per bidang, termasuk Computer Science; Inggris 70%,
+  Indonesia 30%) dan 5.894 **buku** dari OpenLibrary (± separuh Ilmu Komputer, sebagian besar berbahasa Inggris; kolom
+  `jenis_referensi = book`, `link_referensi` = URL OpenLibrary).
+- 7.690 **halu** hasil perusakan referensi asli: kata judul diacak 2.000, kata judul dihapus 2.000, buku dengan
+  judul/penulis dimanipulasi (`mismatch_buku`) 1.713, penulis tinggal satu nama 498, tanpa nama penulis 496, urutan
+  penulis diacak 495, susunan nama penulis dibalik 488.
 
-| Model | CV ROC-AUC (latih) | Uji ROC-AUC | Parameter terbaik |
+Kolom `grup_id` mengikat referensi asli dengan semua perusakannya, dan kolom `split` (latih 80% / uji 20%) sudah
+ditetapkan per grup, jadi model diuji pada referensi yang belum pernah dilihatnya. Pembersihan membuang 214 baris (halu
+yang identik dengan aslinya setelah normalisasi, duplikat, dan judul/penulis tak terpakai), sehingga yang dipakai
+19.370 baris (latih 15.502 / uji 3.868). `dataset_halu.csv` berisi baris halu yang sama (subset), hanya sebagai rujukan.
+Folder `dataset/` adalah versi lama tanpa buku (11.977 baris) dan tidak dipakai lagi.
+
+| Model | CV ROC-AUC (latih, 5-fold) | Uji ROC-AUC | Parameter terbaik |
 |---|---|---|---|
-| Logistic Regression | 0,729 ± 0,008 | 0,721 | C = 0,03 |
-| Random Forest | 0,636 ± 0,005 | 0,635 | min_samples_leaf = 5 |
-| XGBoost | 0,678 ± 0,008 | 0,678 | max_depth = 5, 600 pohon |
+| Logistic Regression | 0,721 ± 0,006 | 0,719 | C = 0,03 |
+| Random Forest | 0,652 ± 0,003 | 0,649 | min_samples_leaf = 5 |
+| XGBoost | 0,686 ± 0,006 | 0,680 | max_depth = 5, 600 pohon |
 
 Model terpilih (CV): Logistic Regression, probabilitas dikalibrasi (Platt, bobot kelas seimbang), **dilatih hanya pada
-split latih** sehingga split uji tidak pernah dilihat model yang dipakai backend. Pada data uji: ROC-AUC 0,72 ·
-F1 halu 0,64 · balanced accuracy 0,66. Ablasi: judul saja 0,69; author saja 0,57; keduanya 0,72. AUC per bahasa:
-Inggris 0,73, Indonesia 0,71.
+split latih** sehingga split uji tidak pernah dilihat model yang dipakai backend. Dilatih dengan grid hiperparameter
+lengkap (`python train_model.py`, ±22 menit di CPU). Pada data uji: ROC-AUC 0,72 · F1 halu 0,60 · balanced accuracy
+0,66 · MCC 0,31.
+Ablasi: judul saja 0,71; author saja 0,60; keduanya 0,72. AUC per bahasa: jurnal Inggris 0,71, Indonesia 0,67, buku
+(kode bahasa `eng`) 0,62.
 
 Model ML saja, per jenis (data uji, ambang 0,5):
 
 | Jenis | n | Terdeteksi halu |
 |---|---|---|
-| Kata judul diacak | 402 | 68% |
-| Kata judul dihapus | 431 | 60% |
-| Penulis tinggal satu nama | 95 | 58% |
+| Kata judul diacak | 402 | 82% |
+| Kata judul dihapus | 431 | 72% |
+| Buku: judul/penulis dimanipulasi | 325 | 35% |
+| Penulis tinggal satu nama | 95 | 61% |
 | Tanpa nama penulis | 91 | 100% |
-| Urutan penulis diacak | 100 | 22% |
-| Susunan nama penulis dibalik | 78 | 51% |
-| *Referensi asli yang salah dituduh halu* | 1.200 | *31%* |
+| Urutan penulis diacak | 100 | 48% |
+| Susunan nama penulis dibalik | 78 | 59% |
+| *Referensi asli yang salah dituduh halu* | 2.346 | *34%* |
 
 **Cara membacanya:** referensi halu hanya berbeda sedikit dari aslinya (urutan kata, satu-dua kata, nama), dan embedding
 kalimat MultiBERT hampir tidak berubah oleh perubahan sekecil itu, sehingga model murni-teks hanya memisahkan secara
-sedang. "Tanpa nama penulis" 100% karena di dataset hanya referensi halu yang tidak punya penulis; urutan penulis yang
-diacak hampir tidak terlihat oleh embedding. Manipulasi semacam ini ditangkap oleh **pemeriksaan Tahap 2** terhadap
+sedang. "Tanpa nama penulis" 100% karena di dataset hanya referensi halu yang tidak punya penulis. Manipulasi buku
+hampir tidak terlihat oleh model (35%, setara dengan alarm palsu pada referensi asli), karena perubahannya sangat kecil
+(nama penulis dibalik/diacak, inisial dipindah). Manipulasi semacam ini ditangkap oleh **pemeriksaan Tahap 2** terhadap
 rekaman asli (lihat "Uji manipulasi dataset" di bawah), dan keputusan akhir sebagian besar bertumpu pada bukti tersebut.
 Skor di atas mengukur dataset sintetis ini, bukan halusinasi LLM di dunia nyata.
 
@@ -191,46 +205,71 @@ Keseluruhan" membagi semua referensi menjadi Valid (hijau), Halu (merah), dan Ti
 
 ## Uji manipulasi dataset (end-to-end)
 
-`python evaluate_system.py --set manipulasi` menguji pipeline utuh (GROBID asli, API eksternal, model ML) pada 160
-referensi APA dari **split uji** `dataset_final.csv` (tidak pernah dilihat model): 40 asli dari berbagai bidang dan 20
-per jenis perusakan. Laporan: `reports/manipulation_evaluation.md`.
+`python evaluate_system.py --set manipulasi` menguji pipeline utuh (GROBID asli, API eksternal, model ML) pada 220
+referensi APA dari **split uji** `dataset_v2/dataset_final.csv` (tidak pernah dilihat model): 40 artikel jurnal asli
+dari berbagai bidang, 40 buku asli, dan 20 per jenis perusakan. Jurnal ditulis dengan nama jurnal, buku tanpa nama
+penerbit (tidak ada di dataset), semuanya tanpa DOI. Laporan: `reports/manipulation_evaluation.md` (11 November 2026).
 
 | Kelompok | n | Pipeline lengkap benar | Model ML saja benar |
 |---|---|---|---|
-| Asli (semua bidang) | 40 | **100%** | 57% |
-| Halu: kata judul diacak | 20 | **100%** | 55% |
-| Halu: kata judul dihapus | 20 | **100%** | 65% |
-| Halu: penulis tinggal satu nama | 20 | **95%** | 60% |
-| Halu: tanpa nama penulis | 20 | **100%** | 95% |
-| Halu: urutan penulis diacak | 20 | **95%** | 10% |
-| Halu: susunan nama penulis dibalik | 20 | **90%** | 50% |
+| Asli: jurnal (semua bidang) | 40 | **100%** | 45% |
+| Asli: buku | 40 | **92%** | 85% |
+| Halu: kata judul diacak | 20 | **100%** | 75% |
+| Halu: kata judul dihapus | 20 | **100%** | 70% |
+| Halu: buku (judul/penulis dimanipulasi) | 20 | **90%** | 35% |
+| Halu: penulis tinggal satu nama | 20 | **100%** | 60% |
+| Halu: tanpa nama penulis | 20 | **95%** | 85% |
+| Halu: urutan penulis diacak | 20 | **95%** | 45% |
+| Halu: susunan nama penulis dibalik | 20 | **95%** | 45% |
 
-Recall halusinasi **97%**, precision **100%** (tidak ada referensi asli yang dituduh), F1 0,98. Kolom "ML saja" jujur
-karena model tidak pernah melihat split uji; selisihnya dengan pipeline lengkap adalah sumbangan pemeriksaan Tahap 2.
+Recall halusinasi **96%** (135 dari 140), precision **98%**, F1 0,97. Pembanding model ML saja: recall 59%, alarm
+palsu 35%. Kolom "ML saja" jujur karena model tidak pernah melihat split uji; selisihnya dengan pipeline lengkap adalah
+sumbangan pemeriksaan Tahap 2.
+
+Tiga buku asli yang dituduh halu punya data penulis yang tidak lazim di dataset OpenLibrary: lembaga atau penerbit
+yang tercatat sebagai penulis ("Research and Education Association", "Lippincott Williams & Wilkins") dan keterangan
+yang ikut di nama ("Zhixian Yan (Computer scientist)"). Dua buku halu yang lolos hanya berbeda tipis dari aslinya
+pada nama penulis tunggal atau nama lembaga (mis. "S. A. Inc"). Pada buku, **tahun tidak
+dinilai** (edisi dan cetak ulang wajar berbeda tahun) dan buku lain yang kebetulan berjudul sama dengan penulis yang
+sama sekali berbeda tidak dianggap bukti manipulasi.
 
 ## Evaluasi sistem end-to-end
 
 `python evaluate_system.py` mengukur pipeline utuh pada 196 referensi berlabel, dengan backend & database sementara
 (tidak menyentuh `data/civa.db`; GROBID harus berjalan). Set: 100 referensi nyata (80 dari OpenAlex, **semua bidang**,
 tidak ada di dataset; 20 dari dataset) dan 96 palsu (DOI karangan, karangan penuh, judul nyata + penulis makalah lain,
-tahun digeser ≥ 3). Laporan: `reports/system_evaluation.md`, rincian: `reports/system_eval_results.csv`.
+tahun digeser ≥ 3). Laporan: `reports/system_evaluation.md`, rincian: `reports/system_eval_results.csv`
+(12 November 2026, model dan database `dataset_v2`).
 
-| Ukuran | Pipeline lengkap | Model ML saja |
-|---|---|---|
-| Recall halusinasi (96 referensi palsu) | **99%** | 31% |
-| Precision | **98%** | - |
-| Referensi nyata salah dituduh halu | **2%** | 30% |
+| Kelompok | n | Pipeline lengkap benar | Model ML saja benar |
+|---|---|---|---|
+| Nyata, tidak ada di dataset (API eksternal) | 80 | **99%** | 50% |
+| Nyata, ada di dataset (lokal) | 20 | **100%** | 45% |
+| Palsu: DOI karangan | 24 | **100%** | 62% |
+| Palsu: karangan penuh | 24 | **100%** | 50% |
+| Palsu: judul nyata + penulis salah | 24 | **96%** | 42% |
+| Palsu: tahun digeser ≥ 3 | 24 | **100%** | 46% |
 
-Dua referensi nyata yang dituduh: satu jurnal lokal yang tidak terindeks di mana pun (tidak ditemukan + skor ML rendah)
-dan satu yang mencantumkan DOI tidak terdaftar (404 di Crossref). Satu referensi palsu lolos karena nama penulisnya
-beraksara Sirilik sehingga tidak bisa dibandingkan. Set uji bersifat sintetis dan sirkular untuk cakupan indeks (lihat
-catatan metodologi di laporan); jangan dibaca sebagai akurasi di dunia nyata.
+Recall halusinasi **99%** (95 dari 96), precision **99%**, F1 0,99. Pembanding model ML saja: recall 50%, alarm
+palsu 51%. Satu-satunya referensi nyata yang dituduh mencantumkan DOI yang memang tidak terdaftar (404 di Crossref
+maupun registri doi.org). Satu referensi palsu lolos karena nama penulisnya beraksara Sirilik sehingga tidak bisa
+dibandingkan. Set uji bersifat sintetis dan sirkular untuk cakupan indeks (referensi nyata
+diambil dari OpenAlex, yang juga dipakai sistem; lihat catatan metodologi di laporan), jadi jangan dibaca sebagai
+akurasi di dunia nyata.
 
 ## Catatan
 
 - **Pencarian eksternal** memakai API publik. arXiv dibatasi 1 request / 3 detik, jadi pemeriksaan 10 referensi
   yang tidak ditemukan bisa memakan puluhan detik pada kali pertama; hasil yang ditemukan dan pencarian yang
-  gagal di-cache sehingga pemeriksaan ulang hampir seketika.
+  gagal di-cache sehingga pemeriksaan ulang hampir seketika. "Tidak ditemukan" hanya di-cache bila semua sumber
+  menjawab; sumber yang gagal 3 kali beruntun dilewati 5 menit. Per November 2026 **DBLP** membalas dengan halaman
+  cek bot (bukan JSON), jadi praktis dilewati dan pencarian memakai Crossref, arXiv, OpenAlex, dan OpenLibrary.
+- **Buku** dicari juga di **OpenLibrary** (tanpa API key; entri tanpa nama penulis diabaikan). Buku yang ditulis
+  dengan edisinya ("3rd ed.", "Eighth Edition", "Edisi ke-2") tidak dituduh karena tahunnya berbeda dari edisi lain.
+  Buku asli yang judulnya generik dan tidak ada di sumber mana pun, tetapi judulnya sama persis dengan artikel lain di
+  Crossref, masih bisa dituduh "penulis tidak sesuai".
+- **Penulis tambahan**: bila semua penulis asli tercantum tetapi referensi memuat lebih banyak nama daripada karya
+  aslinya (ada nama karangan yang ditambahkan), referensi ditandai.
 - **Pencocokan dengan rekaman asli** (Tahap 2) sengaja ketat terhadap pola manipulasi tetapi toleran terhadap variasi
   penulisan yang wajar: subjudul (setelah `:`) boleh tidak ditulis, kata sandang di awal dan `&`/`and` dianggap sama,
   nama tengah boleh disingkat atau dihilangkan, dan daftar ≥ 2 penulis boleh dipersingkat. Yang ditandai: kata judul

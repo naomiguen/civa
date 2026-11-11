@@ -4,7 +4,7 @@
     "palsu_doi": {
       "n": 24,
       "benar": 1.0,
-      "ml_saja_benar": 0.375,
+      "ml_saja_benar": 0.625,
       "status": {
         "halu": 24
       },
@@ -12,14 +12,13 @@
         "mismatch": 24
       },
       "pola": {
-        "DOI": 24,
-        "penulis": 1
+        "DOI": 24
       }
     },
     "palsu_karangan": {
       "n": 24,
       "benar": 1.0,
-      "ml_saja_benar": 0.2916666666666667,
+      "ml_saja_benar": 0.5,
       "status": {
         "halu": 24
       },
@@ -34,7 +33,7 @@
     "palsu_penulis": {
       "n": 24,
       "benar": 0.9583333333333334,
-      "ml_saja_benar": 0.20833333333333334,
+      "ml_saja_benar": 0.4166666666666667,
       "status": {
         "halu": 23,
         "valid": 1
@@ -52,7 +51,7 @@
     "palsu_tahun": {
       "n": 24,
       "benar": 1.0,
-      "ml_saja_benar": 0.375,
+      "ml_saja_benar": 0.4583333333333333,
       "status": {
         "halu": 24
       },
@@ -67,7 +66,7 @@
     "real_dataset": {
       "n": 20,
       "benar": 1.0,
-      "ml_saja_benar": 0.75,
+      "ml_saja_benar": 0.45,
       "status": {
         "valid": 20
       },
@@ -78,15 +77,14 @@
     },
     "real_eksternal": {
       "n": 80,
-      "benar": 0.975,
-      "ml_saja_benar": 0.6875,
+      "benar": 0.9875,
+      "ml_saja_benar": 0.5,
       "status": {
-        "valid": 78,
-        "halu": 2
+        "valid": 79,
+        "halu": 1
       },
       "bukti": {
-        "verified": 78,
-        "not_found": 1,
+        "verified": 79,
         "mismatch": 1
       },
       "pola": {
@@ -96,19 +94,19 @@
   },
   "halu_detection": {
     "tp": 95,
-    "fp": 2,
+    "fp": 1,
     "fn": 1,
-    "tn": 98,
-    "precision": 0.979381443298969,
+    "tn": 99,
+    "precision": 0.9895833333333334,
     "recall": 0.9895833333333334,
-    "f1": 0.9844559585492227,
-    "accuracy": 0.9846938775510204
+    "f1": 0.9895833333333334,
+    "accuracy": 0.9897959183673469
   },
   "ml_saja": {
-    "recall": 0.3125,
-    "false_alarm": 0.3
+    "recall": 0.5,
+    "false_alarm": 0.51
   },
-  "real_false_alarm": 0.02,
+  "real_false_alarm": 0.01,
   "real_unparsed": 0.0,
   "fake_unparsed": 0.0
 }

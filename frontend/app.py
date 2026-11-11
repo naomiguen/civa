@@ -54,22 +54,34 @@ html{scroll-behavior:smooth}
 .stApp{background:var(--bg);font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink)}
 header[data-testid="stHeader"],[data-testid="stToolbar"],[data-testid="stDecoration"],[data-testid="stStatusWidget"],
 footer,#MainMenu{display:none !important}
-.stMainBlockContainer,.block-container{padding:0 !important;max-width:100% !important}
+.stMainBlockContainer,.block-container{padding:54px 0 0 !important;max-width:100% !important}  /* 54px = navbar */
 [data-testid="stVerticalBlock"]{gap:0 !important}
 [data-testid="stElementContainer"]{margin:0}
 button,textarea,[class^="civa-"],[class*=" civa-"],[class^="civa-"] *,[class*=" civa-"] *,
 .st-key-btn_check *,.st-key-btn_recheck *{font-family:'Inter','Segoe UI',system-ui,sans-serif !important}
 
 /* ---------- header ---------- */
-.civa-header{height:54px;background:var(--header);border-bottom:1px solid var(--header-line);display:flex;
-  align-items:center;justify-content:space-between;padding:0 28px}
-.civa-brand{display:flex;align-items:center;gap:12px}
+/* Navbar menempel di atas (fixed). Saat halaman di-scroll ke bawah (kelas body.civa-scrolled, dipasang oleh skrip
+   NAVBAR_JS), navbar berubah menjadi kapsul oval yang mengambang di tengah. */
+.civa-header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;z-index:999;box-sizing:border-box;
+  height:54px;background:var(--header);border:1px solid transparent;border-bottom-color:var(--header-line);
+  border-radius:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 28px;
+  transition:top .35s ease,width .35s ease,border-radius .35s ease,box-shadow .35s ease,background-color .35s ease,
+    padding .35s ease,height .35s ease}
+body.civa-scrolled .civa-header{top:12px;width:min(920px,calc(100% - 32px));height:50px;border-radius:999px;
+  padding:0 10px 0 12px;background:rgba(11,38,32,.92);border-color:rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 12px 32px -10px rgba(11,38,32,.55),0 2px 6px rgba(11,38,32,.18)}
+body.civa-scrolled .civa-status{border-left:0;padding:6px 14px;height:auto;border-radius:999px;
+  background:rgba(255,255,255,.08)}
+.civa-brand{display:flex;align-items:center;gap:12px;min-width:0}
 .civa-logo{width:32px;height:32px;border-radius:8px;background:var(--green);display:grid;place-items:center;
   color:var(--header);box-shadow:0 0 10px rgba(16,185,129,.4)}
 .civa-logo svg{width:18px;height:18px}
-.civa-title{color:#f8fafc;font-weight:700;font-size:16.5px}
-.civa-status{display:flex;align-items:center;gap:8px;color:#f8fafc;font-size:13.5px;font-weight:500;
-  border-left:1px solid var(--header-line);padding-left:14px;height:18px}
+.civa-title{color:#f8fafc;font-weight:700;font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.civa-status{display:flex;align-items:center;gap:8px;color:#f8fafc;font-size:13.5px;font-weight:500;flex:none;
+  white-space:nowrap;border-left:1px solid var(--header-line);padding-left:14px;height:18px;
+  transition:background-color .35s ease,padding .35s ease}
 .civa-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 .civa-dot.warn{background:var(--amber)} .civa-dot.down{background:var(--red)}
 svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -164,8 +176,14 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
     position:static
 }
 .st-key-left_card [data-testid="stSelectbox"] label{display:none}
+/* Daftar pustaka di kontainer dengan tinggi maksimum dan scroll sendiri, agar pie chart di bawahnya tidak terdorong
+   jauh ke bawah saat referensinya banyak. */
 .civa-bibliography{background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:8px 16px;
-  flex:0 0 auto;min-height:0;overflow:visible;padding-bottom:12px;box-sizing:border-box}
+  flex:0 0 auto;min-height:0;max-height:min(440px,55vh);overflow-y:auto;overscroll-behavior:contain;
+  padding-bottom:12px;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
+.civa-bibliography::-webkit-scrollbar{width:8px}
+.civa-bibliography::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+.civa-bibliography::-webkit-scrollbar-track{background:transparent}
 .civa-reference{position:relative;display:flex;align-items:flex-start;padding:14px 4px;margin:0;
   border-bottom:1px solid #e5e7eb;font-size:14px;line-height:1.7;color:#374151;overflow-wrap:anywhere;word-break:break-word;
   cursor:pointer;text-decoration:none}
@@ -243,9 +261,36 @@ svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-l
   position:static;max-height:none;overflow:visible}.st-key-result [data-testid="stHorizontalBlock"]{
   flex-direction:column !important;gap:16px !important}.st-key-result
   [data-testid="stHorizontalBlock"] > [data-testid="column"],.st-key-result
-  [data-testid="stHorizontalBlock"] > .stColumn{width:100% !important;flex:0 0 auto !important}.civa-right{margin:0}}
+  [data-testid="stHorizontalBlock"] > .stColumn{width:100% !important;flex:0 0 auto !important}.civa-right{margin:0}
+  /* aturan desktop memakai :first-child/:last-child (lebih spesifik), jadi ditimpa dengan selektor yang setara */
+  .st-key-result [data-testid="stHorizontalBlock"] > [data-testid="column"]:first-child,
+  .st-key-result [data-testid="stHorizontalBlock"] > .stColumn:first-child,
+  .st-key-result [data-testid="stHorizontalBlock"] > [data-testid="column"]:last-child,
+  .st-key-result [data-testid="stHorizontalBlock"] > .stColumn:last-child{width:100% !important;flex:0 0 auto !important}
+  .civa-bibliography{max-height:360px}
+  .civa-stats{gap:10px}.civa-stat{min-width:0;padding:14px 12px}.civa-stat .l{font-size:13px}
+  .civa-stat .v{font-size:30px}}
 @media (max-width:600px){.civa-steps{grid-template-columns:1fr}}
 """
+
+# Navbar: pasang kelas body.civa-scrolled saat halaman utama di-scroll lebih dari 24px (CSS mengubahnya jadi kapsul).
+# Scroll event tidak "bubble", jadi didengar pada fase capture; scroll di dalam kontainer lain (mis. daftar pustaka)
+# diabaikan karena hanya elemen yang memuat navbar (kontainer utama halaman) yang dihitung. Dipasang sekali saja.
+NAVBAR_JS = """<script>
+(() => {
+  if (window.__civaNavbar) return;
+  window.__civaNavbar = true;
+  const update = (scroller) => {
+    const header = document.querySelector('.civa-header');
+    if (!header) return;
+    if (scroller !== document.scrollingElement && !scroller.contains(header)) return;
+    document.body.classList.toggle('civa-scrolled', scroller.scrollTop > 24);
+  };
+  document.addEventListener('scroll', (e) => {
+    update(e.target === document ? document.scrollingElement : e.target);
+  }, {capture: true, passive: true});
+})();
+</script>"""
 
 # Ikon (lucide) sebagai SVG inline
 ICON = {
@@ -264,7 +309,7 @@ STEPS = [
      "mengekstrak entitas metadata penting seperti judul, penulis, dan tahun publikasi."),
     ("shield", "2. Cek DOI &amp; Metadata",
      "Mencocokkan data referensi dengan pangkalan data rujukan lokal dan sumber akademik terverifikasi (Crossref, "
-     "arXiv, OpenAlex, DBLP): judul, penulis, tahun, dan DOI diperiksa terhadap rekaman aslinya."),
+     "arXiv, OpenAlex, OpenLibrary, DBLP): judul, penulis, tahun, dan DOI diperiksa terhadap rekaman aslinya."),
     ("cpu", "3. Klasifikasi Machine Learning",
      "Mengevaluasi hasil ekstraksi fitur referensi menggunakan model klasifikasi terbaik yang dioptimasi dari hasil "
      "pengujian komparatif antara algoritma Random Forest, XGBoost, dan Logistic Regression."),
@@ -406,17 +451,17 @@ STYLE_OPTIONS = ("APA 7", "Harvard", "IEEE", "MLA", "Chicago", "Vancouver")
 
 def detected_style(text: str) -> str:
     """Deteksi ringan untuk default tampilan; tidak memengaruhi proses verifikasi."""
-    if re.search(r"(^|\r\n)\s*\[\d+\]", text):
-        return "IEEE"
-    if re.search(r"\bVancouver\b", text, re.IGNORECASE):
-        return "Vancouver"
-    if re.search(r"\bIEEE\b", text, re.IGNORECASE):
+    # Hanya pola penomoran yang dipakai: kata "IEEE"/"Vancouver" bisa muncul di nama venue/judul referensi APA
+    # (mis. "Proceedings of the IEEE Conference ..."), jadi bukan penanda gaya.
+    if re.search(r"^\s*\[\d+\]", text, re.MULTILINE):
         return "IEEE"
     return "APA 7"
 
 
 def _reference_metadata(item: dict) -> dict:
-    record = (item.get("evidence") or {}).get("record") or {}
+    # Metadata rekaman asli (venue, DOI, URL, tahun) hanya melengkapi referensi yang VALID. Untuk referensi HALU,
+    # rekaman itu milik makalah ASLI; memakainya akan "membetulkan" referensi palsu (mis. memberi DOI asli).
+    record = ((item.get("evidence") or {}).get("record") or {}) if item.get("status") == "valid" else {}
     return {
         "title": item.get("title") or record.get("title") or item.get("raw", ""),
         "authors": item.get("authors") or [],
@@ -469,24 +514,27 @@ def _link_html(value: str | None) -> str:
 
 def formatted_reference_html(item: dict, style: str, number: int) -> str:
     meta = _reference_metadata(item)
-    title, year, venue = esc(meta["title"]), meta["year"] or "n.d.", esc(meta["venue"])
+    title = esc(str(meta["title"]).strip().rstrip("."))
+    year, venue = meta["year"] or "n.d.", esc(meta["venue"])
     authors = esc(_author_names(item, style))
     link = _link_html(meta["doi"] or meta["url"])
     journal = f"<em>{venue}</em>" if venue else ""
-    volume = ""
-    record = (item.get("evidence") or {}).get("record") or {}
-    if record.get("volume"):
-        volume = f", {esc(record['volume'])}"
+    # Tanpa venue (buku, referensi halu/tidak ditemukan): bagian venue dihilangkan beserta tanda bacanya,
+    # agar tidak muncul "Judul. ." atau "“Judul,” , 2016".
+    def dot(text: object) -> str:  # akhiri dengan satu titik saja ("n.d." / "Brown, A." tidak jadi "..")
+        text = str(text)
+        return text if text.endswith(".") else text + "."
+
     if style in ("APA 7", "Harvard"):
-        entry = f"{authors} ({year}). {title}. {journal}{volume}.{link}"
+        entry = f"{authors} ({year}). {title}." + (f" {journal}." if journal else "") + link
     elif style == "MLA":
-        entry = f"{authors}. “{title}.” {journal}{volume}, {year}.{link}"
+        entry = f"{dot(authors)} “{title}.” " + (f"{journal}, " if journal else "") + f"{dot(year)}{link}"
     elif style == "Chicago":
-        entry = f"{authors}. “{title}.” {journal}{volume} ({year}).{link}"
+        entry = f"{dot(authors)} “{title}.” " + (f"{journal} " if journal else "") + f"({year}).{link}"
     elif style == "IEEE":
-        entry = f"{authors}, “{title},” {journal}{volume}, {year}.{link}"
+        entry = f"{authors}, “{title},” " + (f"{journal}, " if journal else "") + f"{dot(year)}{link}"
     else:
-        entry = f"{authors}. {title}. {journal}{volume}; {year}.{link}"
+        entry = f"{dot(authors)} {title}. " + (f"{journal}; " if journal else "") + f"{dot(year)}{link}"
     status = item.get("status", "unparsed")
     marker = ('<svg class="civa-status-icon" viewBox="0 0 24 24" aria-hidden="true">'
               '<circle cx="12" cy="12" r="10"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg>'
@@ -561,10 +609,15 @@ def run_check(text: str) -> None:
     else:
         try:
             st.session_state["result"] = call_verify(text)
-            st.session_state.update(saved_text=text, view="result", error=None, is_loading=False,
-                                    citation_style=detected_style(text))
+            st.session_state.update(saved_text=text, view="result", error=None, citation_style=detected_style(text))
+            # Pilihan style milik widget disimpan Streamlit per key; hapus agar style hasil deteksi teks baru dipakai.
+            st.session_state.pop("citation_style_select", None)
         except ApiError as exc:
-            st.session_state.update(error=str(exc), is_loading=False)
+            st.session_state["error"] = str(exc)
+        except Exception as exc:  # noqa: BLE001 - galat tak terduga: tampilkan, jangan biarkan layar loading macet
+            st.session_state["error"] = f"Terjadi galat saat memeriksa ({type(exc).__name__}). Coba lagi."
+        finally:
+            st.session_state["is_loading"] = False
 
 
 def home_page() -> None:
@@ -620,6 +673,7 @@ def result_page() -> None:
 def main() -> None:
     st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
     st.markdown(header_html(), unsafe_allow_html=True)
+    st.html(NAVBAR_JS, unsafe_allow_javascript=True)
     if st.session_state.get("is_loading"):
         st.markdown(loading_modal_html(), unsafe_allow_html=True)
         run_check(st.session_state.get("pending_text", ""))

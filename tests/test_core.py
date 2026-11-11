@@ -365,6 +365,164 @@ class CompareTests(unittest.TestCase):
         self.assertIs(retrieval.best_of([bad, good]), good)
         self.assertIsNone(retrieval.best_of([Evidence(status="not_found")]))
 
+    def test_book_with_same_generic_title_is_another_book(self):
+        ref = make_ref(title="Grid Computing", authors=[("P", "Plaszczak")], year=2006, kind="book")
+        other = make_record(title="Grid Computing", authors=["Joshy Joseph", "Craig Fellenstein"], year=2004,
+                            kind="book")
+        self.assertEqual(retrieval.compare(ref, other, "x", False).status, "not_found")  # bukan tuduhan
+        # edisi/cetak ulang: tahun berbeda jauh pada buku yang sama bukan bukti manipulasi
+        reprint = make_record(title="Grid Computing", authors=["Pawel Plaszczak"], year=2012, kind="book")
+        self.assertEqual(retrieval.compare(ref, reprint, "x", False).status, "verified")
+        # pola manipulasi pada orang yang sama tetap dinilai
+        flipped = make_ref(title="Grid Computing", authors=[("Plaszczak", "Pawel")], year=2006, kind="book")
+        self.assertEqual(retrieval.compare(flipped, reprint, "x", False).mismatch_fields, ["susunan nama"])
+
+    def test_added_fake_author(self):
+        added = make_ref(authors=[("K", "Beck"), ("Y", "Zhang"), ("L", "Chen")])
+        self.assertEqual(retrieval.compare(added, make_record(), "x", False).mismatch_fields, ["penulis tambahan"])
+        self.assertIn("tidak terdapat pada karya aslinya", verdict.describe_mismatch(["penulis tambahan"]))
+        # daftar dipersingkat (penulis asli lebih banyak) tetap diterima
+        record = make_record(authors=["Yue Zhang", "Lei Chen", "Kai Li", "Wei Wang"])
+        self.assertEqual(retrieval.compare(make_ref(), record, "x", False).status, "verified")
+
+    def test_journal_parsed_as_book_still_checks_year(self):
+        # GROBID kadang menandai artikel jurnal sebagai buku; rekaman aslinya jurnal -> tahun tetap dinilai
+        ev = retrieval.compare(make_ref(year=2019, kind="book"), make_record(kind="journal"), "x", False)
+        self.assertEqual((ev.status, ev.mismatch_fields), ("mismatch", ["tahun"]))
+
+    def test_stated_edition_allows_different_year(self):
+        for raw in ("Zhang, Y. (2010). Deep Learning for NLP: A Review (3rd ed.). Pearson.",
+                    "Zhang, Y. (2010). Deep Learning for NLP: A Review. Edisi Revisi. Andi.",
+                    "Zhang, Y. (2010). Deep Learning for NLP: A Review, 2nd edition. Pearson."):
+            ref = make_ref(year=2010, raw=raw)
+            self.assertEqual(retrieval.compare(ref, make_record(year=1995), "x", False).status, "verified", raw)
+        # tanpa penanda edisi, tahun yang jauh berbeda tetap dituduh; "Ed." untuk editor bukan penanda edisi
+        for raw in ("Zhang, Y. (2010). Deep Learning for NLP: A Review. Pearson.",
+                    "Zhang, Y. (Ed.). (2010). Deep Learning for NLP: A Review. Pearson.",
+                    "Zhang, Y. (2010). Deep Learning for NLP: A Review. Angewandte Chemie International Edition.",
+                    "Zhang, Y. (2010). Deep Learning for NLP: A Review. Jurnal Informatika Edisi Khusus."):
+            ev = retrieval.compare(make_ref(year=2010, raw=raw), make_record(year=1995), "x", False)
+            self.assertEqual(ev.mismatch_fields, ["tahun"], raw)
+
+
+class RetrieveEvidenceTests(unittest.TestCase):
+    """Cache 'tidak ditemukan' hanya disimpan bila semua sumber aktif benar-benar menjawab."""
+
+    def _run(self, providers):
+        import asyncio
+        import tempfile
+
+        from backend.database import KnowledgeBase
+        with tempfile.TemporaryDirectory() as tmp:
+            kb = KnowledgeBase(Path(tmp) / "kb.db")
+            with mock.patch.object(retrieval, "PROVIDERS", providers), \
+                    mock.patch.object(retrieval, "_breaker", retrieval._Breaker(threshold=2, cooldown=60)):
+                ev = asyncio.run(retrieval.retrieve_evidence(None, kb, make_ref()))
+                missed = kb.recently_missed(make_ref().title, 24)
+                breaker = retrieval._breaker
+        return ev, missed, breaker
+
+    @staticmethod
+    async def _empty(client, ref):
+        return []
+
+    @staticmethod
+    async def _broken(client, ref):
+        raise ValueError("bukan JSON")
+
+    def test_miss_cached_when_all_answer(self):
+        ev, missed, _ = self._run([("a", self._empty), ("b", self._empty)])
+        self.assertEqual((ev.status, ev.unreachable, missed), ("not_found", False, True))
+
+    def test_miss_not_cached_when_a_source_fails(self):
+        ev, missed, _ = self._run([("a", self._empty), ("b", self._broken)])
+        self.assertEqual((ev.status, ev.unreachable, missed), ("not_found", False, False))
+
+    def test_all_sources_fail_is_unreachable(self):
+        ev, missed, _ = self._run([("a", self._broken)])
+        self.assertEqual((ev.status, ev.unreachable, missed), ("not_found", True, False))
+
+    def test_mismatch_survives_recheck(self):
+        """Judul diacak: pemeriksaan ulang harus memberi bukti yang sama, bukan 'tidak ditemukan' dari cache."""
+        import asyncio
+        import tempfile
+
+        from backend.database import KnowledgeBase
+        shuffled = make_ref(title="Processing Language Natural for Learning Deep: A Review")
+        calls: list[str] = []
+
+        async def source(client, ref):
+            calls.append(ref.title)
+            return [make_record()]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            kb = KnowledgeBase(Path(tmp) / "kb.db")
+            with mock.patch.object(retrieval, "PROVIDERS", [("a", source)]), \
+                    mock.patch.object(retrieval, "_breaker", retrieval._Breaker()):
+                first = asyncio.run(retrieval.retrieve_evidence(None, kb, shuffled))
+                again = asyncio.run(retrieval.retrieve_evidence(None, kb, shuffled))
+            self.assertFalse(kb.recently_missed(shuffled.title, 24))
+        self.assertEqual((first.status, first.mismatch_fields), ("mismatch", ["urutan judul"]))
+        self.assertEqual((again.status, again.mismatch_fields, again.source), ("mismatch", ["urutan judul"], "local"))
+
+    def test_openlibrary_records(self):
+        """Judul + subjudul digabung, keterangan edisi di akhir dibuang, jenis = buku."""
+        import asyncio
+
+        payload = {"docs": [
+            {"title": "Java : the Complete Reference, Twelfth Edition", "author_name": ["Herbert Schildt"],
+             "first_publish_year": 2021, "key": "/works/OL1W"},
+            {"title": "Clean Code", "subtitle": "A Handbook of Agile Software Craftsmanship",
+             "author_name": ["Robert C. Martin"], "first_publish_year": 2008, "key": "/works/OL2W"},
+            {"title": "Java: The Complete Reference", "key": "/works/OL3W"},  # tanpa penulis: dilewati
+        ]}
+
+        async def fake_get(client, url, params):
+            self.assertIn("title:(", params["q"])
+            return SimpleNamespace(json=lambda: payload)
+
+        with mock.patch.object(retrieval, "_get", fake_get):
+            records = asyncio.run(retrieval.search_openlibrary(None, make_ref(title="Java: The complete reference")))
+        self.assertEqual([r.title for r in records],
+                         ["Java : the Complete Reference", "Clean Code: A Handbook of Agile Software Craftsmanship"])
+        self.assertEqual({r.kind for r in records}, {"book"})
+        self.assertEqual(records[0].url, "https://openlibrary.org/works/OL1W")
+        ref = make_ref(raw="Schildt, H. (2011). Java: The complete reference (8th ed.). McGraw-Hill.",
+                       title="Java: The complete reference", authors=[("H", "Schildt")], year=2011)
+        self.assertEqual(retrieval.compare(ref, records[0], "openlibrary", False).status, "verified")
+
+    def test_breaker_opens_after_repeated_failures(self):
+        breaker = retrieval._Breaker(threshold=2, cooldown=60)
+        breaker.failure("dblp")
+        self.assertFalse(breaker.is_open("dblp"))
+        breaker.failure("dblp")
+        self.assertTrue(breaker.is_open("dblp"))
+        breaker.success("dblp")
+        self.assertFalse(breaker.is_open("dblp"))
+
+
+class SeedTests(unittest.TestCase):
+    """KB di-seed ulang bila isi dataset seed berubah; rekaman cache API dipertahankan."""
+
+    def test_reseed_on_dataset_change(self):
+        import tempfile
+
+        from backend.database import KnowledgeBase
+        header = "judul,author,tahun,status"
+        with tempfile.TemporaryDirectory() as tmp:
+            csv = Path(tmp) / "dataset_final.csv"
+            csv.write_text(f"{header}\nOld Journal Paper Title,Yue Zhang,2020,1\n", encoding="utf-8")
+            kb = KnowledgeBase(Path(tmp) / "kb.db")
+            self.assertEqual(kb.seed_if_needed(csv), 1)
+            self.assertEqual(kb.seed_if_needed(csv), 0)  # isi sama: tidak diulang
+            kb.insert(make_record(title="Cached From Crossref Title"))
+            csv.write_text(f"{header}\nNew Book Title Here,Pawel Plaszczak,2006,1\n"
+                           "Fake Book Title Here,Pawel Plaszczak,2006,0\n", encoding="utf-8")
+            self.assertEqual(kb.seed_if_needed(csv), 1)  # berubah: seed lama diganti, baris halu tidak masuk
+            self.assertEqual(kb.find("Old Journal Paper Title"), [])
+            self.assertEqual(len(kb.find("New Book Title Here")), 1)
+            self.assertEqual(len(kb.find("Cached From Crossref Title")), 1)  # cache API tetap
+
 
 class VerdictTests(unittest.TestCase):
     def setUp(self):  # bobot tetap, tidak bergantung pada environment variable

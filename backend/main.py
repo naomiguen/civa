@@ -3,7 +3,7 @@ CIVA - Citation Intelligence & Verification Assistant : FastAPI backend.
 
 Alur verifikasi per referensi
   TAHAP 1  GROBID            ekstrak <title> & <author> (+ tahun, DOI, jenis) dari teks mentah
-  TAHAP 2  Retrieval+Cache   database lokal -> Crossref -> arXiv -> OpenAlex -> DBLP (berurutan);
+  TAHAP 2  Retrieval+Cache   database lokal -> Crossref -> arXiv -> OpenAlex -> OpenLibrary -> DBLP;
                              temuan dari API eksternal di-INSERT ke database lokal
   TAHAP 3  ML (MURNI TEKS)   embedding MultiBERT judul (384) + author (384) = 768-d -> classifier -> P(valid)
   KEPUTUSAN                  verdict.fuse(): probabilitas ML + bukti basis data -> VALID / HALU (+ alasan)

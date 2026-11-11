@@ -43,7 +43,7 @@ class Settings:
 
     # --- Tahap 2: Database lokal + API eksternal ----------------------------------------
     db_path: Path = Path(os.getenv("CIVA_DB_PATH", ROOT / "data" / "civa.db"))
-    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset" / "dataset_final.csv"))
+    seed_dataset: Path = Path(os.getenv("CIVA_SEED_DATASET", ROOT / "dataset_v2" / "dataset_final.csv"))
     external_timeout: float = _env_float("CIVA_EXTERNAL_TIMEOUT", 12.0)
     # Email kontak OPSIONAL untuk "polite pool" Crossref/OpenAlex (lebih cepat & stabil).
     # Tidak diisi otomatis; isi sendiri bila mau: set CIVA_CONTACT_EMAIL=email.anda@contoh.com

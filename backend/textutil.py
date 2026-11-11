@@ -332,6 +332,10 @@ def compare_authors(reference_authors: Sequence[tuple[str, str]], record_authors
         return False, "nama penulis"
     if len(order) >= 2 and len(set(order)) == len(order) and order != sorted(order):
         return False, "urutan penulis"  # semua orangnya benar, tetapi urutannya tidak sama dengan aslinya
+    # Nama karangan DITAMBAHKAN: semua penulis asli sudah tercakup, tetapi referensi memuat lebih banyak nama daripada
+    # karya aslinya dan ada yang tidak cocok dengan siapa pun. Tidak bisa dijelaskan oleh daftar yang dipersingkat.
+    if "hilang" in statuses and len(covered) == len(people) and len(wanted) > len(people):
+        return False, "penulis tambahan"
     # Penulis asli dihilangkan: tinggal SATU nama, atau dua nama referensi menunjuk orang yang sama (nama digabung).
     # Daftar >= 2 nama yang tidak lengkap tidak dituduh: lazim dipersingkat, dan nama yang gagal diurai GROBID (nama
     # tunggal, aksara lain) juga tampak seperti "lompatan".

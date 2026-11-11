@@ -49,7 +49,7 @@ from backend.config import settings  # noqa: E402  (juga membaca .env lokal, mis
 from backend.textutil import norm_key, normalize_doi, title_similarity  # noqa: E402
 
 REPORTS = ROOT / "reports"
-DATASET_CSV = ROOT / "dataset" / "dataset_final.csv"  # juga dataset seed basis data lokal (baris asli)
+DATASET_CSV = ROOT / "dataset_v2" / "dataset_final.csv"  # juga dataset seed basis data lokal (baris asli)
 GROBID_URL = os.getenv("CIVA_GROBID_URL", "http://localhost:8070").rstrip("/")
 
 # Referensi karangan penuh (judul sangat spesifik agar hampir pasti tidak ada). (judul, [penulis], tahun, jurnal)
@@ -113,10 +113,10 @@ GROUP_TITLE = {
 }
 # Set "manipulasi" (split uji dataset_final.csv); nama kelompok = kolom `jenis` dataset.
 MANIPULATION_TITLE = {
-    "asli": "Asli (semua bidang)", "acak_kata_judul": "Halu: kata judul diacak",
+    "asli": "Asli: jurnal (semua bidang)", "asli_buku": "Asli: buku", "acak_kata_judul": "Halu: kata judul diacak",
     "hapus_kata_judul": "Halu: kata judul dihapus", "penulis_satu_nama": "Halu: penulis tinggal satu nama",
     "penulis_kosong": "Halu: tanpa nama penulis", "urutan_penulis_acak": "Halu: urutan penulis diacak",
-    "nama_dibalik": "Halu: susunan nama penulis dibalik",
+    "nama_dibalik": "Halu: susunan nama penulis dibalik", "mismatch_buku": "Halu: buku (judul/penulis dimanipulasi)",
 }
 GROUP_TITLE.update(MANIPULATION_TITLE)
 GROUP_LABEL.update({g: "valid" if g.startswith("asli") else "halu" for g in MANIPULATION_TITLE})
@@ -258,16 +258,22 @@ def build_manipulation_set(per_group: int = 20, seed: int = 7) -> list[dict]:
     rng = random.Random(seed)
     frame = pd.read_csv(DATASET_CSV, encoding="utf-8-sig", keep_default_na=False)
     frame = frame[frame["split"] == "uji"]
+    is_book = frame["jenis_referensi"].eq("book") if "jenis_referensi" in frame.columns else frame["jenis"].eq("")
     items: list[dict] = []
     for group in MANIPULATION_TITLE:
-        pool = frame[frame["jenis"] == group]
-        picked = pool.sample(min(len(pool), 2 * per_group if group == "asli" else per_group),
+        if group in ("asli", "asli_buku"):  # asli dibagi jurnal / buku agar keduanya terukur
+            pool = frame[(frame["jenis"] == "asli") & (is_book == (group == "asli_buku"))]
+        else:
+            pool = frame[frame["jenis"] == group]
+        picked = pool.sample(min(len(pool), 2 * per_group if group.startswith("asli") else per_group),
                              random_state=rng.randrange(2**31))
         for row in picked.itertuples(index=False):
-            names = [n.strip() for n in str(row.author).split(",") if n.strip()]
+            book = bool(getattr(row, "jenis_referensi", "") == "book")
+            sep = ";" if ";" in str(row.author) else ","  # data buku memisahkan penulis dengan ';'
+            names = [n.strip() for n in str(row.author).split(sep) if n.strip()]
             title, year = str(row.judul).strip().rstrip("."), int(row.tahun)
-            text = f"{authors_apa(names)} ({year}). {title}. Jurnal Ilmiah." if names else \
-                f"{title}. ({year}). Jurnal Ilmiah."
+            venue = "" if book else " Jurnal Ilmiah."  # buku: tanpa nama jurnal (penerbit tidak ada di dataset)
+            text = f"{authors_apa(names)} ({year}). {title}.{venue}" if names else f"{title}. ({year}).{venue}"
             items.append({"group": group, "expected": GROUP_LABEL[group], "text": text,
                           "meta": {"grup_id": int(row.grup_id), "bidang": row.bidang}})
     rng.shuffle(items)

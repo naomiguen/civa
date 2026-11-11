@@ -8,7 +8,7 @@ ATURAN FITUR (sangat penting)
     digabung (concatenate) = 768-d  ->  XGBoost / Random Forest / Logistic Regression.
   * TIDAK ADA fitur angka perbandingan, similarity, atau jarak ke database.
 
-DATA (folder dataset/)
+DATA (folder dataset_v2/; folder dataset/ = versi lama tanpa buku)
   dataset_final.csv  11.977 referensi: 6.000 ASLI dari 26 bidang ilmu (Inggris & Indonesia) + 5.977 HALU hasil
                      perusakan referensi asli. Kolom yang dipakai: judul, author, status (1 = valid, 0 = halu),
                      jenis (asli | acak_kata_judul | hapus_kata_judul | penulis_satu_nama | penulis_kosong |
@@ -204,7 +204,7 @@ def candidates(seed: int, halu_over_valid: float, quick: bool) -> dict[str, tupl
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Latih model CIVA (murni teks: judul 384-d + author 384-d).")
-    parser.add_argument("--dataset-dir", type=Path, default=ROOT / "dataset")
+    parser.add_argument("--dataset-dir", type=Path, default=ROOT / "dataset_v2")
     parser.add_argument("--quick", action="store_true", help="grid hiperparameter kecil + 3-fold CV (cepat)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--initials-rate", type=float, default=0.35)

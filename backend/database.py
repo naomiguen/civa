@@ -1,7 +1,8 @@
 """
 Database lokal (SQLite) = Knowledge Base CIVA.
 
-* Terisi otomatis dari referensi ASLI di dataset/dataset_final.csv (26 bidang ilmu) saat pertama kali jalan.
+* Terisi otomatis dari referensi ASLI di dataset_v2/dataset_final.csv (jurnal 26 bidang ilmu + buku) saat pertama
+  kali jalan, dan diisi ulang otomatis bila isi dataset seed berubah.
 * Setiap referensi yang ditemukan lewat API eksternal di-INSERT ke sini, sehingga pencarian berikutnya
   cukup dari database lokal (tanpa memanggil API lagi).
 * Pencarian "tidak ditemukan" di-cache sementara (lookup_misses) agar API tidak dipanggil berulang untuk
@@ -9,6 +10,7 @@ Database lokal (SQLite) = Knowledge Base CIVA.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import sqlite3
@@ -46,6 +48,10 @@ CREATE INDEX IF NOT EXISTS ix_kb_doi ON kb_references(doi);
 CREATE TABLE IF NOT EXISTS lookup_misses (
     title_norm  TEXT PRIMARY KEY,
     checked_at  REAL NOT NULL
+);
+CREATE TABLE IF NOT EXISTS kb_meta (
+    key         TEXT PRIMARY KEY,
+    value       TEXT NOT NULL
 );
 """
 
@@ -111,9 +117,12 @@ class KnowledgeBase:
                 ids += [r["id"] for r in con.execute("SELECT id FROM kb_references WHERE doi = ?", (doi,))]
             ids += [r["id"] for r in con.execute("SELECT id FROM kb_references WHERE title_norm = ?", (key,))]
         with self._lock:
-            hits = process.extract(key, self._index_titles, scorer=fuzz.ratio, score_cutoff=80, limit=limit)
-            ids += [self._index_ids[index] for _choice, _score, index in hits]
-        ids = list(dict.fromkeys(ids))[: limit + 2]
+            # ratio: judul mirip / ada kata yang hilang | token_sort_ratio: kata judul diacak (sama seperti
+            # textutil.title_similarity), agar referensi yang judulnya diacak tetap menemukan rekaman aslinya di lokal.
+            for scorer in (fuzz.ratio, fuzz.token_sort_ratio):
+                hits = process.extract(key, self._index_titles, scorer=scorer, score_cutoff=80, limit=limit)
+                ids += [self._index_ids[index] for _choice, _score, index in hits]
+        ids = list(dict.fromkeys(ids))[: 2 * limit + 2]
         if not ids:
             return []
         marks = ",".join("?" * len(ids))
@@ -157,16 +166,20 @@ class KnowledgeBase:
 
     # -- seed dari dataset -----------------------------------------------------------------
     def seed_if_needed(self, csv_path: Path) -> int:
-        """Isi KB dari dataset seed (CSV) bila belum ada baris seed. Mengembalikan jumlah baris yang dimasukkan.
+        """Isi KB dari dataset seed (CSV) bila belum di-seed dari isi berkas yang SAMA. Mengembalikan jumlah baris baru.
 
-        Rekaman hasil API eksternal (origin='cache') tidak dihitung, jadi KB lama yang seed-nya dihapus ikut terisi lagi.
+        Sidik (SHA-1) isi berkas seed disimpan di kb_meta. Bila dataset seed berganti/diperbarui, baris seed lama dihapus
+        dan diisi ulang; rekaman hasil API eksternal (origin='cache') tetap dipertahankan.
         """
-        with self._session() as con:
-            if con.execute("SELECT 1 FROM kb_references WHERE origin = 'seed' LIMIT 1").fetchone():
-                return 0
         csv_path = Path(csv_path)
         if not csv_path.exists():
             log.warning("Dataset seed tidak ditemukan (%s); knowledge base dimulai tanpa seed.", csv_path)
+            return 0
+        signature = f"{csv_path.name}:{hashlib.sha1(csv_path.read_bytes()).hexdigest()}"
+        with self._session() as con:
+            row = con.execute("SELECT value FROM kb_meta WHERE key = 'seed_signature'").fetchone()
+            has_seed = con.execute("SELECT 1 FROM kb_references WHERE origin = 'seed' LIMIT 1").fetchone()
+        if has_seed and row and row["value"] == signature:
             return 0
         import pandas as pd  # impor lazy: hanya perlu saat seeding
 
@@ -192,9 +205,13 @@ class KnowledgeBase:
                 text(getattr(item, "sumber_api", "")).lower() or "dataset", "seed",
             ))
         with self._lock, self._session() as con:
+            removed = con.execute("DELETE FROM kb_references WHERE origin = 'seed'").rowcount  # seed lama (bila ada)
             before = con.execute("SELECT COUNT(*) FROM kb_references").fetchone()[0]
             con.executemany(_INSERT_SQL, rows)
             inserted = con.execute("SELECT COUNT(*) FROM kb_references").fetchone()[0] - before
+            con.execute("INSERT OR REPLACE INTO kb_meta (key, value) VALUES ('seed_signature', ?)", (signature,))
+            con.execute("DELETE FROM lookup_misses")  # cache 'tidak ditemukan' mungkin kini ada di seed baru
         self._reload_index()
-        log.info("Knowledge base di-seed dari %s: %d referensi.", csv_path.name, inserted)
+        log.info("Knowledge base di-seed dari %s: %d referensi (seed lama dihapus: %d).", csv_path.name, inserted,
+                 removed)
         return inserted

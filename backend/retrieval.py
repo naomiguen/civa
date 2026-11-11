@@ -3,11 +3,12 @@ Tahap 2 - Multi-Source Retrieval & Caching.
 
 Urutan pencarian judul hasil ekstraksi GROBID:
     1. Database lokal (SQLite)                      -> bila terverifikasi, selesai (tanpa memanggil API)
-    2. API eksternal, BERURUTAN: Crossref -> arXiv -> OpenAlex -> DBLP
+    2. API eksternal, BERURUTAN: Crossref -> arXiv -> OpenAlex -> OpenLibrary (buku) -> DBLP
        - berhenti di sumber pertama yang memverifikasi referensi
        - rekaman nyata yang judulnya cocok langsung di-INSERT ke database lokal (cache permanen)
        - kegagalan satu API (timeout/429/dll) tidak menghentikan pipeline: lanjut ke API berikutnya
-    3. Tidak ditemukan di mana pun -> dicatat sementara (negative cache) agar tidak menghujani API.
+    3. Tidak ditemukan di mana pun -> dicatat sementara (negative cache) agar tidak menghujani API; hanya bila semua
+       sumber aktif menjawab (kegagalan sesaat dicoba lagi). Sumber yang gagal beruntun dilewati sementara (_Breaker).
 
 Untuk menambah sumber baru cukup tulis `async def search_xxx(client, ref) -> list[Record]` lalu daftarkan di PROVIDERS.
 """
@@ -34,6 +35,13 @@ from civa_core import split_authors
 log = logging.getLogger("civa.retrieval")
 
 _TAG_RE = re.compile(r"<[^>]+>")
+# Penanda edisi pada teks referensi: "(3rd ed.)", "2nd edition", "Edisi 2", "Edisi Revisi", "Cetakan ke-3".
+#   "(Ed.)" / "(Eds.)" = editor, dan "Edition" saja bisa bagian nama jurnal ("Angewandte Chemie International
+#   Edition"), jadi edisi hanya dihitung bila didahului nomor/urutan ("3rd ed.", "Eighth Edition", "Edisi ke-2").
+_ORDINAL_EN = r"(?:\d+\s*(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|revised)"
+_ORDINAL_ID = r"(?:ke-?\s*\d+|\d+|revisi|pertama|kedua|ketiga|keempat|kelima|keenam|ketujuh|kedelapan|kesembilan|kesepuluh)"
+_EDITION_RE = re.compile(rf"\b{_ORDINAL_EN}\.?\s*(?:ed\b|edition\b)|\b(?:edisi|cetakan)\s+{_ORDINAL_ID}\b",
+                         re.IGNORECASE)
 _RANK = {"verified": 2, "mismatch": 1, "not_found": 0}
 
 
@@ -65,6 +73,21 @@ def compare(ref: ParsedReference, record: Record, source: str, cached: bool) -> 
     doi_ok = None
     if normalize_doi(ref.doi) and normalize_doi(record.doi):
         doi_ok = normalize_doi(ref.doi) == normalize_doi(record.doi)
+
+    if year_ok is False and _EDITION_RE.search(ref.raw or ""):
+        # Referensi menyebut edisinya ("3rd ed.", "Edisi 2"): edisi lain wajar berbeda tahun, walau rekaman yang
+        # ditemukan (mis. edisi pertama) tidak bertipe buku di sumbernya.
+        year_ok = None
+    if record.kind == "book" and not title_issue and doi_ok is not False:
+        # Buku: judul generik ("Grid Computing", "Computer Science") dipakai banyak buku berbeda, dan edisi/cetak ulang
+        # membuat tahun wajar berbeda jauh. Penulis yang sama sekali lain = buku LAIN berjudul sama, bukan bukti
+        # manipulasi; tahun saja juga bukan bukti. Pola manipulasi pada orang yang SAMA (urutan/susunan/nama/jumlah
+        # penulis, tanpa penulis) tetap dinilai. Yang menentukan hanya jenis REKAMAN ASLI: GROBID sering menandai
+        # artikel jurnal tanpa volume/halaman sebagai buku, jadi ref.kind tidak dipakai di sini.
+        if author_issue == "penulis":
+            return Evidence(status="not_found", title_similarity=similarity)
+        if year_ok is False:
+            year_ok = None
 
     metadata = [name for name, ok in ((author_issue, author_ok), ("tahun", year_ok), ("DOI", doi_ok)) if ok is False]
     if metadata and not title_issue and similarity < settings.mismatch_title_threshold:
@@ -130,6 +153,36 @@ class _Throttle:
 
 
 _arxiv_throttle = _Throttle(settings.arxiv_min_interval)
+
+
+class _Breaker:
+    """Pemutus sirkuit per sumber: setelah `threshold` kegagalan beruntun, sumber dilewati selama `cooldown` detik.
+
+    Sumber yang sedang dilewati dianggap tidak tersedia (bukan "gagal di pencarian ini"), sehingga satu API yang mati
+    lama (mis. DBLP membalas halaman cek bot) tidak menghalangi cache "tidak ditemukan" untuk sumber lain.
+    """
+
+    def __init__(self, threshold: int = 3, cooldown: float = 300.0):
+        self.threshold, self.cooldown = threshold, cooldown
+        self._failures: dict[str, int] = {}
+        self._open_until: dict[str, float] = {}
+
+    def is_open(self, name: str) -> bool:
+        return time.monotonic() < self._open_until.get(name, 0.0)
+
+    def failure(self, name: str) -> None:
+        self._failures[name] = self._failures.get(name, 0) + 1
+        if self._failures[name] >= self.threshold:
+            self._open_until[name] = time.monotonic() + self.cooldown
+            log.warning("Sumber %s gagal %d kali beruntun; dilewati %.0f detik.", name, self._failures[name],
+                        self.cooldown)
+
+    def success(self, name: str) -> None:
+        self._failures.pop(name, None)
+        self._open_until.pop(name, None)
+
+
+_breaker = _Breaker()
 
 _CROSSREF_KIND = {
     "journal-article": "journal", "proceedings-article": "proceedings", "posted-content": "preprint",
@@ -346,6 +399,39 @@ async def search_openalex(client: httpx.AsyncClient, ref: ParsedReference) -> li
     return records
 
 
+# Keterangan edisi di AKHIR judul OpenLibrary ("..., Twelfth Edition", "(3rd ed.)") bukan bagian judul karya.
+_OL_EDITION_RE = re.compile(
+    r"[\s,:;(\-]*\b(?:\d+\s*(?:st|nd|rd|th)|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|"
+    r"eleventh|twelfth|revised|new|updated|international)\.?\s+(?:edition|ed\.?)\)?\s*$", re.IGNORECASE)
+
+
+async def search_openlibrary(client: httpx.AsyncClient, ref: ParsedReference) -> list[Record]:
+    """Buku (OpenLibrary, sumber data buku di dataset). Tahun = terbit pertama; aturan buku tidak menilai tahun."""
+    words = norm_key(ref.title).split()[:15]
+    if not words:
+        return []
+    data = (await _get(client, "https://openlibrary.org/search.json",
+                       {"q": f"title:({' '.join(words)})", "limit": 5,
+                        "fields": "title,subtitle,author_name,first_publish_year,key"})).json()
+    records = []
+    for doc in data.get("docs", []):
+        title = _plain(doc.get("title"))
+        if doc.get("subtitle"):
+            title = f"{title}: {_plain(doc['subtitle'])}"
+        title = _OL_EDITION_RE.sub("", title).strip()
+        # Entri tanpa penulis (banyak di OpenLibrary) hanya bisa mencocokkan judul, sehingga referensi dengan penulis
+        # karangan ikut "terverifikasi"; entri seperti itu tidak dipakai sebagai bukti.
+        if not title or not doc.get("author_name"):
+            continue
+        records.append(Record(
+            title=title, authors=[_plain(a) for a in doc.get("author_name") or [] if a],
+            year=parse_year(doc.get("first_publish_year")), doi=None,
+            url=f"https://openlibrary.org{doc['key']}" if doc.get("key") else None, venue="", kind="book",
+            source="openlibrary",
+        ))
+    return records
+
+
 async def search_dblp(client: httpx.AsyncClient, ref: ParsedReference) -> list[Record]:
     words = norm_key(ref.title).split()[:12]
     if not words:
@@ -372,6 +458,7 @@ PROVIDERS: list[tuple[str, Provider]] = [
     ("crossref", search_crossref),
     ("arxiv", search_arxiv),
     ("openalex", search_openalex),
+    ("openlibrary", search_openlibrary),  # buku
     ("dblp", search_dblp),
 ]
 
@@ -419,13 +506,19 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
 
     # 2b. API eksternal, berurutan; berhenti pada sumber pertama yang memverifikasi
     reachable = 0  # jumlah API yang berhasil dihubungi (apa pun hasilnya)
+    incomplete = False  # ada API yang gagal DALAM pencarian ini -> hasil "tidak ditemukan" belum pasti
     for name, search in PROVIDERS:
+        if _breaker.is_open(name):  # sumber yang sedang mati terus-menerus: dilewati sementara
+            continue
         try:
             records = await search(client, ref)
         except Exception as exc:  # noqa: BLE001 - satu API bermasalah tidak boleh mematikan pipeline
             detail = str(exc).replace(settings.openalex_api_key, "***") if settings.openalex_api_key else exc
             log.warning("Sumber %s gagal untuk %.60r: %s: %s", name, ref.title, type(exc).__name__, detail)
+            _breaker.failure(name)
+            incomplete = True
             continue
+        _breaker.success(name)
         reachable += 1
         matches = [compare(ref, rec, name, cached=False) for rec in records]
         found = best_of(matches)
@@ -441,5 +534,9 @@ async def retrieve_evidence(client: httpx.AsyncClient, kb: KnowledgeBase, ref: P
 
     if reachable == 0 and best is None:  # semua API gagal: bukan bukti apa pun, jangan dicatat sebagai "sudah dicari"
         return Evidence(status="not_found", unreachable=True)
-    await asyncio.to_thread(kb.remember_miss, ref.title)
+    # "Tidak ditemukan" hanya di-cache bila memang TIDAK ADA rekaman sama sekali dan semua sumber aktif menjawab.
+    # Bila ada rekaman (mismatch), menyimpannya sebagai "miss" membuat pemeriksaan ulang melewati API dan bukti mismatch
+    # hilang (hasil berubah jadi "tidak ditemukan"); kegagalan API sesaat juga dicoba lagi lain kali.
+    if best is None and not incomplete:
+        await asyncio.to_thread(kb.remember_miss, ref.title)
     return best or Evidence(status="not_found")

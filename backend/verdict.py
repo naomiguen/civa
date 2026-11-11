@@ -57,6 +57,7 @@ ISSUE_TEXT = {
     "nama penulis": "nama penulis tidak lengkap (hanya nama depan)",
     "urutan penulis": "urutan penulisnya diacak",
     "jumlah penulis": "sebagian penulis tidak dicantumkan",
+    "penulis tambahan": "ada nama penulis yang tidak terdapat pada karya aslinya",
 }
 
 
@@ -108,7 +109,7 @@ def build_reason(status: Status, evidence: Evidence, from_identifier: Optional[s
     if status == "valid":  # not_found
         return ("Alasan: Judul belum ditemukan di pangkalan data, namun pola judul dan penulis "
                 "konsisten dengan referensi asli (klasifikasi ML).")
-    return ("Alasan: Judul tidak ditemukan di basis data lokal, Crossref, arXiv, OpenAlex, maupun DBLP; "
+    return ("Alasan: Judul tidak ditemukan di basis data lokal, Crossref, arXiv, OpenAlex, OpenLibrary, maupun DBLP; "
             "pola teks mirip referensi halusinasi (klasifikasi ML).")
 
 
